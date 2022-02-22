@@ -1,3 +1,5 @@
+from cmath import sin
+import math 
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
@@ -32,4 +34,6 @@ plt.xlabel('sepal width (cm)')
 plt.ylabel('petal width (cm)')
 plt.legend(bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
 #plt.show()
-plt.savefig('output.png')
+#plt.savefig('output.png')
+
+

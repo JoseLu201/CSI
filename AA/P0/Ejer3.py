@@ -3,7 +3,6 @@
 import math 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.datasets import load_iris
 def equis(inicio , fin, step):
     x = fin - inicio
     v_e = x/step

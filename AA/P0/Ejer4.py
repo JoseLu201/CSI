@@ -1,8 +1,8 @@
 #Ejercicios4
-import math 
+
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import cm
+
 
 def f1(x,y):
    return( 1- abs(x+y) - abs(y-x))
@@ -29,6 +29,7 @@ ax.set_ylim3d(-2, 2)
 ax.set_zlim3d(-0.15, 0.15)
 
 x = np.linspace(-2, 2, 100)
+#asdf
 y = np.linspace(-2, 2, 100)
 
 

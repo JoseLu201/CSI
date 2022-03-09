@@ -1,6 +1,4 @@
-from cmath import sin
-import math 
-import numpy as np
+
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
 
@@ -20,6 +18,8 @@ Y = irisDB.target
 
 data = X[:,[1,3]]
 #data = X[:,[0,2]]
+
+
 setosa = data[0:int(Y.size/3 -1)]
 versicolor = data[int(Y.size/3):int(2*Y.size/3 -1)]
 virginica = data[int(2*Y.size/3):int(Y.size)]

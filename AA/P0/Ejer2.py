@@ -8,24 +8,44 @@ irisDB = load_iris()
 X = irisDB.data
 y = irisDB.target
 
-
+#necesito mantener la proporcion de apariciones de cada tipo.
 def my_train_test_split(X,y,test_size=0.2,rand_state=30):
-  np.random.seed(rand_state)
-  rand_X = np.random.permutation(X)
-  rand_y = np.random.permutation(y)
+    
+    #Concateno tanto la X como la y para que cuando randomize no se pierda la relacion
+    
+    concatenada = np.concatenate((X,y.reshape(len(y),1)),axis=1)
+    
+    setosa = concatenada[0:int((len(X)/3))]
+    ver =  concatenada[int(len(X)/3):int((2/3 * len(X)))]
+    virgi =  concatenada[int(2/3 * len(X)) : len(X) ]
 
-  X_train = rand_X[0:int(len(rand_X)*(1-test_size))]
-  X_test = rand_X[int(len(rand_X)*(1-test_size)):len(rand_X)]
+    np.random.seed(rand_state)
+    rand_setosa = np.random.permutation(setosa)
+    rand_ver = np.random.permutation(ver)
+    rand_virgi = np.random.permutation(virgi)
+       
 
-  y_train = rand_y[0:int(len(rand_y)*(1-test_size))]
-  y_test = rand_y[int(len(rand_y)*(1-test_size)):len(rand_y)]
+    
+    train = np.concatenate((rand_setosa[0:int(len(rand_setosa)*(1-test_size))],rand_ver[0:int(len(rand_ver)*(1-test_size))],rand_virgi[0:int(len(rand_virgi)*(1-test_size))] ),axis=0)
+    rand_train = np.random.permutation(train)
+    
+    X_train = rand_train[:,[0,1,2,3]]
+    y_train = rand_train[:,[4]]
+    
+    test = np.concatenate((rand_setosa[0:int(len(rand_setosa)*(test_size))],rand_ver[0:int(len(rand_ver)*(test_size))],rand_virgi[0:int(len(rand_virgi)*(test_size))] ),axis=0)
+    rand_test = np.random.permutation(test)
+    
+    X_test = rand_test[:,[0,1,2,3]]
+    y_test = rand_test[:,[4]]
 
-  return X_train,X_test,y_train,y_test
 
+    y_train, = np.asarray(y_train.T)
+    y_test, = np.asarray(y_test.T)
+    return X_train, X_test, y_train, y_test
+
+    
 X_train,X_test,y_train,y_test = my_train_test_split(X,y,test_size=0.2)
 
-#print("Clase de los ejemplos de entrenamiento: " ,len(X_train),X_train)
-#print(len(X_test),X_test)
 print("--- Clase Setosa ---")
 print("Ejemplos Train: " ,int(len(X)*0.8/3))
 print("Ejemplos Test: " ,int(len(X)*0.2/3))
@@ -39,3 +59,4 @@ print("Clase de los ejemplos de entrenamiento: ",len(y_train))
 print(y_train)
 print("Clase de los ejemplos de test: " ,len(y_test))
 print(y_test)
+

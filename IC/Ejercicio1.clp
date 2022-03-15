@@ -110,21 +110,21 @@
 =>
    (retract ?f) )
 
-;;;;; Solicitamos el nombre de la primera persona sobre el que se desea informacion y guardamos y a�adimos ese hecho 
+;;;;; Solicitamos el tipo de relacion que deseo obtener
  
 (defrule pregunta
 (declare (salience 1000)) 
 =>
-   (printout t "Dime el nombre de la primera persona de la Familia Castro sobre la que quieres informaci�n (escribe solo el nombre): " crlf)
+   (printout t "Dime la relacion que desea buscar " crlf)
    (assert (relacion (read))))
    
-   ;;;;; Solicitamos el nombre de la segunda persona 
+   ;;;;; Solicitamos el nombre de la persona 
  
 (defrule pregunta2
 (declare (salience 100))
 (relacion ?primero)
 =>
-   (printout t "Dime el nombre de la persona d " ?primero " (escribe solo el nombre): " crlf)
+   (printout t "Dime el nombre de la persona de la cual quieres conocer su " ?primero " (escribe solo el nombre): " crlf)
    (assert (persona (read))))
 
 ;;;;; Hacemos que nos diga por pantalla la relacion entre las persona introducida. Como la forma de expresarlo dependera del sexo, usamos dos reglas, una para cada sexo
@@ -139,6 +139,10 @@
 
 
 
-
-
-
+ (defrule SalidaEstandar
+   (relacion ?r)     
+   (persona ?x)
+   (Relacion (tipo ?r) (sujeto ?y) (objeto ?x))
+   (test (eq ?y nil))
+ =>
+   (printout t "No he encontrado ninguna relacion" crlf)

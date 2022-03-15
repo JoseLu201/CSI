@@ -3,12 +3,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+#Defino las dos funciones
 def f1(x,y):
    return( 1- abs(x+y) - abs(y-x))
 def f2(x,y):
    return( x*y*np.exp(-x**2-y**2))
 
+#Realizo graficos 3D
 fig = plt.figure(figsize=plt.figaspect(0.5))
 ax = fig.add_subplot(1, 2, 1, projection='3d')
 
@@ -29,7 +30,6 @@ ax.set_ylim3d(-2, 2)
 ax.set_zlim3d(-0.15, 0.15)
 
 x = np.linspace(-2, 2, 100)
-#asdf
 y = np.linspace(-2, 2, 100)
 
 

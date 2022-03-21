@@ -1,0 +1,84 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\usepackage{lmodern}
+
+% (2) specify encoding
+\usepackage[T1]{fontenc}
+
+% (3) load symbol definitions
+\usepackage{textcomp}
+
+\graphicspath{ {images/} }
+
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+\begin{document}
+
+\title{Practica 0 Aprendizaje Automatico}
+\author{José Luis Molina Aguilar\newline }
+\date{}
+
+
+\maketitle
+
+\begin{enumerate}
+  \item[] Ejercicio 1: Base de datos IRIS.
+  \begin{enumerate}
+    \item[] Para poder obtener los datatos de la base de datos de Iris necesito exportarlos, para ello:
+    \begin{lstlisting}
+      from sklearn.datasets import load_iris. 
+    \end{lstlisting}
+    \item[] Luego necesitamos obtener las caracterisitcas de los datos, para ello podemos llamar a las miembres data y tarjet.
+    \item[] Data es 
+    \item[] Tarjet contiene
+    \item[] Para obtener las caracterisitcas de los datos, concretamente para las columnas 1 y 3, lo que represetnaria el sepal width y petal width utilizaremos X[]
+    \item[] Despues tendriamos que separar los diferentes tipos, en este caso por setosa, versicolor y virginica; sabemos que hay 50 de cada tipo lo que da un total de 150 datos en total
+    \item[] Finalmente para realizar el grafico, pintaremos cada tipo anteriormente mencionado con un color diferente utilizando la funcion de matplotlib scatter, por ejemlo para pintar las setosa, utilizaremos  
+  \end{enumerate} 
+  \item[] Ejercicio 2: Entrenamiento
+  \begin{enumerate}
+    \item 
+  \end{enumerate} 
+  \item[] Ejercicio 3: Graficos en 2D, plots
+  \begin{enumerate}
+    \item[] Este ejercicio trata de representar funciones en graficos 2D, especificamente dibujaremos entre 0 y 4$\pi$, para poder dividir las coordenadas del eje X en 100 partes iguales utilizamos la funcion de linspace y despues simplemente para las 
+    coordenadas del eje Y utilizaremos las funciones matematicas que nos piden.
+    \item[] Para realizar los graficos una vez tenemos las coordenadas utilizaremos la funcion plot de matplotlib, cuyos parametros son simplemente tanto las coordenadas X e Y y algunos paramtros opcionales que nosotros en este caso utilizaremos como el color y el estilo de la linspace
+    \item[] Finalmente delimitare el rango de valores que puede tener ambos ejex, para ello mediante plt.xlim o plt.ylim y pasandole los parametros entre [] separados por coma
+  \end{enumerate} 
+  \item[] Ejercicio 4: Graficos en 3D
+  \begin{enumerate}
+    \item[] Para este ejercicio primero que nada definiremos las dos funcions que vamos a dibujor, podemos hacerlo tanto con lambda como con funciones, en mi caso será la segunda opcion.
+    \item[] Para especificar el grafico es en 3 dimensiones utilizaremos la funcion \verb|add_subplot| con el parametro de projection='3d'
+    \item[] Para realizar las figuras utilizaremos la funcion \verb|plot_surface| con las coordenadas X, Y, Z, ademas se le pueden pasar mas argumentos para poder definir mas cosas como el mapa de color, las esquinas 
+  \end{enumerate} 
+\end{enumerate}
+
+\end{document}

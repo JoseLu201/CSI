@@ -1,14 +1,15 @@
 #Ejercicios4
-import math 
+
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import cm
 
+#Defino las dos funciones
 def f1(x,y):
    return( 1- abs(x+y) - abs(y-x))
 def f2(x,y):
    return( x*y*np.exp(-x**2-y**2))
 
+#Realizo graficos 3D
 fig = plt.figure(figsize=plt.figaspect(0.5))
 ax = fig.add_subplot(1, 2, 1, projection='3d')
 

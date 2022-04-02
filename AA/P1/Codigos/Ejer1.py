@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-TRABAJO 1. 
-Nombre Estudiante: Jose Luis Molin Aguilar
+Created on Thu Mar 31 13:01:30 2022
+
+@author: JoseL
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+import time
 
 np.random.seed(1)
+
 
 print('EJERCICIO SOBRE LA BUSQUEDA ITERATIVA DE OPTIMOS\n')
 print('Ejercicio 1\n')
@@ -48,9 +50,8 @@ def gradient_descent(w_ini, lr, grad_fun, fun, epsilon, max_iters,only_iters=Fal
     iterations = 0
     w = w_ini
     ws = np.matrix(w_ini)
-    
         
-    if(only_iters):
+    if(only_iters == True):
         while(iterations < max_iters):
             iterations+=1
             w = w - (lr * grad_fun(w[0], w[1]))
@@ -105,20 +106,6 @@ def display_figure(rng_val, fun, ws, colormap, title_fig,fun_name):
     ax.set_ylabel('v')
     ax.set_zlabel(fun_name)
 
-#--------------------------
-def plot_regresion(x,y,w,title,xlabel,ylabel,xlim,ylim):
-    fig = plt.figure()
-    ax= fig.add_subplot()
-    ax.scatter(x[:,1],x[:,2],c=y)
-    if(w != None):
-        ax.plot([0,1],[-w[0]/w[2], -w[0]/w[2] - w[1]/w[2]],color='red')
-    plt.title(title)
-
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    plt.xlim(xlim)
-    plt.ylim(ylim)
-
 #input("\n--- Pulsar tecla para continuar ---\n")
 
 #Variables de entrada
@@ -135,31 +122,6 @@ print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
 
 ###display_figure(2, E, ws, 'plasma','Ejercicio 1.2.',r'E(u,v)')
 
-#Plot para ver que hay muchas iteraciones en las que no he anvanzado mucho
-'''
-ws = np.asarray(ws)
-
-fig = plt.figure()
-ax_gra1= fig.add_subplot()
-
-ax_gra1.plot(np.arange(it+1),E(ws[:,0],ws[:,1]))
-plt.xlabel('Iteraciones')
-plt.ylabel('Error2get')
-plt.title('Error = $10^{-8}$')
-
-#Repito el experimento pero con un error mucho menor
-error2get = 1e-4
-w, it, ws = gradient_descent(initial_point,eta,gradE,E,error2get,maxIter)
-
-ws = np.asarray(ws)
-fig = plt.figure()
-ax_gra2= fig.add_subplot()
-
-ax_gra2.plot(np.arange(it+1),E(ws[:,0],ws[:,1]),color='red',markersize=6)
-plt.xlabel('Iteraciones')
-plt.ylabel('Error2get')
-plt.title('Error = $10^{-4}$')
-'''
 
 input("\n--- Pulsar tecla para continuar ---\n")
 
@@ -219,11 +181,11 @@ input("\n--- Pulsar tecla para continuar con el ejercicio  3---\n")
 #-----------------------------
 #Ejercicio 3a
 eta = 0.01
-error2get = 1e-100
+error2get = 1e-1000
 #Ejecutar con 50 iteraciones como maximo
 maxIter = 50
 point = np.array([-1,1])
-w, it_1,ws_1 = gradient_descent(point,eta,gradF,f1,error2get,maxIter,only_iters=True)
+w, it,ws = gradient_descent(point,eta,gradF,f1,error2get,maxIter,only_iters=True)
 
 print ('Numero de iteraciones: ', it)
 print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
@@ -234,64 +196,33 @@ print()
 #Repetir el experimento pero para eta = 0.1
 eta = 0.1
 error2get = 1e-10
+#Ejecutar con 50 iteraciones como maximo
 maxIter = 50
 point = np.array([-1,1])
-w, it_2,ws_2 = gradient_descent(point,eta,gradF,f1,error2get,maxIter,only_iters=(True))
+w, it,ws = gradient_descent(point,eta,gradF,f1,error2get,maxIter,only_iters=(True))
 
 print ('Numero de iteraciones: ', it)
 print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
-'''
-ws_1 = np.asarray(ws_1)
-ws_2 = np.asarray(ws_2)
-plt.plot(np.arange(it+1),f1(ws_1[:,0],ws_1[:,1]),'bo-')
-plt.plot(np.arange(it+1),f1(ws_2[:,0],ws_2[:,1]),'yo-.')
-plt.xlabel('Iteraciones')
-plt.ylabel('Valor de $f1$')
-plt.legend(['$\eta = 0.01$','$\eta = 0.1$'])
-'''
+
 ###display_figure(3, f1, ws, 'plasma','3a, eta = 0.1',r'x^2+ 2y^2 +2sin(2\pi x)sin(\pi y)')
 
-#----------------------------------------------------------
+
 #Ejercicio 3b
-
-#Este bloque de codigo pinta en 3D los caminos que sigue desde cada punto de inicio hasta el min en 50 iters
-#Punto iniciales
-
-'''
 initial_point = np.array([[-0.5,-0.5],[1,1],[2.1,-2.1],[-3,3],[-2,2]])
-#Display
-rng_val = 3
-from mpl_toolkits.mplot3d import Axes3D
-x = np.linspace(-rng_val, rng_val, 50)
-y = np.linspace(-rng_val, rng_val, 50)
-X, Y = np.meshgrid(x, y)
-Z = f1(X, Y) 
-fig = plt.figure()
-ax = Axes3D(fig,auto_add_to_figure=False)
-fig.add_axes(ax)
-ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1,cstride=1, cmap='magma', alpha=.6)
 
 for point in initial_point:
     for eta in [0.01,0.1]:
-        #Calcular el gradiente desde cada punto y diferente eta
         w, it,ws = gradient_descent(point,eta,gradF,f1,error2get,maxIter,only_iters=(True))
         print('Para eta: ', eta)
         print('Para el punto: ', point )
         print ('Numero de iteraciones: ', it)
         print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
         print()
-        #display_figure(3, f1, ws, 'magma', '', f'${point} $, $\eta = {eta}$')
-        ##--Como el ejemplo se ve mucho mejor con 0.01 pongo esta condicion
-        if (len(ws)>0 and eta == 0.01):
-            ws = np.asarray(ws)
-            min_point = np.array([ws[-1,0],ws[-1,1]])
-            min_point_ = min_point[:, np.newaxis]
-            plt.plot(ws[:-1,0], ws[:-1,1], f1(ws[:-1,0], ws[:-1,1]),c='r', markersize=5,label=f'${point} $, $\eta = {eta}$')
-            plt.plot(min_point_[0], min_point_[1], f1(min_point_[0], min_point_[1]), c='m', markersize=10,marker='*' )
-            plt.legend()
-plt.show()
-'''
-        
+        if(eta == 0.01): 
+            ####display_figure(3, f1, ws, 'plasma',str(point),r'$x^2 +2y^2 +2sin(2\pi x)sin(\pi x)$')
+            print()
+
+
 input("\n--- Pulsar tecla para continuar con el ejercicio  4---\n")
 
 
@@ -414,26 +345,40 @@ maxIter = 10000
 error2get = 1e-8
 w = np.zeros(3)
 
-
 print('Calculando SGD...')
+time_sgd = time.time()
 w = sgd(x,y,eta,batch_size,maxIter,w,error2get)
 print ('Bondad del resultado para grad. descendente estocastico:\n')
 print ("Ein: ", Err(x,y,w))
 print ("Eout: ", Err(x_test, y_test, w))
 print ("w : ", w)
-print()
+print("SGD ha tardado {} segundos\n".format(time.time()-time_sgd))
 
 #---------------------------
 
 print('Calculando pseudo-inversa...')
+time_inv = time.time()
 w_invs = pseudoinverse(x, y)
 print ('Bondad del resultado para inversa:\n')
 print ("Ein: ", Err(x,y,w_invs))
 print ("Eout: ", Err(x_test, y_test, w_invs))
 print ("w : ", w_invs)
-print()
+print("Pseudo inversa ha tardado {} segundos\n".format(time.time()-time_inv))
 
 
+
+#--------------------------
+def plot_regresion(x,y,w,title,xlabel,ylabel,xlim,ylim):
+    fig = plt.figure()
+    ax= fig.add_subplot()
+    ax.scatter(x[:,1],x[:,2],c=y)
+    ax.plot([ -w[0]/w[1] - w[2]/w[1], -w[0]/w[2] - w[1]/w[2]],color='red')
+    plt.title(title)
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    plt.xlim(xlim)
+    plt.ylim(ylim)
 
 plot_regresion(x, y, w, 'Gradiente descendiente Estocastico', 'Intensidad', 'Simetria',None,None)
 plot_regresion(x, y, w_invs, 'Matrix pseudo-inversa', 'Intensidad', 'Simetria',None,None)
@@ -441,172 +386,4 @@ plot_regresion(x, y, w_invs, 'Matrix pseudo-inversa', 'Intensidad', 'Simetria',N
 
 
 
-input("\n--- Pulsar tecla para continuar con el ejercicio 2 de Regresion Lineal---\n")
-
-#Seguir haciendo el ejercicio...
-
-#print('Ejercicio 2\n')
-# Simula datos en un cuadrado [-size,size]x[-size,size]
-
-
-def simula_unif(N, d, size):
-	return np.random.uniform(-size,size,(N,d))
-
-def sign(x):
-	if x >= 0:
-		return 1
-	return -1
-
-def f(x1, x2):
-	return sign((x1-0.2)**2+x2**2-0.6) 
-
-
-#Seguir haciendo el ejercicio...
-
-N = 1000
-size = 1 
-d = 2
-data_set = simula_unif(N, d, size)
-
-#Muestra de los datos distribuidos uniformemente 
-'''
-fig = plt.figure()
-ax_unif= fig.add_subplot()
-ax_unif.scatter(data_set[:,0],data_set[:,1])
-plt.title('DataSet')
-'''
-
-
-
-#Dado un conjunto de datos podemos crear unas etiquetas a partir de la funcion 
-#para decidir a que grupo pertenece
-def add_labels(data_set,fun):
-    new_y = []
-    for sa in data_set:
-        if(fun(sa[0],sa[1]) >0):
-            new_y.append(1)
-        else:
-            new_y.append(-1)   
-    new_y = np.array(new_y, np.float64)        
-    return new_y
-
-new_y = add_labels(data_set,f)
-#Añade a un conjunto de etiquetas un 'percent' de datos en forma de ruido
-def add_noise(data_set,percent=0.1):
-    #Creo el porcentaje de indices a cambiar
-    rand = np.random.permutation(len(data_set))
-    rand = rand[:int(percent*len(data_set))]
-    for r in rand:
-        data_set[r] *=-1
-    return data_set
-
-new_y = add_noise(new_y, 0.1)
-
-w = np.zeros(3);
-w[0] = 1
-#Para que siga con la misma forma que antes, añado una columna de 1's al principio del data_set (x).
-data_set = np.insert(data_set,0,np.ones(len(data_set)),axis=1)
-'''
-fig = plt.figure()
-ax_unif2= fig.add_subplot()
-ax_unif2.scatter(data_set[:,1],data_set[:,2],c=new_y)
-plt.title('Diferenciando tipos')
-'''
-
-import time
-'''
-error2get = 1e-8
-eta = 0.1
-analisis = []
-for i in range(0,50,2):
-    #start_time = time.time()
-    w = sgd(data_set, new_y, eta, 32 , i, w, error2get)
-    analisis.append([i,Err(data_set, new_y, w)])
-    
-analisis = np.array(analisis, np.float64)    
-
-fig = plt.figure()
-ax_ana= fig.add_subplot()
-ax_ana.plot(analisis[:,0],analisis[:,1])
-plt.title('How important the max iter is')
-
-
-
-error2get = 8e-6
-eta = 0.1
-max_iter = 125
-analisis2 = []
-#print(np.linspace(1e-5,1e-10,50))
-it = 0
-for i in np.linspace(1e-5,1e-10,50):
-    #start_time = time.time()
-    print(it,' ',i)
-    it+=1
-    w = sgd(data_set, new_y, eta, 32 , 50, w, i)
-    analisis2.append([i,Err(data_set, new_y, w)])
-    
-analisis2 = np.array(analisis2, np.float64)    
-
-fig = plt.figure()
-ax_ana= fig.add_subplot()
-#ax_ana.plot(analisis [:,0],analisis[:,1])
-ax_ana.plot(analisis2[:,0],analisis2[:,1],color='red')
-ax_ana.ticklabel_format(style='plain')
-plt.title('How important the max iter is')
-'''
-#Comprobamos que el error no cambia dependiendo del numero de iteraciones, en este caso con 1000 iteraciones 
-#alcanza
-
-
-
-#Problema del error medio, es una mettrica relativa
-w = sgd(data_set, new_y, eta, batch_size, maxIter, w, error2get)
-#print(np.shape(w),w)
-plot_regresion(data_set, new_y, w, 'Regresion', '', '',[-1,1],[-1,1])
-
-
-print ('Bondad del resultado el conjunto de datos:\n')
-print ("Ein: ", Err(data_set,new_y,w))
-print ("w : ", w)
-
-
-N = 1000
-size = 1 
-d = 2
-w = np.zeros(3)
-w[0] = 1
-
-eta = 0.1
-batch_size = 32
-maxIter = 15
-error2get = 8e-6
-mean_err = []
-start_time = time.time()
-for exp in range(1000):
-    data_set_n = simula_unif(N, d, size)
-    
-    y_n = add_labels(data_set_n,f)
-    y_n = add_noise(y_n,0.1)
-    data_set_n = np.insert(data_set_n,0,np.ones(len(data_set)),axis=1)
-    #print('Shape, ', np.shape(data_set),np.shape(y_n))
-    w_n = sgd(data_set_n, y_n, eta, batch_size, maxIter, w, error2get)
-    mean_err.append(Err(data_set_n,y_n,w_n))
-    #print(exp)
-    
-
-mean_err = np.array(mean_err, np.float64)
-print ('Bondad del resultado el conjunto de datos tras 1000 ejecuciones:\n')
-print ("Ein: ",mean_err.mean())
-print('Ha tardado ' , int(time.time() - start_time))
-
-
-
-def vectorFeatures(x1,x2):
-    vec_features = np.zeros(x1.size,6)
-    vec_features[:,0] = 1
-    vec_features[:,1] = x1
-    vec_features[:,2] = x2
-    vec_features[:,3] = x1*x2
-    vec_features[:,4] = np.power(x1,2)
-    vec_features[:,5] = np.power(x2,2)
-    return vec_features
+#input("\n--- Pulsar tecla para continuar con el ejercicio 2 de Regresion Lineal---\n")

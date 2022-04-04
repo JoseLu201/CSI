@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/main.dir/main.cc.o CMakeFiles/main.dir/MDD.cc.o  -o main 

@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/tools/ejemplo_random.cc
+iostream
+-
+vector
+-
+random.hpp
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/tools/random.hpp
+
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/tools/random.hpp
+random
+-
+chrono
+-
+type_traits
+-
+cassert
+-
+initializer_list
+-
+utility
+-
+algorithm
+-
+iterator
+-
+limits
+-
+ostream
+-
+istream
+-
+

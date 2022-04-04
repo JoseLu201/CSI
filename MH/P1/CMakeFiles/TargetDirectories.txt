@@ -1,0 +1,4 @@
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/CMakeFiles/edit_cache.dir
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/CMakeFiles/main.dir
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/CMakeFiles/MDD.dir

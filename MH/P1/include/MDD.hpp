@@ -22,6 +22,7 @@ class MDD{
         float diff(vector<int> posib);
         float diff_adding(vector<int> posib, int new_i);
         vector<int> greedy();
+        vector<int> rand_greedy();
         void mostrarDatos();
         void exact_algo();
         void print_check();

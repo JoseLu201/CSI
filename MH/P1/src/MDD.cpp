@@ -17,7 +17,7 @@ MDD::MDD(int n){
     this->m = 2;
     //datos = new vector<vector<float>> (m,vector<float> (n,0));
     this->datos = vector<vector<float>>(n,vector<float>(n,0));
-    cout << datos.size() << ", "<<datos[0].size() << endl;
+    //cout << datos.size() << ", "<<datos[0].size() << endl;
     Random::seed(1);
 }
 
@@ -43,7 +43,7 @@ void MDD::leer_fichero(string nombre_fichero){
     }
     
     file.close();
-    cout << "archivo cerrado" << endl;
+    //cout << "archivo cerrado" << endl;
 }
 
 
@@ -57,13 +57,13 @@ De entre todas las soluciones escojo unas localizaciones aleatorias
 A(v) suma de las dist entre ese vertice 'v' y el resto de vertices de S
 
 */
-
+/*
 void print(vector<int> v){
     cout << "[";
     for(auto a : v)
         cout << a << " ";
     cout << "]\n";
-}
+}*/
 
 
 vector<int> MDD::greedy(){
@@ -81,6 +81,64 @@ vector<int> MDD::greedy(){
     solucion.push_back(select);
     auto delete_ps = cand.begin()+rand;
     cand.erase(delete_ps);
+
+    while(solucion.size() < this->m ){
+        
+        float actual_dif = diff(solucion);
+        float new_diff;
+        int pos = 0;
+
+
+        for(auto ele = 0; ele < cand.size(); ele++) {
+            if(std::find(solucion.begin(), solucion.end(), ele) != solucion.end() )
+                continue;
+            new_diff = diff_adding(solucion,ele);
+            for(auto i = 0; i  < cand.size();i++){
+                if(std::find(solucion.begin(), solucion.end(), i) != solucion.end() )
+                    continue;
+                float inner = diff_adding(solucion,i);
+                if(inner < new_diff){
+                    new_diff = inner;
+                    pos = i;
+                }    
+            }
+        }   
+
+        solucion.push_back(pos);
+        auto index = cand.begin()+pos;
+        //cout << "Añadiendo el elementos \t[" << pos <<"]"<< endl<<endl;
+        cand.erase(index);
+       // cout << "Solucion ";// print(solucion);
+        //cout << "Candidatos "; print(cand); 
+    }
+    return solucion;
+
+}
+
+
+vector<int> MDD::rand_greedy(){
+
+    vector<int> solucion;
+    vector<int> cand;
+
+    for(int i = 0; i < this->n;i++){
+        cand.push_back(i);
+    }
+    int max = this->n;
+    auto rand = Random::get(0,max);
+    auto select = cand.at(rand);//Seleccion inicial
+    //Seleccionar la primera solucion de forma aleatoria
+    solucion.push_back(select);
+    auto delete_ps = cand.begin()+rand;
+    cand.erase(delete_ps);
+    
+    int tam = cand.size();
+    int rand1 = Random::get(0,tam-1);
+    auto select1 = cand.at(rand1);//Seleccion inicial
+    //Seleccionar la primera solucion de forma aleatoria
+    solucion.push_back(select1);
+    auto delete_ps1 = cand.begin()+rand1;
+    cand.erase(delete_ps1);
 
     while(solucion.size() < this->m ){
         float actual_dif = diff(solucion);
@@ -105,18 +163,15 @@ vector<int> MDD::greedy(){
 
         solucion.push_back(pos);
         auto index = cand.begin()+pos;
-        cout << "Añadiendo el elementos \t[" << pos <<"]"<< endl<<endl;
+        //cout << "Añadiendo el elementos \t[" << pos <<"]"<< endl<<endl;
         cand.erase(index);
-        cout << "Solucion "; print(solucion);
-        //cout << "Candidatos "; print(cand);
-                
-
-        
-        
+        //cout << "Solucion "; print(solucion);
+        //cout << "Candidatos "; print(cand); 
     }
     return solucion;
 
 }
+
 void MDD::print_check(){
     vector<int> cand;
     vector<int> solucion = {21,0,1};

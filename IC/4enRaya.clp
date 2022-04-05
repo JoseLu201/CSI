@@ -328,15 +328,6 @@
 )
 
 
-(defrule deduce_siguiente_horizontal
-(Tablero Juego ?f ?c _ )
-(test (< ?c 7))
-=>
-(assert (siguiente ?f ?c h ?f (+ ?c 1)))
-)
-
-
-
 
 ;;Puedo deducir con una sola regla todos los anteriores ya que conozco todos los siguientes
 
@@ -344,3 +335,63 @@
 (siguiente ?f ?c ?d ?f1 ?c1)
 =>
 (assert (anterior ?f1 ?c1 ?d ?f ?c)))
+
+;Ejercicio 2 Fila en la que caeria una ficha al meterla por cierta columna
+; Donde p es el player jugando
+
+;Esta es para el principio
+(defrule cae_6
+(Tablero Juego 6 ?c _)
+=>
+(assert (caeria 6 ?c))
+)
+
+;Como dice tenemos que actualizar el valor de caeria 
+(defrule fila_caida
+(declare (salience 15))
+?f <- (caeria ?f1 ?c)
+(Tablero ?t ?f1 ?c M|J) 
+
+(test (> ?f1 1))
+=>
+(retract ?f)
+(assert (caeria (- ?f1 1) ?c ))
+(printout t "Ejecutando "?f " " crlf)
+)
+
+(defrule elimina_overflow
+?f <- (caeria ?f1 ?c)
+(Tablero Juego ?f1 ?c M|J)
+(test (eq ?f1 1))
+=>
+(retract ?f)
+)
+
+
+
+
+; 2 Fichas Conectadas
+
+(defrule conect
+(Tablero ?t ?f1 ?c1 ?p)
+(Tablero ?t ?f2 ?c2 ?p)
+(test (neq ?p _)) ;Si el jugador es  blanco
+(siguiente ?f1 ?c2 ?d ?f2 ?c2)
+=>
+(assert (conectado ?t ?d ?f1 ?c1 ?f2 ?c2 ?p))
+)
+
+
+;3 fichas conectadas
+;HACERLO CON LOS DEMAS DIRECCIONES, es simplemente cambier lo de h,v
+(defrule 3_conect_hor
+(Tablero Juego ?f ?c ?p)
+(test (neq ?p _))
+(conectado Juego h ?f ?c ?f1 ?c1 ?p )
+(siguiente ?f1 ?c1 h ?f2 ?c2) ;Tercera columna en horizontal
+(Tablero Juegp ?f2 ?c2 ?j)
+=>
+(assert (3_en_linea Juego h ?f ?c ?f2 ?c2 ?p))     
+)
+
+

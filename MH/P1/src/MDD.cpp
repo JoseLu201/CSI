@@ -18,6 +18,7 @@ MDD::MDD(int n){
     //datos = new vector<vector<float>> (m,vector<float> (n,0));
     this->datos = vector<vector<float>>(n,vector<float>(n,0));
     cout << datos.size() << ", "<<datos[0].size() << endl;
+    Random::seed(1);
 }
 
 void MDD::read_dimension(string fichero){
@@ -57,46 +58,85 @@ A(v) suma de las dist entre ese vertice 'v' y el resto de vertices de S
 
 */
 
-
+void print(vector<int> v){
+    cout << "[";
+    for(auto a : v)
+        cout << a << " ";
+    cout << "]\n";
+}
 
 
 vector<int> MDD::greedy(){
 
     vector<int> solucion;
     vector<int> cand;
-    Random::seed(5);
+
     for(int i = 0; i < this->n;i++){
         cand.push_back(i);
     }
     int max = this->n;
     auto rand = Random::get(0,max);
     auto select = cand.at(rand);//Seleccion inicial
-    cout << "Valor inicial = " << select << endl;
     //Seleccionar la primera solucion de forma aleatoria
     solucion.push_back(select);
     auto delete_ps = cand.begin()+rand;
     cand.erase(delete_ps);
+
     while(solucion.size() < this->m ){
         float actual_dif = diff(solucion);
         float new_diff;
-        
+        int pos = 0;
 
-        for(auto ele : cand){
+
+        for(auto ele = 0; ele < cand.size(); ele++) {
+            if(std::find(solucion.begin(), solucion.end(), ele) != solucion.end() )
+                continue;
             new_diff = diff_adding(solucion,ele);
-            cout << "Añadiendo el elementeo " << ele << " -> " << new_diff << endl;
-            
-            if((new_diff < actual_dif || new_diff == actual_dif )&& solucion.size() < this->m){
-                solucion.push_back(ele);
-                auto index = cand.begin()+ele;
-                cout << "Añadiendo el elementos " << ele << endl;
-                cand.erase(index);
-                
+            for(auto i = 0; i  < cand.size();i++){
+                if(std::find(solucion.begin(), solucion.end(), i) != solucion.end() )
+                    continue;
+                float inner = diff_adding(solucion,i);
+                if(inner < new_diff){
+                    new_diff = inner;
+                    pos = i;
+                }    
             }
-        }
+        }   
+
+        solucion.push_back(pos);
+        auto index = cand.begin()+pos;
+        cout << "Añadiendo el elementos \t[" << pos <<"]"<< endl<<endl;
+        cand.erase(index);
+        cout << "Solucion "; print(solucion);
+        //cout << "Candidatos "; print(cand);
+                
+
+        
+        
     }
     return solucion;
 
 }
+void MDD::print_check(){
+    vector<int> cand;
+    vector<int> solucion = {21,0,1};
+    for(int i = 0; i < this->n;i++){
+        cand.push_back(i);
+    }
+
+    float new_diff;
+    for(auto ele : cand){
+        //float actual_dif = diff(solucion);
+        //cout << "ACtual diff " << actual_dif << endl;
+        new_diff = diff_adding(solucion,ele);
+        cout << "21,0,1,"<<ele<< " ->" << new_diff <<endl;
+    }
+    
+}
+/*
+21,0,i
+
+*/
 
 
 
@@ -130,7 +170,7 @@ float MDD::diff(vector<int> posib){
 }
 
 float MDD::diff_adding(vector<int> posib, int new_i){
-    float actual_diff = diff(posib);
+    /*float actual_diff = diff(posib);
     float new_diff;
     vector<int> n;
     n = posib;
@@ -142,7 +182,13 @@ float MDD::diff_adding(vector<int> posib, int new_i){
     }else{
         //cout << "No se mejora "<< endl;
         return actual_diff;
-    }
+    }*/
+    float new_diff;
+    vector<int> n = posib;
+    n.push_back(new_i);
+    new_diff = diff(n);
+    return new_diff;
+
 
 }
 

@@ -24,6 +24,7 @@ class MDD{
         vector<int> greedy();
         void mostrarDatos();
         void exact_algo();
+        void print_check();
 
 };
 

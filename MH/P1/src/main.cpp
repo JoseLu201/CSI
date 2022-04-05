@@ -19,8 +19,8 @@ int read_dimension(string fichero){
 int main(){
 
     
-    string nombreArchivo = "datos_MDD/GKD-b_11_n50_m5.txt";
-    //string nombreArchivo = "datos_MDD/datos_prueba.txt";
+    //string nombreArchivo = "datos_MDD/GKD-b_11_n50_m5.txt";
+    string nombreArchivo = "datos_MDD/GKD-b_25_n100_m10.txt";
     ifstream file(nombreArchivo);
 
     
@@ -34,10 +34,12 @@ int main(){
     float dis = instance.diff(index);
     cout << endl << "Distancia " << dis << endl;
     */
+   
     vector<int> sol = instance.greedy();
     for(auto i : sol)
         cout << i << " ";
     cout << "Dispersion = " << instance.diff(sol) << endl;
     
+   //instance.print_check();
     return 0;
 }

@@ -19,6 +19,7 @@ class MDD{
         void read_dimension(string fichero);
         void leer_fichero(string nombre_fichero);
         float distPuntoRestoElemenetos(int f,vector<int> v);
+        float distPuntoRestoElemenetos2(vector<int> v,pair<int,int> cambio);
         float diff(vector<int> posib);
         float diff_adding(vector<int> posib, int new_i);
         vector<int> greedy();
@@ -26,6 +27,11 @@ class MDD{
         void mostrarDatos();
         void exact_algo();
         void print_check();
+
+        ///
+
+        vector<int> BL();
+        float MDD::calcular_nuevo_coste(vector<int> pos,pair<int,int> cambio);
 
 };
 

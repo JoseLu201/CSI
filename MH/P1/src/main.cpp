@@ -60,5 +60,7 @@ int main(int argc, char *argv[]){
     
     cout <</* "Media de la dispersion " <<*/ sum/dispersion.size() <<endl;
 
+    
+
     return 0;
 }

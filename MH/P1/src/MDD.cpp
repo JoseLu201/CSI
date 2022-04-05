@@ -199,6 +199,7 @@ void MDD::print_check(){
 Calcula la distancia desde un puntoal resto de los pntos
 f -> es la fila sobre la que se aplica,
 v -> es un vector con los indices de las columnas sobre las que se suman
+Esta funcion recalcula muchos datos
 */
 float MDD::distPuntoRestoElemenetos(int f,vector<int> v){
     float dist = 0;
@@ -206,6 +207,16 @@ float MDD::distPuntoRestoElemenetos(int f,vector<int> v){
         dist+=this->datos[f][v[i]];
         if(datos[f][v[i]] == 0)
             dist+= datos[v[i]][f];
+    }
+    return dist;
+}
+
+float MDD::distPuntoRestoElemenetos2(vector<int> v,pair<int,int> cambio){
+    float dist = 0;
+    vector<float> distancias = {0};
+    for(int i : v){
+        distancias[0] = a
+        distancias[i] -= distancias[cambio.first] + distancias[cambio.second];
     }
     return dist;
 }
@@ -225,19 +236,6 @@ float MDD::diff(vector<int> posib){
 }
 
 float MDD::diff_adding(vector<int> posib, int new_i){
-    /*float actual_diff = diff(posib);
-    float new_diff;
-    vector<int> n;
-    n = posib;
-    n.push_back(new_i);
-    new_diff = diff(n);
-    if(new_diff < actual_diff){
-        cout << "Se mejora" << endl;
-        return new_diff;
-    }else{
-        //cout << "No se mejora "<< endl;
-        return actual_diff;
-    }*/
     float new_diff;
     vector<int> n = posib;
     n.push_back(new_i);
@@ -253,4 +251,47 @@ void MDD::mostrarDatos(){
         cout << x << "\t"; 
         cout << endl;
     }
+}
+/*
+Genero una solucion aleatoria y luego seria ir intercambiando para generar los vecinos
+
+Una forma de cambiar los indices seria hacer hacer una pareja de valores en la cual la primera 
+posicion es el valor que cambias y el segundo seria por el cual lo cambias, con esto podemos mejorar en memoria
+
+Para factorizar la funcion de evaluacion si solo cambiamos un elemento en los vecinos, no tendriamos que 
+volver a recalcular todos los valores por solo cambiar uno
+
+ejemplo
+
+(0,4,6)
+D0 = D04 + D06  //Esta ya no lo necesito
+D4 = D40 + D46  //Si cambio el o por un 1 D4 = D4 -D04 + D14
+D6 = D60 + D64
+*/
+
+float MDD::calcular_nuevo_coste(vector<int> pos,pair<int,int> cambio){
+    
+    float dist1 = distPuntoRestoElemenetos(cambio.first,pos);
+    float dist2 = distPuntoRestoElemenetos(cambio.second,pos);
+}
+
+vector<int> MDD::BL(){
+    vector<int> solucion;
+    vector<int> cand;
+    int rand;
+    for(int i = 0; i < this->m;i++){
+        rand = Random::get(0,this->n-1);
+        /*if(std::find(solucion.begin(), solucion.end(), rand) != solucion.end() )
+                continue;*/
+        solucion.push_back(rand);
+    }
+    bool mejor_sol = true;
+    float actual_diff;
+    while(mejor_sol){
+        for(auto ele : solucion){
+            actual_diff = diff(solucion);
+        }
+    }
+
+    return solucion;
 }

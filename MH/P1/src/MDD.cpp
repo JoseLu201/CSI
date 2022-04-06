@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include "random.hpp"
+#include <vector>
 
 
 /*
@@ -88,7 +89,6 @@ vector<int> MDD::greedy(){
         float new_diff;
         int pos = 0;
 
-
         for(auto ele = 0; ele < cand.size(); ele++) {
             if(std::find(solucion.begin(), solucion.end(), ele) != solucion.end() )
                 continue;
@@ -109,63 +109,6 @@ vector<int> MDD::greedy(){
         //cout << "Añadiendo el elementos \t[" << pos <<"]"<< endl<<endl;
         cand.erase(index);
        // cout << "Solucion ";// print(solucion);
-        //cout << "Candidatos "; print(cand); 
-    }
-    return solucion;
-
-}
-
-
-vector<int> MDD::rand_greedy(){
-
-    vector<int> solucion;
-    vector<int> cand;
-
-    for(int i = 0; i < this->n;i++){
-        cand.push_back(i);
-    }
-    int max = this->n;
-    auto rand = Random::get(0,max);
-    auto select = cand.at(rand);//Seleccion inicial
-    //Seleccionar la primera solucion de forma aleatoria
-    solucion.push_back(select);
-    auto delete_ps = cand.begin()+rand;
-    cand.erase(delete_ps);
-    
-    int tam = cand.size();
-    int rand1 = Random::get(0,tam-1);
-    auto select1 = cand.at(rand1);//Seleccion inicial
-    //Seleccionar la primera solucion de forma aleatoria
-    solucion.push_back(select1);
-    auto delete_ps1 = cand.begin()+rand1;
-    cand.erase(delete_ps1);
-
-    while(solucion.size() < this->m ){
-        float actual_dif = diff(solucion);
-        float new_diff;
-        int pos = 0;
-
-
-        for(auto ele = 0; ele < cand.size(); ele++) {
-            if(std::find(solucion.begin(), solucion.end(), ele) != solucion.end() )
-                continue;
-            new_diff = diff_adding(solucion,ele);
-            for(auto i = 0; i  < cand.size();i++){
-                if(std::find(solucion.begin(), solucion.end(), i) != solucion.end() )
-                    continue;
-                float inner = diff_adding(solucion,i);
-                if(inner < new_diff){
-                    new_diff = inner;
-                    pos = i;
-                }    
-            }
-        }   
-
-        solucion.push_back(pos);
-        auto index = cand.begin()+pos;
-        //cout << "Añadiendo el elementos \t[" << pos <<"]"<< endl<<endl;
-        cand.erase(index);
-        //cout << "Solucion "; print(solucion);
         //cout << "Candidatos "; print(cand); 
     }
     return solucion;
@@ -211,15 +154,66 @@ float MDD::distPuntoRestoElemenetos(int f,vector<int> v){
     return dist;
 }
 
+/*(0,4,6)
+D0 = D04 + D06  //Esta ya no lo necesito
+D4 = D40 + D46  //Si cambio el o por un 1 D4 = D4 -D04 + D14
+D6 = D60 + D64
+*/
+/*
+La pareja que paso quee son indices o posciones de la matriz de datos
+*/
 float MDD::distPuntoRestoElemenetos2(vector<int> v,pair<int,int> cambio){
-    float dist = 0;
-    vector<float> distancias = {0};
-    for(int i : v){
-        distancias[0] = a
-        distancias[i] -= distancias[cambio.first] + distancias[cambio.second];
+    float disp = 0;
+    int fila;
+    for(auto i =0; i < v.size();i++){
+        this->distan.push_back(distPuntoRestoElemenetos(v[i],v));
+        //cout << this->distan[i] << " ";
     }
-    return dist;
+    /*cout << endl;
+
+    cout << "Paso del vector " << endl;
+    for(auto i :v)
+        cout << i << " ";
+    cout << endl;*/
+    int last_pos = v[cambio.first] ;
+    v[cambio.first] = cambio.second;
+    /*cout << "A ESTO " <<endl;
+    for(auto i :v)
+        cout << i << " ";
+    cout << endl;*/
+    //Necesito calcularlo entero otra vez ya que lo cambio
+    this->distan[cambio.first] = distPuntoRestoElemenetos(cambio.second,v);
+
+    for(auto i =0; i < v.size();i++){
+        if(i != cambio.first){ 
+            
+            if(this->datos[last_pos][v[i]] != 0){
+                if(this->datos[cambio.second][v[i]] != 0){
+                    //cout << "Dist "<<v[i] << " = " << this->distan[i] << " - ("<<last_pos<<","<<v[i] <<")"<<this->datos[last_pos][v[i]] <<" + " << "("<<cambio.second<<","<<v[i] <<")"<<this->datos[cambio.second][v[i]] << endl;
+                    this->distan[i] = this->distan[i] - this->datos[last_pos][v[i]] + this->datos[cambio.second][v[i]];
+                }
+                else{
+                    //cout << "Dist "<<v[i] << " = " << this->distan[i] << " - ("<<last_pos<<","<<v[i] <<")"<<this->datos[last_pos][v[i]] <<" + " << "("<<cambio.second<<","<<v[i] <<")"<<this->datos[cambio.second][v[i]] << endl;
+                    this->distan[i] = this->distan[i] - this->datos[last_pos][v[i]] + this->datos[v[i]][cambio.second];
+                }
+            }else{
+                if(this->datos[cambio.second][v[i]] != 0){
+                    //cout << "Dist "<<v[i] << " = " << this->distan[i] << " - ("<<v[i]<<","<<last_pos <<")"<<this->datos[v[i]][last_pos] <<" + " << "("<<cambio.second<<","<<v[i] <<")" << this->datos[cambio.second][v[i]] << endl;
+                    this->distan[i] = this->distan[i] - this->datos[v[i]][last_pos] + this->datos[cambio.second][v[i]];
+                }else{ 
+                    //cout << "Dist "<<v[i] << " = " << this->distan[i] << " - ("<<v[i]<<","<<last_pos <<")"<<this->datos[v[i]][last_pos] <<" + " << "("<<v[i]<<","<<cambio.second<<")" << this->datos[v[i]][cambio.second] << endl;
+                    this->distan[i] = this->distan[i] - this->datos[v[i]][last_pos] + this->datos[v[i]][cambio.second];
+                }
+            }
+        }
+    }
+
+    sort(distan.begin(), distan.end());
+    return (distan[distan.size()-1] - distan[0] );
+    
 }
+
+
 
 float MDD::diff(vector<int> posib){
     //Almaceno los valores para cada solucion
@@ -229,9 +223,6 @@ float MDD::diff(vector<int> posib){
         distancias.push_back(distPuntoRestoElemenetos(posib[i],posib));
     }
     sort(distancias.begin(), distancias.end());
-    /*for(auto x : distancias)
-        cout << x << " ";
-    cout << endl;*/
     return (distancias[distancias.size()-1] - distancias[0] );
 }
 
@@ -239,6 +230,7 @@ float MDD::diff_adding(vector<int> posib, int new_i){
     float new_diff;
     vector<int> n = posib;
     n.push_back(new_i);
+
     new_diff = diff(n);
     return new_diff;
 
@@ -273,6 +265,7 @@ float MDD::calcular_nuevo_coste(vector<int> pos,pair<int,int> cambio){
     
     float dist1 = distPuntoRestoElemenetos(cambio.first,pos);
     float dist2 = distPuntoRestoElemenetos(cambio.second,pos);
+    return dist2;
 }
 
 vector<int> MDD::BL(){
@@ -285,13 +278,53 @@ vector<int> MDD::BL(){
                 continue;*/
         solucion.push_back(rand);
     }
-    bool mejor_sol = true;
-    float actual_diff;
-    while(mejor_sol){
-        for(auto ele : solucion){
-            actual_diff = diff(solucion);
-        }
-    }
+     
+    pair<int,int> par(1,1);
+    return solucion;
+}
 
+vector<int> MDD::BL2(){
+    vector<int> solucion;
+    vector<int> cand;
+    for(int i = 0; i < this->n;i++){
+        cand.push_back(i);
+    }
+    
+    int rand;
+    for(int i = 0; i < this->m;i++){
+        rand = Random::get(0,this->n-1);
+        /*if(std::find(solucion.begin(), solucion.end(), rand) != solucion.end() )
+                continue;*/
+        solucion.push_back(rand);
+    }
+    cout << "Dispersion inicial " << diff(solucion) << endl;
+    using std::remove;
+    for(auto i : solucion){
+        cout << i << " ";
+        cand.erase(std::remove(cand.begin(), cand.end(), i), cand.end());
+    }
+    cout << endl;
+    float actual_disp = diff(solucion);
+    
+
+    pair<int,int> cambio;
+    int index = 0;
+    float new_disp;
+    while(index != solucion.size()){
+        for(auto i : cand){
+            cambio = make_pair(index,i);
+            new_disp = distPuntoRestoElemenetos2(solucion,cambio);
+            //cout << "Cambiando [" << solucion[cambio.first] << "] por [" << cambio.second << "] Obtengo "<< new_disp << endl;
+            //cout << "Dispersion " << diff(solucion) << " --  " << new_disp << endl;
+            if(new_disp < actual_disp  ){
+                solucion[index] = i;
+                cand.erase(cand.begin()+i);
+                index++;
+            }
+        }
+        index++;
+    }
+    
+    cout <<"Dispersion final = "<<  diff(solucion) << endl;
     return solucion;
 }

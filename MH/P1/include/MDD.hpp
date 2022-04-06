@@ -14,7 +14,10 @@ class MDD{
     private:
         vector<vector<float>> datos;
         int n,m;
+
+        
     public:
+        vector<float> distan;
         MDD(int n);
         void read_dimension(string fichero);
         void leer_fichero(string nombre_fichero);
@@ -31,7 +34,9 @@ class MDD{
         ///
 
         vector<int> BL();
-        float MDD::calcular_nuevo_coste(vector<int> pos,pair<int,int> cambio);
+        vector<int> BL2(); // borrar
+        float calcular_nuevo_coste(vector<int> pos,pair<int,int> cambio);
+        
 
 };
 

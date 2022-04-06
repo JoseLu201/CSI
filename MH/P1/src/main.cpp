@@ -23,12 +23,18 @@ void print(vector<int> v){
         cout << a << ",";
     cout << "]\n";
 }
+void printf(vector<float> v){
+    cout << "[";
+    for( int a = 0; a < v.size();a++)
+        cout << a << ",";
+    cout << "]\n";
+}
 
 int main(int argc, char *argv[]){
 
     
-    //string nombreArchivo = "datos_MDD/GKD-b_11_n50_m5.txt";
-    string nombreArchivo = argv[1];// = "datos_MDD/GKD-b_25_n100_m10.txt";
+    string nombreArchivo = "datos_MDD/GKD-b_11_n50_m5.txt";
+   // string nombreArchivo = argv[1];// = "datos_MDD/GKD-b_25_n100_m10.txt";
 
     ifstream file(nombreArchivo);
 
@@ -36,6 +42,8 @@ int main(int argc, char *argv[]){
     MDD instance(dim);
     instance.read_dimension(nombreArchivo);
     instance.leer_fichero(nombreArchivo);
+
+/*
     std::seed_seq sseq{0,1,2,3,4};
     
     Random::seed(sseq);
@@ -58,9 +66,17 @@ int main(int argc, char *argv[]){
         sum+=dis;
     }
     
-    cout <</* "Media de la dispersion " <<*/ sum/dispersion.size() <<endl;
+    cout <</* "Media de la dispersion " << sum/dispersion.size() <<endl;
 
     
 
-    return 0;
+    return 0;*/
+    for(int i = 0; i < 5;i++){
+
+        vector<int> ans = instance.BL2();
+        for(auto i : ans)
+            cout << i << " ";
+        cout << endl<<endl;
+    }
+    
 }

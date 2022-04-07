@@ -81,28 +81,22 @@ vector<int> MDD::greedy(){
     cand.erase(delete_ps);
 
     while(solucion.size() < this->m ){
-        
         float actual_dif = diff(solucion);
         float new_diff;
         int pos = 0;
 
-        for(int ele = 0; ele < cand.size(); ele++) {
-            if(std::find(solucion.begin(), solucion.end(), cand[ele]) != solucion.end() )
-                continue;
-            new_diff = diff_adding(solucion,cand[ele]);
-            for(auto i = 0; i  < cand.size();i++){
-                if(std::find(solucion.begin(), solucion.end(), cand[i]) != solucion.end() )
-                    continue;
-                float inner = diff_adding(solucion,cand[i]);
+        for(auto ele : cand){
+            new_diff = diff_adding(solucion,ele);
+            for(auto i: cand){
+                float inner = diff_adding(solucion,i);
                 if(inner < new_diff){
                     new_diff = inner;
                     pos = i;                    
                 }    
             }
         }   
-        solucion.push_back(cand[pos]);
-        auto index = cand.begin()+pos;
-        cand.erase(index);
+        solucion.push_back(pos);
+        std::remove(cand.begin(),cand.end(),pos);
 
     }
     return solucion;

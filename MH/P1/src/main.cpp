@@ -28,8 +28,7 @@ int main(int argc, char *argv[]){
     MDD instance(dim.first,dim.second);
 
     instance.leer_fichero(nombreArchivo);
-    //std::seed_seq sseq{0,1,2,3,4};
-    std::seed_seq sseq{5,6,7,8,9};
+    std::seed_seq sseq{1,2,3,4,5};
     Random::seed(sseq);
     //Random::seed(0);
     vector<float> dispersion;
@@ -40,7 +39,7 @@ int main(int argc, char *argv[]){
         vector<int> sol = instance.greedy(); 
         auto fin = high_resolution_clock::now();
         dispersion.push_back(instance.diff(sol));
-        /*for(auto i : sol)
+       /* for(auto i : sol)
         cout << i << " ";
         cout << endl;*/
         tiempo = duration_cast<std::chrono::milliseconds>(fin - inicio);
@@ -57,8 +56,8 @@ int main(int argc, char *argv[]){
         sum_tiempo+=t.count();
     }
      
-    cout << /*"Media de la dispersion " <<*/ sum/dispersion.size() <<endl;
-    //cout << /*"Media de la tiempos " << */sum_tiempo/times.size() <<endl;
+    cout << /*"Media de la dispersion " <<*/ sum/dispersion.size() <<";";
+    cout << /*"Media de la tiempos " << */sum_tiempo/times.size() <<endl;
     return 0;
  
     

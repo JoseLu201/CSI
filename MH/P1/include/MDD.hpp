@@ -18,11 +18,11 @@ class MDD{
         
     public:
         vector<float> distan;
-        MDD(int n);
+        MDD(int n,int m );
         void read_dimension(string fichero);
         void leer_fichero(string nombre_fichero);
         float distPuntoRestoElemenetos(int f,vector<int> v);
-        float distPuntoRestoElemenetos2(vector<int> v,pair<int,int> cambio);
+        float distPuntoRestoElemenetos2(vector<int> sol,pair<int,int> cambio);
         float diff(vector<int> posib);
         float diff_adding(vector<int> posib, int new_i);
         vector<int> greedy();

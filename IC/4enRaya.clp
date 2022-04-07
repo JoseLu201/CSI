@@ -356,7 +356,7 @@
 =>
 (retract ?f)
 (assert (caeria (- ?f1 1) ?c ))
-(printout t "Ejecutando "?f " " crlf)
+;(printout t "Ejecutando "?f " " crlf)
 )
 
 (defrule elimina_overflow
@@ -373,25 +373,32 @@
 ; 2 Fichas Conectadas
 
 (defrule conect
-(Tablero ?t ?f1 ?c1 ?p)
-(Tablero ?t ?f2 ?c2 ?p)
+(Tablero Juego ?f1 ?c1 ?p)
+(Tablero Juego ?f2 ?c2 ?p)
 (test (neq ?p _)) ;Si el jugador es  blanco
-(siguiente ?f1 ?c2 ?d ?f2 ?c2)
+(siguiente ?f1 ?c1 ?d ?f2 ?c2)
 =>
-(assert (conectado ?t ?d ?f1 ?c1 ?f2 ?c2 ?p))
+(assert (conectado ?d ?f1 ?c1 ?f2 ?c2 ?p))
 )
 
 
 ;3 fichas conectadas
-;HACERLO CON LOS DEMAS DIRECCIONES, es simplemente cambier lo de h,v
-(defrule 3_conect_hor
-(Tablero Juego ?f ?c ?p)
+
+(defrule 3_conect_sig
+(Tablero Juego ?f1 ?c1 ?p)
+(Tablero Juego ?f2 ?c2 ?p)
 (test (neq ?p _))
-(conectado Juego h ?f ?c ?f1 ?c1 ?p )
-(siguiente ?f1 ?c1 h ?f2 ?c2) ;Tercera columna en horizontal
-(Tablero Juegp ?f2 ?c2 ?j)
+(siguiente ?f1 ?c1 ?d ?f2 ?c2) ; Obtengo la direccion
+(conectado ?d ?f2 ?c2 ?f3 ?c3 ?p )
 =>
-(assert (3_en_linea Juego h ?f ?c ?f2 ?c2 ?p))     
+(assert (3_en_linea Juego ?d ?f1 ?c1 ?f3 ?c3 ?p))     
 )
 
-
+;gana en columna
+(defrule posib_ganar
+(3_en_linea Juego ?d ?f1 ?c1 ?f3 ?c3 ?p)
+(siguiente ?f3 ?c3 ?d ?f4 ?c4)
+(caeria ?f4 ?c4)
+=>
+(assert (ganaria ?p ?c4))  
+)

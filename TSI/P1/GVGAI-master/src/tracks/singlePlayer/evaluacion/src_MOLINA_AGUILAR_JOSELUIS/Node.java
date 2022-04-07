@@ -2,13 +2,17 @@ package tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS;
 import java.util.ArrayList;
 import java.util.Set;
 
+import core.game.ForwardModel;
+import core.game.Game;
 import core.game.StateObservation;
+import ontology.Types.ACTIONS;
 import tools.Vector2d;
 import tools.pathfinder.Agent;
 
 
 public class Node implements Comparable<Node>{
     private Node parent;
+    private ArrayList<Node> childs;
     private Vector2d posicion;
     private Vector2d orientacion;
     private Vector2d portal;
@@ -17,6 +21,7 @@ public class Node implements Comparable<Node>{
     private double coste_total;
     private boolean visitado;
     private StateObservation state;
+    private ArrayList<ACTIONS> availableActions;
 
     public Node(Vector2d pos, Vector2d portal,Vector2d orientacion, StateObservation state){
         this.posicion = pos;
@@ -41,8 +46,12 @@ public class Node implements Comparable<Node>{
     
     }
 
-    public Set<Node> expandirNodoBFS(Node n){
-        n.
+    public ArrayList<Node> expandirNodoBFS(Node n){
+        ArrayList<Node> exp = new ArrayList<>();
+        ArrayList<ACTIONS> availableActions = n.state.getAvailableActions();
+
+
+        return exp;
     }
 
     public Vector2d getPosicion() {
@@ -113,5 +122,27 @@ public class Node implements Comparable<Node>{
         this.visitado = visitado;
     }
            
-     
-}
+}   
+/*
+public static void main(String[] args){
+    Vector2d pos = new Vector2d(0, 0);
+    Vector2d portal = new Vector2d(3, 3);
+    Vector2d orientacion = new Vector2d(0, 0);
+    Game a_gameState = new Game() {
+
+        @Override
+        public boolean isGameOver() {
+            //return getGameWinner() != Types.WINNER.NO_WINNER;
+        }
+
+        @Override
+        public void buildStringLevel(String[] levelString, int randomSeed) {
+            // TODO Auto-generated method stub
+            
+        }
+        
+    };
+    ForwardModel a_model = new ForwardModel(a_gameState, 1)
+    StateObservation state = new StateObservation(a_model, 1)
+    Node n = new Node(pos, portal, orientacion, state);
+}*/

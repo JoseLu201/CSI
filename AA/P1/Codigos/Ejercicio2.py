@@ -39,6 +39,7 @@ def Err(x,y,w):
     #Error cuadratico medio
     # (1/n)*(x*w-y)^2
     h = x.dot(w)-y
+
     ans = np.power(h,2)
     return ans.mean()
 
@@ -110,7 +111,7 @@ def f(x1, x2):
 def add_labels(data_set,fun):
     new_y = []
     for sa in data_set:
-        if(fun(sa[0],sa[1]) >0):
+        if(sign(fun(sa[0],sa[1]) )):
             new_y.append(1)
         else:
             new_y.append(-1)   
@@ -128,6 +129,10 @@ def add_noise(data_set,percent=0.1):
     return data_set
 
 
+def check(data_set):
+    for i in data_set:
+        if(i[1] > 1 or i[2] < -1):
+            return True
 
 N = 1000
 size = 1 
@@ -149,8 +154,8 @@ def plot_regresion(x,y,w,title,xlabel,ylabel,xlim,ylim):
     plt.xlim(xlim)
     plt.ylim(ylim)
 
+#Generar
 
-'''
 
 eta = 0.1
 batch_size = 32
@@ -159,7 +164,9 @@ error2get = 1e-10
 mean_err_in = []
 mean_err_out = []
 start_time = time.time()
-for exp in range(1000):
+for exp in range(1):
+    w = np.zeros(3)
+    w[0] = 1
     data_set_n = simula_unif(N, d, size)
     
     #test_data_set_n = simula_unif(N, d, size)
@@ -173,12 +180,14 @@ for exp in range(1000):
     #test_data_set_n = np.insert(test_data_set_n,0,np.ones(len(data_set)),axis=1)
     
     w_n = sgd(data_set_n, y_n, eta, batch_size, maxIter, w, error2get)
+    plot_regresion(data_set_n, y_n, w_n, 'Regresion_nn', '', '',[-1,1],[-1,1])
+    
     mean_err_in.append(Err(data_set_n,y_n,w_n))
     #mean_err_out.append(Err(test_data_set_n, test_y_n, w_n))
     #print(exp)
-    if(exp == 99):
-        plot_regresion(data_set_n, y_n, w_n, 'Regresion_nn', '', '')
-    
+    #if(exp == 999):
+    #    plot_regresion(data_set_n, y_n, w_n, 'Regresion_nn', '', '',[-1,1],[-1,1])
+
 
 mean_err_in = np.array(mean_err_in, np.float64)
 mean_err_out = np.array(mean_err_out, np.float64)
@@ -187,7 +196,7 @@ print ("Ein: ",mean_err_in.mean())
 #print ("Eout: ",mean_err_out.mean())
 print('Ha tardado ' , int(time.time() - start_time), ' segundos')
 
-'''
+
 #------------------------------
 
 
@@ -248,13 +257,15 @@ def sgd2(x,y,eta,batch_size,maxIter,w,error2get):
     error = np.array(error, np.float64)
     return w,iterations,error
 
+
+'''
 w = np.zeros(6)
 data_set = simula_unif(1000, 2, 1)
 y_n = add_labels(data_set,f)
 data_set= np.insert(data_set,0,np.ones(len(data_set)),axis=1)
 y_n = add_noise(y_n,0.1)
 sample = vectorFeatures(data_set[:,1], data_set[:,2])
-
+'''
 
 
 
@@ -266,6 +277,7 @@ sample = vectorFeatures(data_set[:,1], data_set[:,2])
 #print(np.shape(data_set),data_set)
 
 '''
+
 from itertools import cycle
 cycol = cycle('bgrcmk')
 
@@ -329,7 +341,7 @@ def non_linear_plot(X, y, w_s,title=None, xlabel=None, ylabel=None):
 
 
 #Como hemos visto antes los mejores parametros para esta funcion son batch_size bajos
-
+'''
 w = np.zeros(6)
 data_set = simula_unif(1000, 2, 1)
 y_n = add_labels(data_set,f)
@@ -344,6 +356,8 @@ batch = 16
 #
 #non_linear_plot(data_set, y_n, w,title="Non Linear", xlabel="r$x_1$", ylabel="r$x_2$")
 '''
+
+'''
 fig = plt.figure()
 ax= fig.add_subplot()
 print(np.shape(w),w)
@@ -357,10 +371,10 @@ print ('Bondad del resultado el conjunto de datos:\n')
 print ("Ein: ", Err(sample,y_n,w))
 print ("w : ", w)
 print('Iteraciones: ' , iterations_sgd)
-
-
-
 '''
+
+
+
 
 
 eta = 0.01
@@ -371,23 +385,20 @@ mean_err_in = []
 mean_err_out = []
 start_time = time.time()
 size = 50
-for exp in range(size):
-    w = np.zeros(6)
+w = np.zeros(6)
+for exp in range(1):
+    
     data_set_n = simula_unif(N, d, size)
     
     y_n = add_labels(data_set_n,f)
     data_set_n= np.insert(data_set_n,0,np.ones(len(data_set_n)),axis=1)
     y_n = add_noise(y_n,0.1)
-    sample = vectorFeatures(data_set_n[:,1], data_set_n[:,2]) 
+    print(np.shape(data_set_n))
+    plt.scatter(data_set_n[:,1],data_set_n[:,2],c=y_n)
+    #sample = vectorFeatures(data_set_n[:,1], data_set_n[:,2]) 
     
-    w_n,iterations_sgd,error = sgd2(sample, y_n, eta, batch, maxIter, w, error2get)
-    mean_err_in.append(Err(sample,y_n,w_n))
-    #mean_err_out.append(Err(test_data_set_n, test_y_n, w_n))
-    #print(exp)
-    i =0
-    if(100*i == exp):
-        print(exp)
-        i+=1
+    #w_n,iterations_sgd,error = sgd2(sample, y_n, eta, batch_size, maxIter, w, error2get)
+   # mean_err_in.append(Err(sample,y_n,w_n))
     
 
 mean_err_in = np.array(mean_err_in, np.float64)
@@ -396,8 +407,5 @@ print ('Bondad del resultado el conjunto de datos tras 1000 ejecuciones:\n')
 print ("Ein: ",mean_err_in.mean())
 #print ("Eout: ",mean_err_out.mean())
 print('Ha tardado ' , int(time.time() - start_time), ' segundos')
-
-
-
 
 

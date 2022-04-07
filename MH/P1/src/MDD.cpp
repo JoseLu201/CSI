@@ -16,12 +16,8 @@ using Random = effolkronium::random_static;
 MDD::MDD(int n, int m){
     this->n = n;
     this->m = m;
-    //datos = new vector<vector<float>> (m,vector<float> (n,0));
-    this->datos = vector<vector<float>>(n,vector<float>(n,0));
-    this->distan = vector<float>(m,0);
-    //cout << datos.size() << ", "<<datos[0].size() << endl;
-
-    Random::seed(1);
+    this->datos.resize(n,vector<float>(n));
+    this->distan.resize(m);
 }
 /*
 void MDD::read_dimension(string fichero){
@@ -41,7 +37,6 @@ void MDD::leer_fichero(string nombre_fichero){
     getline(file,t1);
     int i =0,j=0;
     while (file >> i >> j >> dist){
-        //cout <<"->" << i << " " << j << " dist=" << dist << endl;
         datos[i][j] = dist;
     }
     
@@ -152,28 +147,16 @@ float MDD::distPuntoRestoElemenetos(int f,vector<int> v){
         dist+=this->datos[f][v[i]];
         if(datos[f][v[i]] < 0 || datos[f][v[i]] == 0)
             dist+= datos[v[i]][f];
-        //cout << "DIST " << dist << endl;
     }
     return dist;
 }
 
-/*(0,4,6)
-D0 = D04 + D06  //Esta ya no lo necesito
-D4 = D40 + D46  //Si cambio el o por un 1 D4 = D4 -D04 + D14
-D6 = D60 + D64
-*/
-/*
-La pareja que paso quee son indices o posciones de la matriz de datos
-*/
 float MDD::distPuntoRestoElemenetos2(vector<int> sol,pair<int,int> cambio){
     float disp = 0;
-    //cout << "sol[i]"<<sol.size()<< endl;
     for(int i = 0; i < sol.size();i++){
-        //cout << "Distancia " << sol[i] << " al resto ";
         this->distan[i] = distPuntoRestoElemenetos(sol[i],sol);
-        //cout << this->distan[i] << " "<<endl;
     }
-    cout << endl;
+    //cout << endl;
 
     int last_pos = sol[cambio.first] ;
     sol[cambio.first] = cambio.second;
@@ -184,19 +167,18 @@ float MDD::distPuntoRestoElemenetos2(vector<int> sol,pair<int,int> cambio){
                
             if(this->datos[last_pos][sol[i]] != 0){
                 if(this->datos[cambio.second][sol[i]] != 0){
-                    //cout << "Dist1 "<<sol[i] << " = " << this->distan[i] << " - ("<<last_pos<<","<<sol[i] <<")"<<this->datos[last_pos][sol[i]] <<" + " << "("<<cambio.second<<","<<sol[i] <<")"<<this->datos[cambio.second][sol[i]] << endl;
                     this->distan[i] = this->distan[i] - this->datos[last_pos][sol[i]] + this->datos[cambio.second][sol[i]];
                 }
                 else{
-                    //cout << "Dist2 "<<sol[i] << " = " << this->distan[i] << " - ("<<last_pos<<","<<sol[i] <<")"<<this->datos[last_pos][sol[i]] <<" + " << "("<<cambio.second<<","<<sol[i] <<")"<<this->datos[cambio.second][sol[i]] << endl;
+                    
                     this->distan[i] = this->distan[i] - this->datos[last_pos][sol[i]] + this->datos[sol[i]][cambio.second];
                 }
             }else{
                 if(this->datos[cambio.second][sol[i]] != 0){
-                    //cout << "Dist3 "<<sol[i] << " = " << this->distan[i] << " - ("<<sol[i]<<","<<last_pos <<")"<<this->datos[sol[i]][last_pos] <<" + " << "("<<cambio.second<<","<<sol[i] <<")" << this->datos[cambio.second][sol[i]] << endl;
+                    
                     this->distan[i] = this->distan[i] - this->datos[sol[i]][last_pos] + this->datos[cambio.second][sol[i]];
                 }else{ 
-                    //cout << "Dist4 "<<sol[i] << " = " << this->distan[i] << " - ("<<sol[i]<<","<<last_pos <<")"<<this->datos[sol[i]][last_pos] <<" + " << "("<<sol[i]<<","<<cambio.second<<")" << this->datos[sol[i]][cambio.second] << endl;
+                   
                     this->distan[i] = this->distan[i] - this->datos[sol[i]][last_pos] + this->datos[sol[i]][cambio.second];
                 }
             }
@@ -211,7 +193,6 @@ float MDD::distPuntoRestoElemenetos2(vector<int> sol,pair<int,int> cambio){
 
 
 float MDD::diff(vector<int> posib){
-    //Almaceno los valores para cada solucion
     vector<float> distancias;
 
     for(int i = 0; i < posib.size();i++){
@@ -236,7 +217,7 @@ void MDD::mostrarDatos(){
     for(auto vec : datos){
        for(auto x : vec)
         cout << x << "\t"; 
-        cout << endl;
+        //cout << endl;
     }
 }
 /*
@@ -263,22 +244,8 @@ float MDD::calcular_nuevo_coste(vector<int> pos,pair<int,int> cambio){
     return dist2;
 }
 
-vector<int> MDD::BL(){
-    vector<int> solucion;
-    vector<int> cand;
-    int rand;
-    for(int i = 0; i < this->m;i++){
-        rand = Random::get(0,this->n-1);
-        /*if(std::find(solucion.begin(), solucion.end(), rand) != solucion.end() )
-                continue;*/
-        solucion.push_back(rand);
-    }
-     
-    pair<int,int> par(1,1);
-    return solucion;
-}
 
-vector<int> MDD::BL2(){
+vector<int> MDD::BL(){
     vector<int> solucion;
     vector<int> cand;
     for(int i = 0; i < this->n;i++){
@@ -286,14 +253,10 @@ vector<int> MDD::BL2(){
     }
     
     int rand;
-    //cout << "Tam = " << this->m << endl;
     for(int i = 0; i < this->m;i++){
         rand = Random::get(0,this->n-1);
         solucion.push_back(rand);
     }
-    solucion.pop_back();
-    solucion.push_back(15);
-    //cout << "Dispersion inicial " << diff(solucion) << endl;
     using std::remove;
     //cout << "Solucion inicial " << endl;
     for(auto i : solucion){
@@ -308,24 +271,10 @@ vector<int> MDD::BL2(){
     float new_disp;
     bool change = false;
     while(index != solucion.size() && change == false){
-        
-        /*for(auto i : cand){
-            cambio = make_pair(index,i);
-            new_disp = distPuntoRestoElemenetos2(solucion,cambio);
-            //cout << "Cambiando [" << solucion[cambio.first] << "] por [" << cambio.second << "] Obtengo "<< new_disp << endl;
-            //cout << "Dispersion " << diff(solucion) << " --  " << new_disp << endl;
-            if(new_disp < actual_disp  ){
-                solucion[index] = i;
-                cand.erase(cand.begin()+i);
-                index++;
-                change = true;
-            }
-        }
-        index++;*/
         for(auto i = 0; i < cand.size();i++){
             float actual_disp = diff(solucion);
             cambio = make_pair(index,cand[i]);
-            //cout << "Pareja obtenida " << cambio.first << " , " << cambio.second << endl;
+           //cout << "Pareja obtenida ((" << solucion[cambio.first] << ")) , " << cambio.second << endl;
             new_disp = distPuntoRestoElemenetos2(solucion,cambio);
             //cout << "Cambiando [" << solucion[cambio.first] << "] por [" << cambio.second << "] Obtengo "<< new_disp << endl;
             //cout << "Dispersion " << actual_disp << " --  " << new_disp << endl;
@@ -334,17 +283,16 @@ vector<int> MDD::BL2(){
                 solucion[index] = cand[i];
                 auto it = std::find(cand.begin(), cand.end(), cand[i]);
                 cand.erase(it);
-                //cout << "LLEGA" << endl;
-                index++;
+                index = (index +1)%solucion.size();
                 change = true;
+               /* for(auto a : solucion){
+                    cout << a << " ";
+                }
+                cout << endl;*/
             }
             if(change == true){
-                //cout << "He cambiado" << endl;
-                //cout << "Actual diff "<< diff(solucion) << endl;
-                //i = -1;
                 change = false;
             }
-            //cout <<"FIN " << endl;
         }
         index++;
     }

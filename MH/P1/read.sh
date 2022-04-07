@@ -6,9 +6,8 @@ i=0
 len=${#array[@]}
 while [ $i -lt $len ];
 do  
-    echo ${array[$i]}
-    #echo "./bin/main datos_MDD/${array[$i]}"
-    ./bin/main "datos_MDD/${array[$i]}" 
+    #echo ${array[$i]}
+    ./bin/main "datos_MDD/${array[$i]}"
     let i++
 done
 

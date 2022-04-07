@@ -1,0 +1,83 @@
+\input{preambuloSimple.tex}
+
+\everymath{\displaystyle}
+%----------------------------------------------------------------------------------------
+%	TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+
+\title{	
+\normalfont \normalsize 
+\textsc{\textbf{Metaheurística} \\ Grado en Ingeniería Informática \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Práctica 1.a Técnicas de Búsqueda Local y Algoritmos Greedy para el Problema de la Mínima Dispersión Diferencial \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{José Luis Molina Aguilar} % Nombre y apellidos
+
+\date{\normalsize\today} % Incluye la fecha actual
+
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+
+\maketitle % Muestra el Título
+  \centering
+  \vfill
+  \begin{large}
+  Curso 2021-2022\\
+  DNI : 77556436E\\
+  Correo : joselu201@correo.ugr.es\\
+  Grupo : A3, MARTES 17:30 - 19:30
+  \vfill
+  \end{large}
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+\listoffigures
+
+\listoftables
+
+\newpage
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 1
+%----------------------------------------------------------------------------------------
+
+\section{Descripción Problema de Mínima Dispersión Diferencial}
+El problema de Mínima Dispersión Diferencial es un problema de optimización combinatoria que entra en la clase de problemas
+\textbf{NP-Completo}
+Este es un problema en el que las heuristica obtinen buenas soluciones en menos tiempo.
+
+\subsection{Descripción}
+Dado un conjunto de $n$ elementos todos ellos conectados entre si, representado por una matriz de distancias, obtener
+un subconjunto $m$ talque la diferencia entre la maxima suma y la minima suma de los elementos de $m$
+se minimiza
+El conjunto $m < n$\\
+$ m \subset n \mid Minimize DD(S_m) $\\
+donde $DD(S_m) $ es la Dispersión Diferencial del conjunto de Soluciones de tamaño $m$\\
+$sum dist_{u,S-u}$  donde $dist_{u,S-u}$ son las distancias des un punto $u$ al resto de los puntos.\\
+
+$DD(S) = max{sum dist_{u,S-u}} - min{sum dist_{u,S-u}}$
+\section{Greedy}
+
+\section{Busqueda por Trayectorias Simples (BL)}
+
+
+
+
+
+
+%------------------------------------------------
+
+\bibliography{citas} %archivo citas.bib que contiene las entradas 
+\bibliographystyle{plain} % hay varias formas de citar
+
+\end{document}

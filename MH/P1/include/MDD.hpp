@@ -12,8 +12,9 @@ using Random = effolkronium::random_static;
 class MDD{
 
     private:
-        vector<vector<float>> datos;
         int n,m;
+        vector<vector<float>> datos;
+        
 
         
     public:
@@ -34,7 +35,6 @@ class MDD{
         ///
 
         vector<int> BL();
-        vector<int> BL2(); // borrar
         float calcular_nuevo_coste(vector<int> pos,pair<int,int> cambio);
         
 

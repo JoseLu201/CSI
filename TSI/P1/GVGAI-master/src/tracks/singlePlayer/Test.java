@@ -24,8 +24,8 @@ public class Test {
         String sampleRSController = "tracks.singlePlayer.advanced.sampleRS.Agent";
         String sampleRHEAController = "tracks.singlePlayer.advanced.sampleRHEA.Agent";
 		String sampleOLETSController = "tracks.singlePlayer.advanced.olets.Agent";
-
-		String testBFS =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgentBFS";
+		//String a_Estrlla = "src/tools/pathfinder/Agent";
+		String testA_ESTRELLA =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.Agent";
 
 		//Load available games
 		String spGamesCollection =  "examples/all_games_sp.csv";
@@ -51,7 +51,7 @@ public class Test {
 		//ArcadeMachine.playOneGame(game, level1, recordActionsFile, seed);
 
 		// 2. This plays a game in a level by the controller.
-		ArcadeMachine.runOneGame(game, level1, visuals, testBFS, recordActionsFile, seed, 0);
+		ArcadeMachine.runOneGame(game, level1, visuals, testA_ESTRELLA, recordActionsFile, seed, 0);
 
 
 		// 3. This replays a game from an action file previously recorded

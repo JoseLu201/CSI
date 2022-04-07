@@ -108,122 +108,6 @@ def display_figure(rng_val, fun, ws, colormap, title_fig,fun_name):
 
 #input("\n--- Pulsar tecla para continuar ---\n")
 
-#Variables de entrada
-eta = 0.1
-maxIter = 10000000000
-error2get = 1e-8
-initial_point = np.array([0.5,-0.5])
-
-#Calculo gradiente sobre E
-w, it, ws = gradient_descent(initial_point,eta,gradE,E,error2get,maxIter)
-
-print ('Numero de iteraciones: ', it)
-print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
-
-###display_figure(2, E, ws, 'plasma','Ejercicio 1.2.',r'E(u,v)')
-
-
-input("\n--- Pulsar tecla para continuar ---\n")
-
-
-
-#------------------------------------------
-#   Funciones para ejercicio 3
-#------------------------------------------
-
-#Definicion de funcion para el ejercicio 1.3
-def f1(x,y):
-    return np.power(x,2)+ 2*np.power(y,2) +2*np.sin(2*np.pi*x)*np.sin(np.pi*y)
-
-#Derivada de f respecto de x
-def dfx(x,y):
-    return 2*x +4*np.pi*np.cos(2*x*np.pi)*np.sin(y*np.pi)
-
-#Derivada de f respecto de y
-def dfy(x,y):
-    return 4*y+2*np.pi*np.sin(2*np.pi*x)*np.cos(np.pi*y)
-
-#Gradiente de f
-def gradF(x,y):
-    return np.array([dfx(x,y), dfy(x,y)])
-#Utilizar el gradiente descendente para minimizar la funcion
-
-#Definicion de una funcion para testear learning rate
-def testF(x,y):
-    return np.power(x,2) + np.power(y,2)
-def dtestFx(x,y):
-    return 2*x
-def dtestFy(x,y):
-    return 2*y
-def gradtestF(x,y):
-    return np.array([dtestFx(x,y), dtestFy(x,y)])
-
-print('Graficas sobre gradiete Descendiente')
-#----------------------------------------------------
-#Ejemplo de intentar encontra el minimo con un lr inadecuado
-eta = 1
-maxIter = 50
-error2get = 1e-800
-initial_point = np.array([2,2])
-
-w, it, ws = gradient_descent(initial_point,eta,gradtestF,testF,error2get,maxIter)
-###display_figure(3, testF, ws, 'plasma','eta=1',r'x^2+y^2')
-
-#----------------------------------------
-#Figuras para memoria, aplicando gradiente descendiente
-eta = 0.01
-initial_point = np.array([2,2])
-w, it, ws = gradient_descent(initial_point,eta,gradtestF,testF,error2get,maxIter)
-###display_figure(3, testF, ws, 'plasma','Test',r'x^2+y^2')
-
-input("\n--- Pulsar tecla para continuar con el ejercicio  3---\n")
-
-#-----------------------------
-#Ejercicio 3a
-eta = 0.01
-error2get = 1e-1000
-#Ejecutar con 50 iteraciones como maximo
-maxIter = 50
-point = np.array([-1,1])
-w, it,ws = gradient_descent(point,eta,gradF,f1,error2get,maxIter,only_iters=True)
-
-print ('Numero de iteraciones: ', it)
-print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
-print()
-
-###display_figure(3, f1, ws, 'plasma','3a, eta = 0.01',r'x^2+ 2y^2 +2sin(2\pi x)sin(\pi y)')
-
-#Repetir el experimento pero para eta = 0.1
-eta = 0.1
-error2get = 1e-10
-#Ejecutar con 50 iteraciones como maximo
-maxIter = 50
-point = np.array([-1,1])
-w, it,ws = gradient_descent(point,eta,gradF,f1,error2get,maxIter,only_iters=(True))
-
-print ('Numero de iteraciones: ', it)
-print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
-
-###display_figure(3, f1, ws, 'plasma','3a, eta = 0.1',r'x^2+ 2y^2 +2sin(2\pi x)sin(\pi y)')
-
-
-#Ejercicio 3b
-initial_point = np.array([[-0.5,-0.5],[1,1],[2.1,-2.1],[-3,3],[-2,2]])
-
-for point in initial_point:
-    for eta in [0.01,0.1]:
-        w, it,ws = gradient_descent(point,eta,gradF,f1,error2get,maxIter,only_iters=(True))
-        print('Para eta: ', eta)
-        print('Para el punto: ', point )
-        print ('Numero de iteraciones: ', it)
-        print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
-        print()
-        if(eta == 0.01): 
-            ####display_figure(3, f1, ws, 'plasma',str(point),r'$x^2 +2y^2 +2sin(2\pi x)sin(\pi x)$')
-            print()
-
-
-input("\n--- Pulsar tecla para continuar con el ejercicio  4---\n")
 
 
 #Para calcular el plano podemos obtener 2 puntos a y b que son los que x_1 y x_2 son 0
@@ -368,22 +252,43 @@ print("Pseudo inversa ha tardado {} segundos\n".format(time.time()-time_inv))
 
 
 #--------------------------
-def plot_regresion(x,y,w,title,xlabel,ylabel,xlim,ylim):
+#Esta funcion pinta la regresion de cada funcion por separado
+
+def plot_regresion(x,y,w,title,xlabel,ylabel,xlim,ylim,y_labels,labels):
     fig = plt.figure()
     ax= fig.add_subplot()
-    ax.scatter(x[:,1],x[:,2],c=y)
-    ax.plot([ -w[0]/w[1] - w[2]/w[1], -w[0]/w[2] - w[1]/w[2]],color='red')
+    sct = ax.scatter(x[:,1],x[:,2],c=y)
+    #legend1= ax.legend(*sct.legend_elements())
+    ax.plot([ -w[0]/w[1] - w[2]/w[1], -w[0]/w[2] - w[1]/w[2]],color='red',label=labels)
     plt.title(title)
 
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     plt.xlim(xlim)
     plt.ylim(ylim)
+    fig.legend(handles=sct.legend_elements()[0],labels=y_labels,loc='upper center')
+    ax.legend()
 
-plot_regresion(x, y, w, 'Gradiente descendiente Estocastico', 'Intensidad', 'Simetria',None,None)
-plot_regresion(x, y, w_invs, 'Matrix pseudo-inversa', 'Intensidad', 'Simetria',None,None)
+#Esta funcion pinta la regresion de dos funciones a la vez
+def plot_regresion_join(x,y,w,w_2,title,xlabel,ylabel,xlim,ylim,y_labels,labels):
+    fig = plt.figure()
+    ax= fig.add_subplot()
+    sct = ax.scatter(x[:,1],x[:,2],c=y)
+    ax.plot([ -w[0]/w[1] - w[2]/w[1], -w[0]/w[2] - w[1]/w[2]],color='red',label=labels[0])
+    ax.plot([ -w_2[0]/w_2[1] - w_2[2]/w_2[1], -w_2[0]/w_2[2] - w_2[1]/w[2]],color='green',label=labels[1])
+    plt.title(title)
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    plt.xlim(xlim)
+    plt.ylim(ylim)
+    fig.legend(handles=sct.legend_elements()[0],labels=y_labels,loc='upper center')
+    ax.legend()
+
+plot_regresion(x, y, w, 'Gradiente descendiente Estocastico', 'Intensidad', 'Simetria',None,None,[1,5],'SGD')
+plot_regresion(x, y, w_invs, 'Matrix pseudo-inversa', 'Intensidad', 'Simetria',None,None,[1,5],'INVERSA')
+
+plot_regresion_join(x, y, w, w_invs, '`','Intensidad', 'Simetria',None,None,[1,5],['SGD','invers'])
 
 
 
-
-#input("\n--- Pulsar tecla para continuar con el ejercicio 2 de Regresion Lineal---\n")

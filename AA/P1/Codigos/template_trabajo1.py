@@ -110,8 +110,8 @@ def plot_regresion(x,y,w,title,xlabel,ylabel,xlim,ylim):
     fig = plt.figure()
     ax= fig.add_subplot()
     ax.scatter(x[:,1],x[:,2],c=y)
-    if(w != None):
-        ax.plot([0,1],[-w[0]/w[2], -w[0]/w[2] - w[1]/w[2]],color='red')
+    #if(w != None):
+    ax.plot([0,1],[-w[0]/w[2], -w[0]/w[2] - w[1]/w[2]],color='red')
     plt.title(title)
 
     ax.set_xlabel(xlabel)
@@ -335,7 +335,11 @@ def readData(file_x, file_y):
 def Err(x,y,w):
     #Error cuadratico medio
     # (1/n)*(x*w-y)^2
-    ans = np.power((x.dot(w)-y),2)
+
+    h = np.float64(x.dot(w)-y)
+    #print(np.shape(h),h)
+    h.dtype = np.float64
+    ans = np.power(h,2)
     return ans.mean()
 
 '''
@@ -414,7 +418,7 @@ maxIter = 10000
 error2get = 1e-8
 w = np.zeros(3)
 
-
+'''
 print('Calculando SGD...')
 w = sgd(x,y,eta,batch_size,maxIter,w,error2get)
 print ('Bondad del resultado para grad. descendente estocastico:\n')
@@ -422,9 +426,9 @@ print ("Ein: ", Err(x,y,w))
 print ("Eout: ", Err(x_test, y_test, w))
 print ("w : ", w)
 print()
-
+'''
 #---------------------------
-
+'''
 print('Calculando pseudo-inversa...')
 w_invs = pseudoinverse(x, y)
 print ('Bondad del resultado para inversa:\n')
@@ -432,11 +436,11 @@ print ("Ein: ", Err(x,y,w_invs))
 print ("Eout: ", Err(x_test, y_test, w_invs))
 print ("w : ", w_invs)
 print()
+'''
 
 
-
-plot_regresion(x, y, w, 'Gradiente descendiente Estocastico', 'Intensidad', 'Simetria',None,None)
-plot_regresion(x, y, w_invs, 'Matrix pseudo-inversa', 'Intensidad', 'Simetria',None,None)
+#plot_regresion(x, y, w, 'Gradiente descendiente Estocastico', 'Intensidad', 'Simetria',None,None)
+#plot_regresion(x, y, w_invs, 'Matrix pseudo-inversa', 'Intensidad', 'Simetria',None,None)
 
 
 
@@ -490,7 +494,6 @@ def add_labels(data_set,fun):
     new_y = np.array(new_y, np.float64)        
     return new_y
 
-new_y = add_labels(data_set,f)
 #Añade a un conjunto de etiquetas un 'percent' de datos en forma de ruido
 def add_noise(data_set,percent=0.1):
     #Creo el porcentaje de indices a cambiar
@@ -500,12 +503,16 @@ def add_noise(data_set,percent=0.1):
         data_set[r] *=-1
     return data_set
 
-new_y = add_noise(new_y, 0.1)
 
 w = np.zeros(3);
 w[0] = 1
 #Para que siga con la misma forma que antes, añado una columna de 1's al principio del data_set (x).
+
+new_y = add_labels(data_set,f)
 data_set = np.insert(data_set,0,np.ones(len(data_set)),axis=1)
+new_y = add_noise(new_y, 0.1)
+
+#Muestra los puntos diferenciados por etiquetas
 '''
 fig = plt.figure()
 ax_unif2= fig.add_subplot()
@@ -514,13 +521,15 @@ plt.title('Diferenciando tipos')
 '''
 
 import time
+#Vamos a comprobar cuantas iteraciones hacen faltan para ver si mejora
+
 '''
 error2get = 1e-8
 eta = 0.1
+batch_size = 32
 analisis = []
-for i in range(0,50,2):
-    #start_time = time.time()
-    w = sgd(data_set, new_y, eta, 32 , i, w, error2get)
+for i in range(0,100,2):
+    w = sgd(data_set, new_y, eta, batch_size , i, w, error2get)
     analisis.append([i,Err(data_set, new_y, w)])
     
 analisis = np.array(analisis, np.float64)    
@@ -528,34 +537,9 @@ analisis = np.array(analisis, np.float64)
 fig = plt.figure()
 ax_ana= fig.add_subplot()
 ax_ana.plot(analisis[:,0],analisis[:,1])
-plt.title('How important the max iter is')
-
-
-
-error2get = 8e-6
-eta = 0.1
-max_iter = 125
-analisis2 = []
-#print(np.linspace(1e-5,1e-10,50))
-it = 0
-for i in np.linspace(1e-5,1e-10,50):
-    #start_time = time.time()
-    print(it,' ',i)
-    it+=1
-    w = sgd(data_set, new_y, eta, 32 , 50, w, i)
-    analisis2.append([i,Err(data_set, new_y, w)])
-    
-analisis2 = np.array(analisis2, np.float64)    
-
-fig = plt.figure()
-ax_ana= fig.add_subplot()
-#ax_ana.plot(analisis [:,0],analisis[:,1])
-ax_ana.plot(analisis2[:,0],analisis2[:,1],color='red')
-ax_ana.ticklabel_format(style='plain')
-plt.title('How important the max iter is')
-'''
-#Comprobamos que el error no cambia dependiendo del numero de iteraciones, en este caso con 1000 iteraciones 
-#alcanza
+plt.title('How important the maxIter is?')
+plt.xlabel('Iteraciones')
+plt.ylabel('Error')
 
 
 
@@ -569,7 +553,9 @@ print ('Bondad del resultado el conjunto de datos:\n')
 print ("Ein: ", Err(data_set,new_y,w))
 print ("w : ", w)
 
+'''
 
+'''
 N = 1000
 size = 1 
 d = 2
@@ -578,8 +564,8 @@ w[0] = 1
 
 eta = 0.1
 batch_size = 32
-maxIter = 15
-error2get = 8e-6
+maxIter = 20
+error2get = 1e-6
 mean_err = []
 start_time = time.time()
 for exp in range(1000):
@@ -588,21 +574,57 @@ for exp in range(1000):
     y_n = add_labels(data_set_n,f)
     y_n = add_noise(y_n,0.1)
     data_set_n = np.insert(data_set_n,0,np.ones(len(data_set)),axis=1)
-    #print('Shape, ', np.shape(data_set),np.shape(y_n))
-    w_n = sgd(data_set_n, y_n, eta, batch_size, maxIter, w, error2get)
-    mean_err.append(Err(data_set_n,y_n,w_n))
-    #print(exp)
     
+    w_n = sgd(data_set_n, y_n, eta, batch_size, maxIter, w, error2get)
+
+    mean_err.append(Err(data_set_n,y_n,w_n))    
 
 mean_err = np.array(mean_err, np.float64)
 print ('Bondad del resultado el conjunto de datos tras 1000 ejecuciones:\n')
 print ("Ein: ",mean_err.mean())
 print('Ha tardado ' , int(time.time() - start_time))
+'''
 
+#Apartado d2, generar otros mil datos para tests
+
+'''
+eta = 0.1
+batch_size = 32
+maxIter = 15
+error2get = 1e-10
+mean_err_in = []
+mean_err_out = []
+start_time = time.time()
+for exp in range(1000):
+    data_set_n = simula_unif(N, d, size)
+    
+    test_data_set_n = simula_unif(N, d, size)
+    test_y_n = add_labels(test_data_set_n, f)
+    test_y_n = add_noise(test_y_n,0.1)
+    
+    y_n = add_labels(data_set_n,f)
+    y_n = add_noise(y_n,0.1)
+
+    data_set_n = np.insert(data_set_n,0,np.ones(len(data_set)),axis=1)
+    test_data_set_n = np.insert(test_data_set_n,0,np.ones(len(data_set)),axis=1)
+    
+    w_n = sgd(data_set_n, y_n, eta, batch_size, maxIter, w, error2get)
+    mean_err_in.append(Err(data_set_n,y_n,w_n))
+    mean_err_out.append(Err(test_data_set_n, test_y_n, w_n))
+
+    
+
+mean_err_in = np.array(mean_err_in, np.float64)
+mean_err_out = np.array(mean_err_out, np.float64)
+print ('Bondad del resultado el conjunto de datos tras 1000 ejecuciones:\n')
+print ("Ein: ",mean_err_in.mean())
+print ("Eout: ",mean_err_out.mean())
+print('Ha tardado ' , int(time.time() - start_time), ' segundos')
+'''
 
 
 def vectorFeatures(x1,x2):
-    vec_features = np.zeros(x1.size,6)
+    vec_features = np.zeros((x1.size,6))
     vec_features[:,0] = 1
     vec_features[:,1] = x1
     vec_features[:,2] = x2
@@ -610,3 +632,203 @@ def vectorFeatures(x1,x2):
     vec_features[:,4] = np.power(x1,2)
     vec_features[:,5] = np.power(x2,2)
     return vec_features
+
+#-----------------------------------------------------------
+#Repetir el esperimento pero con carcteristicas no lineales
+def gradient2(x,y,w):
+    suma = np.sum(x.dot(w))-y
+    return ( suma.dot(x) *2/x[:,0].size)
+
+# Gradiente Descendente Estocastico
+#Necesitare X -> datos de entrada
+#           y -> estiquetas del output deseado
+#  
+
+def sgd2(x,y,eta,batch_size,maxIter,w,error2get):
+    #CReo indices aleatiors del tamaño de la muestra
+    indices = np.random.permutation(len(x))
+    #https://stackoverflow.com/questions/47742622/np-random-permutation-with-seed
+    #print('Shuffling index ', indices)
+    min_batch_n = 0
+    iterations = 0
+    max_iter_batch = batch_size
+    
+    error = []
+    
+    while(Err(x, y, w) > error2get and iterations < maxIter):
+        error.append(Err(x,y,w))
+        #Si el tamaño maximo del mini_batch es mayor que el de la muestra
+        # Comprobar que no cogemos todo la muestra
+        if( max_iter_batch >= len(x) and (min_batch_n + batch_size ) < len(x) ):
+            max_iter_batch = len(x)
+        
+        mini_batch_x1 = x[indices[min_batch_n : max_iter_batch]]
+        mini_batch_x2 = y[indices[min_batch_n : max_iter_batch]]   
+        
+        w = w - (eta * gradient2(mini_batch_x1,mini_batch_x2,w))
+    
+        max_iter_batch += batch_size
+        min_batch_n +=batch_size
+    
+        #Si me salgo de la muestra vuelvo al inicio, como un vector circular
+        if(min_batch_n > len(x)):
+            min_batch_n = 0
+            max_iter_batch = batch_size
+        iterations+=1
+    error = np.array(error, np.float64)
+    return w,iterations,error
+
+#Ajustar un modelo no lineal
+'''
+w = np.zeros(6)
+data_set = simula_unif(1000, 2, 1)
+y_n = add_labels(data_set,f)
+data_set= np.insert(data_set,0,np.ones(len(data_set)),axis=1)
+y_n = add_noise(y_n,0.1)
+sample = vectorFeatures(data_set[:,1], data_set[:,2])
+
+from itertools import cycle
+cycol = cycle('bgrcmk')
+
+fig = plt.figure()
+ax_e1= fig.add_subplot()
+
+eta = 0.01
+maxIter = 20000
+error2get = 1e-9
+
+for batch in [12,16,32]:
+    w = np.zeros(6)
+    data_set = simula_unif(1000, 2, 1)
+    y_n = add_labels(data_set,f)
+    data_set= np.insert(data_set,0,np.ones(len(data_set)),axis=1)
+    y_n = add_noise(y_n,0.1)
+    sample = vectorFeatures(data_set[:,1], data_set[:,2]) 
+    w,iterations_sgd,error = sgd2(sample, y_n, eta, batch, maxIter, w, error2get)    
+    #Esta figura muestra como baja el error conforme aumenta el numero de iteraciones, hasta que llega un punto 
+    #en el cual se estabiliza
+    #Podemos ver que en algunas iteraciones aumenta mucho el error
+    ax_e1.plot(np.linspace(0,iterations_sgd,len(error)),error,c=next(cycol),linewidth=1,
+                label="batch_size = {}".format(batch))
+    plt.xlabel('Iteraciones')
+    plt.ylabel('Error')
+    print('------------------------------------')
+    print ('Bondad del resultado el conjunto de datos:\n')
+    print ("Ein: ", Err(sample,y_n,w))
+    print ("w : ", w)
+    print('Iteraciones: ' , iterations_sgd)
+    print('Batch_size = ', batch)
+    print('------------------------------------\n')
+    
+plt.legend()
+'''
+def non_linear_plot(X, y, w_s,title=None, xlabel=None, ylabel=None):
+    
+    fig = plt.figure()
+    ax= fig.add_subplot()
+    
+    ax.scatter(X[:,1],X[:,2],c=y)
+    
+    X_min0, X_max0 = np.min(X[:,1]), np.max(X[:,1])
+    X_min1, X_max1 = np.min(X[:,2]), np.max(X[:,2])
+    x_t, y_t = np.meshgrid(np.linspace(X_min0-0.5, X_max0+0.5, 100),np.linspace(X_min1-0.5, X_max1+0.5, 100))
+
+    f_t = w_s[0] + w_s[1]*x_t + w_s[2]*y_t + w_s[3]*x_t*y_t + w_s[4]*x_t*x_t + w_s[5]*y_t*y_t
+    #print(f_t)
+    #f_t = vectorFeatures(x_t, y_t)
+    ax.contour(x_t, y_t, f_t, [0])
+    plt.xlim([-1,1])
+    plt.ylim([-1,1])
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+
+#------------------------------------------
+'''
+w = np.zeros(6)
+data_set = simula_unif(1000, 2, 1)
+y_n = add_labels(data_set,f)
+data_set= np.insert(data_set,0,np.ones(len(data_set)),axis=1)
+y_n = add_noise(y_n,0.1)
+sample = vectorFeatures(data_set[:,1], data_set[:,2]) 
+
+eta = 0.01
+batch = 16
+
+w,iterations_sgd,error = sgd2(sample, y_n, eta, batch, maxIter, w, error2get)
+#
+non_linear_plot(data_set, y_n, w,title="Non Linear", xlabel="r$x_1$", ylabel="r$x_2$")
+
+
+
+
+print ('Bondad del resultado el conjunto de datos:\n')
+print ("Ein: ", Err(sample,y_n,w))
+print ("w : ", w)
+print('Iteraciones: ' , iterations_sgd)
+'''
+
+
+
+
+
+eta = 0.01
+batch_size = 16
+maxIter = 1000
+error2get = 1e-10
+mean_err_in = []
+mean_err_out = []
+start_time = time.time()
+size = 50
+w = np.zeros(6)
+
+N = 1000
+size = 1 
+d = 2
+
+for exp in range(50):
+    
+    data_set_n = simula_unif(N, d, size)
+    #test_data_set_n = simula_unif(N, d, size)
+    
+    
+    y_n = add_labels(data_set_n,f)
+    data_set_n = np.insert(data_set_n,0,np.ones(len(data_set)),axis=1)
+    y_n = add_noise(y_n,0.1)
+    
+    #test_y_n = add_labels(test_data_set_n, f)
+    #test_y_n = add_noise(test_y_n,0.1)
+    
+    
+    #test_data_set_n = np.insert(test_data_set_n,0,np.ones(len(data_set)),axis=1)
+    
+    sample = vectorFeatures(data_set_n[:,1], data_set_n[:,2]) 
+    #sample_test = vectorFeatures(test_data_set_n[:,1], test_data_set_n[:,2])
+    
+    w_n,iterations_sgd,error = sgd2(sample, y_n, eta, batch_size, maxIter, w, error2get)
+    
+    mean_err_in.append(Err(sample,y_n,w_n))
+    #non_linear_plot(data_set_n, y_n, w_n,title="Non Linear", xlabel="r$x_1$", ylabel="r$x_2$")
+    #mean_err_out.append(Err(sample_test, test_y_n, w_n))
+
+
+mean_err_in = np.array(mean_err_in, np.float64)
+#mean_err_out = np.array(mean_err_out, np.float64)
+print ('Bondad del resultado el conjunto de datos tras 1000 ejecuciones:\n')
+print ("Ein: ",mean_err_in.mean())
+#print ("Eout: ",mean_err_out.mean())
+print('Ha tardado ' , int(time.time() - start_time), ' segundos')
+
+
+
+#``````````````````````````````
+# TODO : MIRAR EN CUANTAS ITERACIONES CONVERGE LA SEGUNDA OPCION Y A PARTIR DE ESO HACER EL TEST
+#``````````````````````
+
+
+
+
+
+
+
+

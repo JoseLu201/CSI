@@ -15,7 +15,7 @@ public class PathFinder {
     public AStar astar;
     public StateObservation state;
 
-    public boolean VERBOSE = false;
+    public boolean VERBOSE = true;
 
     //All types are obstacles except the ones included in this array
     public ArrayList<Integer> obstacleItypes;
@@ -71,7 +71,7 @@ public class PathFinder {
     }
 
     private void runAll()
-    {
+    {   System.out.println("Executing run...........................");
         for(int i = 0; i < grid.length; ++i)
         {
             for(int j = 0; j < grid[i].length; ++j)

@@ -86,48 +86,73 @@ vector<int> MDD::greedy(){
         float new_diff;
         int pos = 0;
 
-        for(auto ele = 0; ele < cand.size(); ele++) {
-            if(std::find(solucion.begin(), solucion.end(), ele) != solucion.end() )
+        for(int ele = 0; ele < cand.size(); ele++) {
+            if(std::find(solucion.begin(), solucion.end(), cand[ele]) != solucion.end() )
                 continue;
-            new_diff = diff_adding(solucion,ele);
+            new_diff = diff_adding(solucion,cand[ele]);
             for(auto i = 0; i  < cand.size();i++){
-                if(std::find(solucion.begin(), solucion.end(), i) != solucion.end() )
+                if(std::find(solucion.begin(), solucion.end(), cand[i]) != solucion.end() )
                     continue;
-                float inner = diff_adding(solucion,i);
+                float inner = diff_adding(solucion,cand[i]);
                 if(inner < new_diff){
                     new_diff = inner;
-                    pos = i;
+                    pos = i;                    
                 }    
             }
         }   
-
-        solucion.push_back(pos);
+        solucion.push_back(cand[pos]);
         auto index = cand.begin()+pos;
-        //cout << "Añadiendo el elementos \t[" << pos <<"]"<< endl<<endl;
         cand.erase(index);
-       // cout << "Solucion ";// print(solucion);
-        //cout << "Candidatos "; print(cand); 
+
     }
     return solucion;
-
 }
 
-void MDD::print_check(){
+vector<int> MDD::greedy_2(){
+
+    vector<int> solucion;
     vector<int> cand;
-    vector<int> solucion = {21,0,1};
+
     for(int i = 0; i < this->n;i++){
         cand.push_back(i);
     }
-
-    float new_diff;
-    for(auto ele : cand){
-        //float actual_dif = diff(solucion);
-        //cout << "ACtual diff " << actual_dif << endl;
-        new_diff = diff_adding(solucion,ele);
-        cout << "21,0,1,"<<ele<< " ->" << new_diff <<endl;
-    }
+    int max = this->n;
+    auto rand = Random::get(0,max);
+    auto select = cand.at(rand);//Seleccion inicial
+    //Seleccionar la primera solucion de forma aleatoria
+    solucion.push_back(select);
+    auto delete_ps = cand.begin()+rand;
+    cand.erase(delete_ps);
     
+    bool first_it = true;
+    while(solucion.size() < this->m ){
+        float min = 1e5;
+        float actual_dif = diff(solucion);
+        float new_diff;
+        int pos = 0;
+        int ele_min;
+        for(int ele : cand) {
+            //cout << "Actual diff "  << actual_dif << endl; 
+            new_diff = diff_adding2(solucion,cand,ele);  
+            if(new_diff < min){
+                min = new_diff;
+                ele_min = ele;
+                //cout << "Min actual [" << ele_min <<"] " <<  min << endl;
+            }
+            if(min <= actual_dif){
+                actual_dif = new_diff;
+                pos = ele;
+                //cout << "Elementos " << pos << endl;   
+            }    
+    
+        }
+        solucion.push_back(ele_min);
+        std::remove(cand.begin(),cand.end(),ele_min);
+    }
+    return solucion;
 }
+
+
 /*
 21,0,i
 
@@ -202,17 +227,20 @@ float MDD::diff(vector<int> posib){
     return (distancias[distancias.size()-1] - distancias[0] );
 }
 
+float MDD::diff_adding2(vector<int> posib,vector<int> cand, int new_i){
+    float new_diff;
+    posib.push_back(cand[new_i]);
+    new_diff = diff(posib);
+    posib.pop_back();
+    return new_diff;
+}
 float MDD::diff_adding(vector<int> posib, int new_i){
     float new_diff;
-    vector<int> n = posib;
-    n.push_back(new_i);
-
-    new_diff = diff(n);
+    posib.push_back(new_i);
+    new_diff = diff(posib);
+    posib.pop_back();
     return new_diff;
-
-
 }
-
 void MDD::mostrarDatos(){
     for(auto vec : datos){
        for(auto x : vec)

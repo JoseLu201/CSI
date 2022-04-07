@@ -25,8 +25,10 @@ class MDD{
         float distPuntoRestoElemenetos(int f,vector<int> v);
         float distPuntoRestoElemenetos2(vector<int> sol,pair<int,int> cambio);
         float diff(vector<int> posib);
-        float diff_adding(vector<int> posib, int new_i);
+        float diff_adding(vector<int> posib,int new_i);
+        float diff_adding2(vector<int> posib,vector<int> cand,int new_i);
         vector<int> greedy();
+        vector<int> greedy_2();
         vector<int> rand_greedy();
         void mostrarDatos();
         void exact_algo();

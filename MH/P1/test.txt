@@ -1,0 +1,149 @@
+Solucion inicial 
+10 24 18 23 0 3 7 
+Fitness inicial = 147.19
+]
+Candidatos [17 8 20 12 5 19 22 6 2 11 1 21 13 15 16 14 9 4 ]
+Index ->>> 0
+Cambiando [10] por [17] Obtengo 186.556
+Dispersion 147.19 --  186.556
+index ??? 0,i=0 ha habido cambio -> 0 0
+Index ->>> 0
+Cambiando [10] por [8] Obtengo 161.779
+Dispersion 147.19 --  161.779
+index ??? 0,i=1 ha habido cambio -> 0 0
+Index ->>> 0
+Cambiando [10] por [20] Obtengo 139.011
+Dispersion 147.19 --  139.011
+ --> Cambiando 10 por 20
+ --> Nos movemos a -> {1}
+index ??? 1,i=-1 ha habido cambio -> 1 0
+Index ->>> 1
+Cambiando [24] por [17] Obtengo 152.883
+Dispersion 139.011 --  152.883
+index ??? 1,i=0 ha habido cambio -> 1 0
+Index ->>> 1
+Cambiando [24] por [8] Obtengo 142.937
+Dispersion 139.011 --  142.937
+index ??? 1,i=1 ha habido cambio -> 1 0
+Index ->>> 1
+Cambiando [24] por [12] Obtengo 146.516
+Dispersion 139.011 --  146.516
+index ??? 1,i=2 ha habido cambio -> 1 0
+Index ->>> 1
+Cambiando [24] por [5] Obtengo 159.424
+Dispersion 139.011 --  159.424
+index ??? 1,i=3 ha habido cambio -> 1 0
+Index ->>> 1
+Cambiando [24] por [19] Obtengo 141.644
+Dispersion 139.011 --  141.644
+index ??? 1,i=4 ha habido cambio -> 1 0
+Index ->>> 1
+Cambiando [24] por [22] Obtengo 117.708
+Dispersion 139.011 --  117.708
+ --> Cambiando 24 por 22
+ --> Nos movemos a -> {2}
+index ??? 2,i=-1 ha habido cambio -> 1 0
+Index ->>> 2
+Cambiando [18] por [17] Obtengo 133.806
+Dispersion 117.708 --  133.806
+index ??? 2,i=0 ha habido cambio -> 1 0
+Index ->>> 2
+Cambiando [18] por [8] Obtengo 136.094
+Dispersion 117.708 --  136.094
+index ??? 2,i=1 ha habido cambio -> 1 0
+Index ->>> 2
+Cambiando [18] por [12] Obtengo 154.73
+Dispersion 117.708 --  154.73
+index ??? 2,i=2 ha habido cambio -> 1 0
+Index ->>> 2
+Cambiando [18] por [5] Obtengo 167.638
+Dispersion 117.708 --  167.638
+index ??? 2,i=3 ha habido cambio -> 1 0
+Index ->>> 2
+Cambiando [18] por [19] Obtengo 112.046
+Dispersion 117.708 --  112.046
+ --> Cambiando 18 por 19
+ --> Nos movemos a -> {3}
+index ??? 3,i=-1 ha habido cambio -> 1 0
+Index ->>> 3
+Cambiando [23] por [17] Obtengo 137.049
+Dispersion 112.046 --  137.049
+index ??? 3,i=0 ha habido cambio -> 1 0
+Index ->>> 3
+Cambiando [23] por [8] Obtengo 186.776
+Dispersion 112.046 --  186.776
+index ??? 3,i=1 ha habido cambio -> 1 0
+Index ->>> 3
+Cambiando [23] por [12] Obtengo 108.389
+Dispersion 112.046 --  108.389
+ --> Cambiando 23 por 12
+ --> Nos movemos a -> {4}
+index ??? 4,i=-1 ha habido cambio -> 1 0
+Index ->>> 4
+Cambiando [0] por [17] Obtengo 77.7766
+Dispersion 108.389 --  77.7766
+ --> Cambiando 0 por 17
+ --> Nos movemos a -> {5}
+index ??? 5,i=-1 ha habido cambio -> 1 0
+Index ->>> 5
+Cambiando [3] por [8] Obtengo 141.372
+Dispersion 77.7766 --  141.372
+index ??? 5,i=0 ha habido cambio -> 1 0
+Index ->>> 5
+Cambiando [3] por [5] Obtengo 76.1932
+Dispersion 77.7766 --  76.1932
+ --> Cambiando 3 por 5
+ --> Nos movemos a -> {6}
+index ??? 6,i=-1 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [8] Obtengo 148.755
+Dispersion 76.1932 --  148.755
+index ??? 6,i=0 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [6] Obtengo 104.207
+Dispersion 76.1932 --  104.207
+index ??? 6,i=1 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [2] Obtengo 197.351
+Dispersion 76.1932 --  197.351
+index ??? 6,i=2 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [11] Obtengo 106.705
+Dispersion 76.1932 --  106.705
+index ??? 6,i=3 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [1] Obtengo 135.908
+Dispersion 76.1932 --  135.908
+index ??? 6,i=4 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [21] Obtengo 135.023
+Dispersion 76.1932 --  135.023
+index ??? 6,i=5 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [13] Obtengo 137.402
+Dispersion 76.1932 --  137.402
+index ??? 6,i=6 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [15] Obtengo 98.7185
+Dispersion 76.1932 --  98.7185
+index ??? 6,i=7 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [16] Obtengo 124.038
+Dispersion 76.1932 --  124.038
+index ??? 6,i=8 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [14] Obtengo 159.026
+Dispersion 76.1932 --  159.026
+index ??? 6,i=9 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [9] Obtengo 116.251
+Dispersion 76.1932 --  116.251
+index ??? 6,i=10 ha habido cambio -> 1 0
+Index ->>> 6
+Cambiando [7] por [4] Obtengo 100.26
+Dispersion 76.1932 --  100.26
+Index_out 0
+Iteraciones 31
+20 22 19 12 17 5 7 
+76.1932
+---------------------------------------------------------

@@ -26,9 +26,10 @@
 
 
 \maketitle % Muestra el Título
-  \centering
-  \vfill
   \begin{large}
+    \centering
+  \vfill
+  
   Curso 2021-2022\\
   DNI : 77556436E\\
   Correo : joselu201@correo.ugr.es\\
@@ -41,7 +42,6 @@
 
 \listoffigures
 
-\listoftables
 
 \newpage
 
@@ -53,31 +53,246 @@
 
 \section{Descripción Problema de Mínima Dispersión Diferencial}
 El problema de Mínima Dispersión Diferencial es un problema de optimización combinatoria que entra en la clase de problemas
-\textbf{NP-Completo}
-Este es un problema en el que las heuristica obtinen buenas soluciones en menos tiempo.
-
+\textbf{NP-Completo}\\
+Este es un problema en el que las heurísticas obtienen buenas soluciones en menos tiempo.
+ 
 \subsection{Descripción}
-Dado un conjunto de $n$ elementos todos ellos conectados entre si, representado por una matriz de distancias, obtener
-un subconjunto $m$ talque la diferencia entre la maxima suma y la minima suma de los elementos de $m$
-se minimiza
-El conjunto $m < n$\\
+Dado un conjunto de $n$ elementos todos ellos conectados entre sí, representado por una matriz de distancias de tamaño $nxn$
+obtener un subconjunto $m$ tal que la diferencia entre la máxima distancia acumulada y la mínima distancia acumulada de los elementos de $m$
+se minimiza.\\
+El conjunto $m < n$ y por lo tanto lo que estamos buscando es
 $ m \subset n \mid Minimize DD(S_m) $\\
 donde $DD(S_m) $ es la Dispersión Diferencial del conjunto de Soluciones de tamaño $m$\\
-$sum dist_{u,S-u}$  donde $dist_{u,S-u}$ son las distancias des un punto $u$ al resto de los puntos.\\
-
-$DD(S) = max{sum dist_{u,S-u}} - min{sum dist_{u,S-u}}$
+\subsection{Consideraciones}
+En mi representación de este problema la matriz de distancias descrita anteriormente será una matriz de flotantes llamada \textbf{datos}\\
+ 
+ 
+Además implementaré un vector \textbf{distan} la cual almacena la distancia desde un punto al resto, será útil para factorizar en BL.\\
+ 
 \section{Greedy}
+El algoritmo Greedy se basa en la heurística de ir añadiendo a la solución el elemento más óptimo de los disponibles, el cual es el que minimice la dispersión.\\
+Elegiremos el primer elemento de $m$ de forma aleatoria para ganar variedad en los resultados.\newline
+Después, el resto de elementos a elegir hasta completar la solución será, sobre todos los posibles candidatos,
+calculamos la dispersión cuando añadimos ese elemento a la solución $m$ y
+el elemento que la minimice será escogido y añadido a la solución.\\
+Esta aproximación cae fácilmente en óptimos locales ya que es muy dependiente de los del punto de inicio y en cada paso aunque escojamos
+el elemento que minimiza la Dispersión no significa que, como conjunto solución, sea el correcto.\\
+La ventaja principal del greedy es que obtiene una solución relativamente buena en mucho menos tiempo que el algoritmo perfecto que resuelve este problema.
+ 
+Para ayudarnos en el desarrollo del Greedy usaremos 3 funciones:\\
+
+\begin{itemize}
+  \item \textbf{distPuntoRestoElemenetos}, que calcula la distancia acumulada de un punto al resto del vector.
+  \item\textbf{diff}, el cual dado un vector de soluciones calcule las distancias acumuladas (distPuntoRestoElemenetos)
+  y devuelva la dispersión para ese conjunto.\\
+  \item \textbf{fit\_adding}, esta función simplemente calcula la dispersión (mediante diff) si añadimos un nuevo elemento al vector de soluciones.
+\end{itemize}
+
+ 
+La representación de la solución la realizaremos con un vector de enteros que almacena los índices de los elementos escogidos.
+ 
+Por lo que el algoritmo Greedy quedaría:\\
+\begin{algorithm}[H]
+  \caption{Greedy}
+  \label{Greedy}
+  \begin{algorithmic}[1]
+    \Function{Greedy}{}
+      \State $Solucion \gets \emptyset$
+      \State $Candidatos \gets V$ \Comment{V son todos los indices, $n$}
+      \State $v_0 \gets SelectRandomFrom(Candidatos)$
+      \State $Solucion \gets Solucion \cup  \{v_0\}$
+      \State $Candidatos \gets Candidatos \setminus  \{v_0\}$
+      \While{$|Solucion| < m $}
+        \For{ele in Candidatos}
+          \State $min \gets FLOATMAX$
+          \State $new\_fitness \gets \texttt{fit\_adding(Solucion, ele)}$
+          \If{$new\_fitness < min$ }
+            \State $ele\_pos \gets ele$ \Comment{Guardo el mejor elemento}
+            \State $min \gets new\_fitness$ \Comment{Actualizo el minimo actual}
+          \EndIf
+        \EndFor
+        \State $Solucion \gets Solucion \cup \{ele\_pos\}$  \Comment{Añado a la solucion}
+        \State $Candidatos \gets Candidatos \setminus  \{ele\_pos\}$
+
+      \EndWhile
+      \label{euclidendwhile}
+      \State \Return{$Solucion$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+\newpage
+Pseudocodigo de \textbf{distPuntoRestoElemenetos}
+\begin{algorithm}[H]
+  \caption{distPuntoRestoElemenetos}
+  \begin{algorithmic}[1]
+    \Function{distPuntoRestoElemenetos(fila,vector)}{}
+      \State $dist \gets 0$
+        \For{$i \gets 0$ to ${length(vector)}$}
+          \State $dist \gets dist + datos[fila][vector[i]]$
+        \EndFor
+      \label{euclidendwhile}
+      \State \Return{$dist$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Pseudocodigo de \textbf{diff}
+\begin{algorithm}[H]
+  \caption{diff}
+  \begin{algorithmic}[1]
+    \Function{diff(posibles)}{}
+      \State $distancias \gets \emptyset$
+      \For{$i \gets 0$ to ${length(posibles)}$}
+        \State $distancias \gets distancias \cup distPuntoRestoElemenetos(posibles[i],posib))$
+      \EndFor
+      \State $sort(distancias)$
+      \State \Return{$distancias[{length(posibles)}] - distancias[0] $}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Pseudocodigo de \textbf{fit\_adding}
+
+\begin{algorithm}[H]
+  \caption{fit\_adding}
+  \begin{algorithmic}[1]
+    \Function{$fit\_adding(posibles, new_i)$}{}
+      \State $posibles \gets posibles \cup new_i$
+      \State $new\_diff \gets \texttt{diff(posibles)}$
+      \State $posibles \gets posibles \setminus new_i$
+      \State \Return{$new\_diff$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
 
 \section{Busqueda por Trayectorias Simples (BL)}
+La búsqueda local se basa en generar una solución aleatoria, la cual como solución válida tiene que satisfacer las restricciones de
+\begin{itemize}
+  \item No puede tener elementos repetidos
+  \item Tiene que tener exactamente $m $ elementos
+  \item El orden no es relevante
+\end{itemize}
+Para obtener una solución BL aplica un Operador de intercambio, este es:\\
+Dada una solución, intercambiar un elemento de esa solución por otro elemento del conjunto Candidatos, (el cual
+esto formado por todos los índices menos los que están en solución, S-Solucion = Candidatos), el cual minimice el valor del fitness.\\
+Esto provoca que el espacio de posibilidades de cambio sea de  $m\cdot (m-n)$, por lo que a la hora de aplicar esto, una vez que
+encontremos un elemento que minimice la dispersión se añadirá a la solución, (con añadir me refiero a intercambiar los valores) y
+seguidamente buscaremos otra vez para el siguiente elemento de la solución, puede llegar un punto en el que una vez recorrido
+todo el conjunto de soluciones e intentar intercambiarlo por algún elemento del conjunto de Candidatos ninguno minimice el valor
+actual, en ese caso terminaremos y devolveremos la solución actual.\\
+También utilizaremos un número limitado de iteraciones.
+ 
+\subsection{Factorización del Movimiento de Intercambio}
+Ejemplo.\\
+Dado el conjunto solución (0,4,6), cambio el elemento 0 por 1, quedaria (1,4,6) por lo que el vector distan quedaría:\\
+D0 = D04 + D06  //Esta ya no lo necesito\\
+D4 = D40 + D46  //Si cambio el 0 por un 1, D4 = D4 -D04 + D14\\
+D6 = D60 + D64\\
+------------------------------------------------------------\\
+D1 = D14 + D16 //Este tengo que recalcularlo entero\\
+D4 = D4 -D04 + D14\\
+D6 = D6 -D06 + D16\\
+ 
+De esta forma no tengo que volver a calcular de nuevo todas las distancia de un punto al resto,
+sino que simplemente tendré que actualizar el valor de la forma anteriormente descrita.\\
+Lo cual me hace pasar de una complejidad $\mathcal{O}(n^2)$ a $\mathcal{O}(n)$
+
+\begin{algorithm}[H]
+  \caption{BL}
+  \label{Greedy}
+  \begin{algorithmic}[1]
+    \Function{BL}{}
+      \State $Solucion \gets \texttt{SelectRandomSolution}$
+      \State $Candidatos \gets V$ \Comment{V son todos los indices de $n$}
+      \State $\texttt{Shuffle(Candidatos)}$
+      \State $index \gets 0$ \Comment{Indice de solucion}
+      \State $MaxIters \gets 1000000$
+      \State $cambia \gets true$
+      \State $iter \gets 0$
+      \While{$iter < MaxIters $ and $cambia$}
+        \For{$i \gets 0$ to ${length(candidatos)}$}
+          \State $actual\_disp \gets \texttt{diff(Solucion)}$
+          \State $intercambio \gets ( index , cand[i])$ \Comment{Cambio el elemento $index$ por un candidato}
+          \State $new\_disp \gets \texttt{distFactorizada(Solucion, intercambio)}$
+          \If{$new\_disp < actual_disp$ }
+            \State $Solucion \gets Solucion \cup \{cand[i]\}$  \Comment{Añado a la solucion}
+            \State $index \gets index +1$ \Comment{Avanzo a otro elemento de solucion}
+            \State $cambio \gets true$ \Comment{Anoto que ha habido cambio}
+            \State $i \gets 0$ \Comment{Vuelvo a mirar con el siguiente elemento}
+          \EndIf
+
+          \If{$!cambio$ and solucion[index] != solucion[solucion.size()]}\\
+          \Comment{Si no ha habido cambio, pero no he he comprobado todo Solucion}
+            \State $index \gets index +1$ \Comment{Avanzo al siguiente elemento}
+            \State $i \gets 0$ \Comment{Vuelvo a mirar si algun candidato mejora}
+          \ElsIf{solucion[index] == solucion[solucion.size()]} \\
+          \Comment{Si he comprobado todas}
+            \State $cambio \gets false$
+          \EndIf
+          \State $iter \gets iter +1$
+        \EndFor
+        \State $index \gets index +1$
+      \EndWhile
+      \State \Return{$Solucion$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Pseudocodigo de \textbf{distFactorizada}
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$distFactorizada(solucion, cambio)$}{}
+      \State $distan[cambio.first] = distPuntoRestoElemenetos(cambio.second,solucion);$\Comment{Recalculo el punto que he cambiado}
+      \For{$i \gets 0$ to $length(solucion)$}
+        \State $distan[i] \gets distan[i] - datos[solucion[cambio.first]][solucion[i]] + datos[cambio.second][solucion[i]];$
+      \EndFor
+      \State $\texttt{Sort(distan)}$
+        \State \Return{$(distan[distan.size()-1] - distan[0] );$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+\section{Analisis}
+\begin{itemize}
+  \item La información de uso se encuentra en el README.md.
+  \item Las semillas con las que se han obtenido los resultados entan el main.cpp y son \{0,1,2,3,4\}.
+\end{itemize}
+
+Finalmente para representar los resultados obtenidos por estos dos algoritmos respecto del perfecto tenemos la siguinte grafica
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{graf1}
+  \caption{Resultados distintos Algoritmos}
+  \label{gra}
+\end{figure}
 
 
+En la Gráfica \ref{gra} podemos ver como se comporta cada algoritmo, como vemos la BL es mucho mejor que el Greedy en este caso ya que 
+esta mas cerca del resultado que nos ofrece el algoritmo perfecto.\newpage
 
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{desv}
+  \caption{Desviación distintos Algoritmos}
+  \label{gra2}
+\end{figure}
 
+Pero esta mejora en la precisión conlleva como podemos ver el la Gráfica \ref{gra3} un aumento sustancial en el tiempo de computo
+aunque si pudiesemos comparar el tiempo que le tomo al algoritmo perfecto, la BL en comparación sería muy rapida.
 
-%------------------------------------------------
+Además podemos ver que que el tiempo que tarda en dar una solucion es directamente proporcional al numero de elementos de $m$ ya
+que, como podemos ver podemos diferenciar intervalos que tienen en comun una cosa $n$, por ejemplo [31,40 ], $n = 125$, dentro de ese
+intervalo tenemos que [31-35] $m =12 $ y [35 - 40] $m =37 $, en la Gráfica podemos ver que tarda mucho menos en [31-35]
+ya que el valor de $m$ es menor que en el intervalo [35 - 40]
 
-\bibliography{citas} %archivo citas.bib que contiene las entradas 
-\bibliographystyle{plain} % hay varias formas de citar
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.9\textwidth]{tiempos}
+  \caption{Tiempos(ms) para diferentes Algoritmos}
+  \label{gra3}
+\end{figure}
+
 
 \end{document}

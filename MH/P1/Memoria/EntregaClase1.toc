@@ -1,5 +1,8 @@
 \babel@toc {spanish}{}
 \contentsline {section}{\numberline {1}Descripción Problema de Mínima Dispersión Diferencial}{3}%
 \contentsline {subsection}{\numberline {1.1}Descripción}{3}%
+\contentsline {subsection}{\numberline {1.2}Consideraciones}{3}%
 \contentsline {section}{\numberline {2}Greedy}{3}%
-\contentsline {section}{\numberline {3}Busqueda por Trayectorias Simples (BL)}{3}%
+\contentsline {section}{\numberline {3}Busqueda por Trayectorias Simples (BL)}{5}%
+\contentsline {subsection}{\numberline {3.1}Factorización del Movimiento de Intercambio}{6}%
+\contentsline {section}{\numberline {4}Analisis}{8}%

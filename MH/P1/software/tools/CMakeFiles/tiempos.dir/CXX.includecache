@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/tools/fact.cc
+
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/tools/fact.h
+
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/tools/tiempos.cc
+iostream
+-
+chrono
+-
+thread
+-
+ctime
+-
+fact.h
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/tools/fact.h
+

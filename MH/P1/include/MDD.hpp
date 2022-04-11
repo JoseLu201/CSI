@@ -37,6 +37,7 @@ class MDD{
         ///
 
         vector<int> BL();
+        vector<int> BL_2();
         float calcular_nuevo_coste(vector<int> pos,pair<int,int> cambio);
         
 

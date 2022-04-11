@@ -7,9 +7,8 @@ import tools.Vector2d;
 
 import java.util.ArrayList;
 
-/**
- * Created by dperez on 14/01/16.
- */
+
+
 public class PathFinder {
 
     public AStar astar;
@@ -71,7 +70,7 @@ public class PathFinder {
     }
 
     private void runAll()
-    {   System.out.println("Executing run...........................");
+    { 
         for(int i = 0; i < grid.length; ++i)
         {
             for(int j = 0; j < grid[i].length; ++j)

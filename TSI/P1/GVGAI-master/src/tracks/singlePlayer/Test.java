@@ -41,7 +41,7 @@ public class Test {
 
 		// Game and level to play
 		int gameIdx = 58;
-		int levelIdx = 5; // level names from 0 to 8 (game_lvlN.txt).
+		int levelIdx = 8; // level names from 0 to 8 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
 		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx );
@@ -75,14 +75,15 @@ public class Test {
 		
 		/*for(int i = 0; i < 9;i++){
 			String level_i = game.replace(gameName, gameName + "_lvl" + i);
-			ArcadeMachine.runOneGame(game, level_i,visuals, test_DFS,recordActionsFile, seed, 0);
+			System.out.println(level_i);
+			ArcadeMachine.runOneGame(game, level_i,visuals, testA_ESTRELLA,recordActionsFile, seed, 0);
 			TimeUnit.SECONDS.sleep(2);
 			
-		}
+		}*/
 
-		for(int i = 5; i < 9;i++){
+		/*for(int i = 5; i < 9;i++){
 			String level_i = game.replace(gameName, gameName + "_lvl" + i + "_eval");
-			ArcadeMachine.runOneGame(game, level_i,visuals, test_DFS,recordActionsFile, seed, 0);
+			ArcadeMachine.runOneGame(game, level_i,visuals, testA_ESTRELLA,recordActionsFile, seed, 0);
 			TimeUnit.SECONDS.sleep(2);
 		}*/
 		

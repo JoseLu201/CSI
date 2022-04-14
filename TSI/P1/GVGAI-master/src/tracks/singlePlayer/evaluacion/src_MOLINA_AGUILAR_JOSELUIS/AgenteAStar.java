@@ -97,6 +97,9 @@ public class AgenteAStar  extends AbstractPlayer {
 			}
 			return 0;
     	}
+		public Object getPos() {
+			return posicion;
+		}
     }
 
 	private int distMH(Node i, Node destino) {
@@ -116,23 +119,31 @@ public class AgenteAStar  extends AbstractPlayer {
 		// NO TENGO QUE MIRAR SI EL HIJO ESTÁ EN CERRADOS PORQUE LA HEURÍSTICA (DISTANCIA MANHATTAN)
 		// ES UNA HEURÍSTICA MONÓTONA Y POR TANTO NO HAY QUE COMPROBAR SI ESTÁ EN CERRADOS 
 		// (VISTO Y DEMOSTRADO EN TEORÍA)
+
+	public boolean containsName(final Queue<Node> list, final Vector2d pos){
+		return list.stream().filter(o -> o.getPos().equals(pos)).findFirst().isPresent();
+	}
+	public boolean containsName(final ArrayList<Node> list, final Vector2d pos){
+		return list.stream().filter(o -> o.getPos().equals(pos)).findFirst().isPresent();
+	}
     public void AStar(Node inicio, Node fin){
         Queue<Node> abiertos = new  PriorityQueue<>();
 		ArrayList<Node> cerrados = new ArrayList<Node>();
 		abiertos.add(inicio);
-		int coste = 0;
 
 		Node current = new Node();
 		Node aux = new Node(new Vector2d(0,0));
 		aux.g = 1;
 		int iter = 0;
+		
 		while(true){
-			System.out.println("------------------------------------------------------------------");
+			//System.out.println("------------------------------------------------------------------");
 			iter++;
 			
 			current = abiertos.remove();
 
-			System.out.println("CURRENT "+ current.toString());
+			//System.out.println("CURRENT "+ current.toString());
+
 			if(current.posicion.equals(fin.posicion))
 				break;
 			nodosExpandidos++;
@@ -148,120 +159,141 @@ public class AgenteAStar  extends AbstractPlayer {
 			
 			arriba.h = distMH(arriba, fin);
 			
-			arriba.accion = ACTIONS.ACTION_UP;
+			arriba.accion = current.accion;
 			arriba.padre = current;
 			arriba.g = g(arriba);
 			arriba.CalcF();
-			coste = g(current) + distMH(current, arriba);
-			
 			
 			if(!walls.contains(arriba.posicion)){
 				if(grid[(int) arriba.posicion.x][(int) arriba.posicion.y].isEmpty() || arriba.posicion.equals(fin.posicion)){
+					
+					
+					//boolean cerrados_contein = cerrados.contains(arriba);
+					//boolean abiertos_contein = abiertos.contains(arriba);
+					boolean cerrados_contein = containsName(cerrados, arriba.posicion);
+					boolean abiertos_contein = containsName(abiertos, arriba.posicion);
+					//System.out.println("->Arriba "+ arriba.toString());
+					arriba.accion = ACTIONS.ACTION_UP;
+					
 					if(arriba.posicion == current.padre.posicion){
 						continue;
 					}
-					if(cerrados.contains(arriba) && abiertos.contains(arriba)){
+					if(cerrados_contein && abiertos_contein){
 						abiertos.remove(arriba);
 					}
-					if(!cerrados.contains(arriba) && !abiertos.contains(arriba)){
+					if(!cerrados_contein && !abiertos_contein){
 						abiertos.add(arriba);
 						//System.out.println("Arriba no visitado,aña " + arriba.toString());
-					}else if(abiertos.contains(arriba) && current.g < arriba.g){
+					}else if(abiertos_contein && current.g < arriba.g){
 						abiertos.remove(arriba);
 						arriba.g = g(arriba);
 						abiertos.add(arriba);
-						System.out.println("Entra3 arriba");
+						//System.out.println("Entra3 arriba");
 					}
-					System.out.println("->Arriba "+ arriba.toString());
 				}
 			}
 			/*-------------------Abajo ------------------------*/
 			Node abajo = new Node(new Vector2d(current.posicion.x, current.posicion.y +1));
 			abajo.h = distMH(abajo, fin);
-			abajo.accion = ACTIONS.ACTION_DOWN;
+			
+			abajo.accion = current.accion;
 			abajo.padre = current;
 			abajo.g = g(abajo);
 			abajo.CalcF();
-			coste = g(current) + distMH(current, abajo);
+			
+
 			if(!walls.contains(abajo.posicion)){
 				if(grid[(int) abajo.posicion.x][(int) abajo.posicion.y].isEmpty() || abajo.posicion.equals(fin.posicion)){
+					boolean cerrados_contein = containsName(cerrados, abajo.posicion);
+					boolean abiertos_contein = containsName(abiertos, abajo.posicion);
+					//System.out.println("->Abajo "+ abajo.toString());
+					abajo.accion = ACTIONS.ACTION_DOWN;
 					if(abajo.posicion == current.padre.posicion){
 						continue;
 					}
-					if(cerrados.contains(abajo) && abiertos.contains(abajo)){
+					if(cerrados_contein && abiertos_contein){
 						abiertos.remove(abajo);
 					}
-					if(!cerrados.contains(abajo) && !abiertos.contains(abajo)){
+					if(!cerrados_contein && !abiertos_contein){
 						abiertos.add(abajo);
 						//System.out.println("Abajo no visitado,aña " + abajo.toString());
-					}else if(abiertos.contains(abajo) && current.g < abajo.g){
+					}else if(abiertos_contein && current.g < abajo.g){
 						abiertos.remove(abajo);
 						abajo.g = g(abajo);
 						abiertos.add(abajo);
-						System.out.println("Entra3 abajo");
+						//System.out.println("Entra3 abajo");
 					}
-					System.out.println("->Abajo "+ abajo.toString());
+					
 				}
 			}
 
 			Node izquierda  = new Node(new Vector2d(current.posicion.x-1, current.posicion.y));
 			izquierda.h = distMH(izquierda, fin);
-			izquierda.accion = ACTIONS.ACTION_LEFT;
+			izquierda.accion = current.accion;
+			
 			izquierda.padre = current;
 			izquierda.g = g(izquierda);
 			izquierda.CalcF();
-			coste = g(current) + distMH(current, izquierda);
+
 			if(!walls.contains(izquierda.posicion)){
 				if(grid[(int) izquierda.posicion.x][(int) izquierda.posicion.y].isEmpty() || izquierda.posicion.equals(fin.posicion)){
+					boolean cerrados_contein = containsName(cerrados, izquierda.posicion);
+					boolean abiertos_contein = containsName(abiertos, izquierda.posicion);
+					//System.out.println("->Izquierda "+ izquierda.toString());
+					izquierda.accion = ACTIONS.ACTION_LEFT;
 					if(izquierda.posicion == current.padre.posicion){
 						continue;
 					}
-					if(cerrados.contains(izquierda) && abiertos.contains(izquierda)){
+					if(cerrados_contein && abiertos_contein){
 						abiertos.remove(izquierda);
 					}
-					if(!cerrados.contains(izquierda) && !abiertos.contains(izquierda)){
+					if(!cerrados_contein && !abiertos_contein){
 						abiertos.add(izquierda);
 						//System.out.println("Izquierda no visitado,aña " + izquierda.toString());
-					}else if(abiertos.contains(izquierda) && current.g < izquierda.g){
+					}else if(abiertos_contein && current.g < izquierda.g){
 						abiertos.remove(izquierda);
 						izquierda.g = g(izquierda);
 						abiertos.add(izquierda);
-						System.out.println("Entra3 izquierda");
+						//System.out.println("Entra3 izquierda");
 					}
-					System.out.println("->Izquierda "+ izquierda.toString());
+					
 				}
 			}
 
 			Node derecha = new Node(new Vector2d(current.posicion.x+1, current.posicion.y ));
 			derecha.h = distMH(derecha, fin);
-			derecha.accion = ACTIONS.ACTION_RIGHT;
+			derecha.accion = current.accion;
+			
 			derecha.padre = current;
 			derecha.g = g(derecha);
 			derecha.CalcF();
-			coste = g(current) + distMH(current, derecha);
 			if(!walls.contains(derecha.posicion)){
 				if(grid[(int) derecha.posicion.x][(int) derecha.posicion.y].isEmpty() || derecha.posicion.equals(fin.posicion)){
+					boolean cerrados_contein = containsName(cerrados, derecha.posicion);
+					boolean abiertos_contein = containsName(abiertos, derecha.posicion);
+					//System.out.println("->Derecha "+ derecha.toString());
+					derecha.accion = ACTIONS.ACTION_RIGHT;
 					if(derecha.posicion == current.padre.posicion){
 						continue;
 					}
-					if(cerrados.contains(derecha) && abiertos.contains(derecha)){
+					if(cerrados_contein && abiertos_contein){
 						abiertos.remove(derecha);
 					}
-					if(!cerrados.contains(derecha) && !abiertos.contains(derecha)){
+					if(!cerrados_contein && !abiertos_contein){
 						abiertos.add(derecha);
 						//System.out.println("Derecha no visitado,aña " + derecha.toString());
-					}else if(abiertos.contains(derecha) && current.g < derecha.g){
+					}else if(abiertos_contein && current.g < derecha.g){
 						abiertos.remove(derecha);
 						derecha.g = g(derecha);
 						abiertos.add(derecha);
-						System.out.println("Entra3 derecha");
+						//System.out.println("Entra3 derecha");
 					}	
-					System.out.println("->Derecha "+ derecha.toString());		
+							
 
 				}
 			}
 
-			System.out.println("\tLista de abiertos " + abiertos.size());
+			/*System.out.println("\tLista de abiertos " + abiertos.size());
 			Queue<Node> abiertos_aux = new PriorityQueue<>(abiertos);
 		
 			while (!abiertos_aux.isEmpty()) {
@@ -270,7 +302,7 @@ public class AgenteAStar  extends AbstractPlayer {
 			System.out.println("\tLista de cerrados");
 			for(Node n : cerrados)
 				System.out.println("\t"+n);
-
+			*/
 			if(abiertos.size() > nodosMemoria){
 				nodosMemoria = abiertos.size();
 			}

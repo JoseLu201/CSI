@@ -28,6 +28,7 @@ public class Test {
 		String sampleOLETSController = "tracks.singlePlayer.advanced.olets.Agent";
 		//String a_Estrlla = "src/tools/pathfinder/Agent";
 		String testA_ESTRELLA =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgenteAStar";
+
 		String test_bfs =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgenteBFS";
 		String test_DFS =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgenteDFS";
 
@@ -40,8 +41,9 @@ public class Test {
 		int seed = new Random().nextInt();
 
 		// Game and level to play
+		//5,6,7,8
 		int gameIdx = 58;
-		int levelIdx = 8; // level names from 0 to 8 (game_lvlN.txt).
+		int levelIdx =6; // level names from 0 to 8 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
 		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx );
@@ -64,7 +66,7 @@ public class Test {
 		 //ArcadeMachine.replayGame(game, level1, visuals, readActionsFile);
 
 		// 4. This plays a single game, in N levels, M times :
-/* 		String level2 = new String(game).replace(gameName, gameName + "_lvl" + 1);
+		/* 		String level2 = new String(game).replace(gameName, gameName + "_lvl" + 1);
 		int M = 1;
 		for(int i=0; i<games.length; i++){
 			game = games[i][0];
@@ -73,7 +75,7 @@ public class Test {
 			ArcadeMachine.runGames(game, new String[]{level1}, M, sampleMCTSController, null);
 		} */
 		
-		/*for(int i = 0; i < 9;i++){
+		/*for(int i = 5; i < 9;i++){
 			String level_i = game.replace(gameName, gameName + "_lvl" + i);
 			System.out.println(level_i);
 			ArcadeMachine.runOneGame(game, level_i,visuals, testA_ESTRELLA,recordActionsFile, seed, 0);

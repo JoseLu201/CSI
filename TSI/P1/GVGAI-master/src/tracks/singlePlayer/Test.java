@@ -28,6 +28,8 @@ public class Test {
 		String sampleOLETSController = "tracks.singlePlayer.advanced.olets.Agent";
 		//String a_Estrlla = "src/tools/pathfinder/Agent";
 		String testA_ESTRELLA =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgenteAStar";
+		String testA_ESTRELLA2 =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgenteAStar2";
+		String Agente_IDA =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgenteIDAStar";
 
 		String test_bfs =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgenteBFS";
 		String test_DFS =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgenteDFS";
@@ -43,10 +45,10 @@ public class Test {
 		// Game and level to play
 		//5,6,7,8
 		int gameIdx = 58;
-		int levelIdx =6; // level names from 0 to 8 (game_lvlN.txt).
+		int levelIdx =0; // level names from 0 to 8 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
-		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx );
+		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
 
 		String recordActionsFile =null;// = "actions_" + games[gameIdx] + "_lvl"
 						 //+ levelIdx + "_" + seed + ".txt";
@@ -58,7 +60,7 @@ public class Test {
 
 		// 2. This plays a game in a level by the controller.
 		//String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx+"_eval" );
-		ArcadeMachine.runOneGame(game, level1, visuals, testA_ESTRELLA, recordActionsFile, seed, 0);
+		ArcadeMachine.runOneGame(game, level1, visuals, Agente_IDA, recordActionsFile, seed, 0);
 
 
 		// 3. This replays a game from an action file previously recorded
@@ -75,15 +77,14 @@ public class Test {
 			ArcadeMachine.runGames(game, new String[]{level1}, M, sampleMCTSController, null);
 		} */
 		
-		/*for(int i = 5; i < 9;i++){
+		/*for(int i = 0; i < 9;i++){
 			String level_i = game.replace(gameName, gameName + "_lvl" + i);
 			System.out.println(level_i);
 			ArcadeMachine.runOneGame(game, level_i,visuals, testA_ESTRELLA,recordActionsFile, seed, 0);
 			TimeUnit.SECONDS.sleep(2);
 			
-		}*/
-
-		/*for(int i = 5; i < 9;i++){
+		}
+		for(int i = 5; i < 9;i++){
 			String level_i = game.replace(gameName, gameName + "_lvl" + i + "_eval");
 			ArcadeMachine.runOneGame(game, level_i,visuals, testA_ESTRELLA,recordActionsFile, seed, 0);
 			TimeUnit.SECONDS.sleep(2);

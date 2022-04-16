@@ -2,8 +2,13 @@ package tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
 
 import javax.swing.Action;
 
@@ -16,11 +21,12 @@ import tools.Vector2d;
 
 public class AgenteIDAStar  extends AbstractPlayer{
     
-    Vector2d avatar; 	//Posicion del avatar
-	Vector2d fescala; 	//Escala pix grid
+    Vector2D avatar; 	//Posicion del avatar
+	Vector2D fescala; 	//Escala pix grid
 	Vector2d portal;	//Salida/meta
 	
-	ArrayList<ACTIONS> path;
+	LinkedHashMap<Vector2D, Node> path = new LinkedHashMap<>();
+	Queue<ACTIONS> ansPath =  new LinkedList<>();
 	ArrayList<Observation> grid[][];
 
     int nodosMemoria = 0;
@@ -30,7 +36,7 @@ public class AgenteIDAStar  extends AbstractPlayer{
 
     	// Struct nodo
 	public static class Node implements Comparable<Node>{
-		public Vector2d posicion;
+		public Vector2D posicion;
 		public ACTIONS accion;
 		public Node padre;
         public int f,g,h;
@@ -38,7 +44,7 @@ public class AgenteIDAStar  extends AbstractPlayer{
 		
 
 		public Node() {
-			posicion = new Vector2d(0, 0);
+			posicion = new Vector2D(0, 0);
 			accion = ACTIONS.ACTION_NIL;
 			padre = null;
             f = 0;
@@ -52,12 +58,12 @@ public class AgenteIDAStar  extends AbstractPlayer{
 			this.posicion = o.posicion;
 		}
 
-		public Node(Vector2d pos){
+		public Node(Vector2D pos){
 			posicion = pos;
 			accion = ACTIONS.ACTION_NIL;
 			padre = null;
 		}
-        public Node(Vector2d pos, int new_g,int new_h){
+        public Node(Vector2D pos, int new_g,int new_h){
 			posicion = pos;
 			accion = ACTIONS.ACTION_NIL;
 			padre = null;
@@ -65,7 +71,7 @@ public class AgenteIDAStar  extends AbstractPlayer{
 			h = new_h;
             //f = g+h;
 		}
-		public Node(Vector2d pos, int new_g){
+		public Node(Vector2D pos, int new_g){
 			posicion = pos;
 			accion = ACTIONS.ACTION_NIL;
 			padre = null;
@@ -80,15 +86,16 @@ public class AgenteIDAStar  extends AbstractPlayer{
                 "Accion : " + accion.toString() + "\t" +
 				"F : " + f + "\t" +
 				"G : " + g + "\t" +
-				"H : " + h + "\t" 
+				"H : " + h + "\t" +
+				"Tiene Padre : " +(padre!=null)
             );
         
 	    }
 
         @Override
     	public int compareTo(Node o) {
-			if(this.f < o.f)
-				return -1;
+			if(this.f < o.f){
+				return -1;}
 			else if(this.f > o.f)
 				return 1;
 			else if(this.f == o.f){
@@ -115,10 +122,9 @@ public class AgenteIDAStar  extends AbstractPlayer{
 					else if(this.accion == ACTIONS.ACTION_LEFT && o.accion == ACTIONS.ACTION_DOWN) return 1;
 					
 					else if(this.accion == ACTIONS.ACTION_DOWN && o.accion == ACTIONS.ACTION_UP) return 1;
-					
-
 				}
 			}
+
 			return 0;
     	}
 		public Object getPos() {
@@ -171,179 +177,150 @@ public class AgenteIDAStar  extends AbstractPlayer{
 
 
     public void IDAStar(Node inicio, Node fin){
-        LinkedHashMap<Vector2d, Node> ruta = new LinkedHashMap<>();
+        
 		Node inicial = new Node(inicio);
 		Node solucion = inicial;
-		int cota = inicial.g;
-		ruta.put(inicial.posicion, inicial);
+		int cota = inicial.h;
+		path.put(inicial.posicion, inicial);
+		Node aux = new Node(new Vector2D(0,0));
+		aux.g = 1;
 
 		while(true){
-			var resultado = IDA_search(ruta, 0, cota,fin);
-
-			// Si el resultado es un numero negativo se ha encontrado solución
-			if (resultado < 0){
-				Vector2d lastElementKey = new ArrayList<>(ruta.keySet()).get(ruta.size() - 1);
-				solucion = ruta.get(lastElementKey);
-
-                while(solucion.padre != null){
-                    path.add(solucion.accion);
-                    solucion = solucion.padre;
-                }
-
+			
+			solucion.padre = aux;
+			int t = IDA_search(path, 0, cota,fin);
+			if (t < 0){
+				Vector2D currKey = new ArrayList<>(path.keySet()).get(path.size() - 1);
+				solucion = path.get(currKey);
+				Node reconstSol = solucion;
+				while(reconstSol.padre != null){
+					ansPath.add(reconstSol.accion);
+					reconstSol = reconstSol.padre;
+				}
 				nodosMemoria = path.size();
-				//return path;
+				return;
 			}
-
-			// Si el resultado es infinito se ha terminado el algoritmo y no hay solucion
-			if (resultado == Double.POSITIVE_INFINITY)
+			if (t == Double.POSITIVE_INFINITY){
 				throw new ArithmeticException("No se ha encontrado solución");
-
-			// Se actualiza la cota
-			cota = resultado;
+			}
+			cota = t;
 		}
 
 
     }
 
-    public int IDA_search(LinkedHashMap<Vector2d, Node> ruta, int g, int cota,Node fin)
-	{
+    public int IDA_search(LinkedHashMap<Vector2D, Node> path, int g, int cota,Node fin){
 		// Se toma como nodo actual el último elemento de la ruta
-		Vector2d lastElementKey = new ArrayList<>(ruta.keySet()).get(ruta.size() - 1);
-		var current = ruta.get(lastElementKey);
+		Vector2D currKey = new ArrayList<>(path.keySet()).get(path.size() - 1);
+		Node current = path.get(currKey);
 
 		// Se calcula el coste del nodo y, si sobrepasa la cota, se devuelve y no se
 		// continua explorando la ruta actual
 		int f = g + current.h;
-		if (f > cota) { return f; }
-
-		// Si el nodo actual es objetivo el algoritmo ha terminado
-		nodosExpandidos += 1;
-		if (current.posicion.equals(portal)) { solucion = current; return -1; }
+		if (f > cota){ 
+			return f;
+		}
+		nodosExpandidos++;
+		// Si el nodo actual es objetivo el algoritmo ha terminado	
+		if (current.posicion.equals(fin.posicion)) { solucion = current; return -1; }
 
 		// Se expande del nodo actual
 		var min = Double.POSITIVE_INFINITY;
 
-/////////////////////////////////////////////
-
-        Node arriba = new Node(new Vector2d(current.posicion.x, current.posicion.y -1));
-			
-				//SOLO ANDO SI HAY SUELO O META
-			if(grid[(int) arriba.posicion.x][(int) arriba.posicion.y].isEmpty() || arriba.posicion.equals(fin.posicion)){				
-				// Si el nodo no ha sido visitado en la ruta actual 
-                if(current.padre != null){
-                    if(!arriba.posicion.equals(current.padre.posicion)){
-                        if(!ruta.containsKey(arriba.posicion)){
-                            // Se incluye a la ruta y se llama a la función de forma recursiva sobre
-                            // la nueva ruta
-                            ruta.put(arriba.posicion, arriba);
-                            var t = IDA_search(ruta, g+1, cota,fin);
-                            // Si devuelve negativo es porque se ha encontrado solución y se propaga
-                            if (t < 0)
-                                return t;
-
-                            // Se actualiza el coste mínimo
-                            if (t < min)
-                                min = t;
-
-                            // Se elimina el nodo de la ruta para probar con otro vecino
-                            ruta.remove(arriba.posicion);
-                        }
-                    }
-                }
+		//Vector donde ordeno los sucesores del nodo actual
+		ArrayList<Node> vecinos = new ArrayList<>();
+		Node arriba = new Node(new Vector2D(current.posicion.x, current.posicion.y -1));
+		if(grid[(int) arriba.posicion.x][(int) arriba.posicion.y].isEmpty() || arriba.posicion.equals(fin.posicion)){				
+			if(current.padre != null){
+				if(!arriba.posicion.equals(current.padre.posicion)){
+					if(!path.containsKey(arriba.posicion)){
+						arriba.h = distMH(arriba, fin);
+						arriba.accion = ACTIONS.ACTION_UP;
+						arriba.padre = current;
+						arriba.g = g(arriba);
+						arriba.CalcF();
+						vecinos.add(arriba);
+					}
+				}
 			}
-            Node abajo =  new Node(new Vector2d(current.posicion.x, current.posicion.y +1));
+		}
+
+        Node abajo =  new Node(new Vector2D(current.posicion.x, current.posicion.y+1));
+		if(grid[(int) abajo.posicion.x][(int) abajo.posicion.y].isEmpty() || abajo.posicion.equals(fin.posicion)){				
+			if(current.padre != null){
+				if(!abajo.posicion.equals(current.padre.posicion)){
+					if(!path.containsKey(abajo.posicion)){
+						abajo.h = distMH(abajo, fin);
+						abajo.accion = ACTIONS.ACTION_DOWN;
+						abajo.padre = current;
+						abajo.g = g(abajo);
+						abajo.CalcF();
+						vecinos.add(abajo);
+					}	
+				}
+			}
+		}
 			
-				//SOLO ANDO SI HAY SUELO O META
-                if(grid[(int) abajo.posicion.x][(int) abajo.posicion.y].isEmpty() || abajo.posicion.equals(fin.posicion)){				
-                    // Si el nodo no ha sido visitado en la ruta actual 
-                    if(current.padre != null){
-                        if(!abajo.posicion.equals(current.padre.posicion)){
-                            if(!ruta.containsKey(abajo.posicion)){
-                                // Se incluye a la ruta y se llama a la función de forma recursiva sobre
-                                // la nueva ruta
-                                ruta.put(abajo.posicion, abajo);
-                                var t = IDA_search(ruta, g+1, cota,fin);
-                                // Si devuelve negativo es porque se ha encontrado solución y se propaga
-                                if (t < 0)
-                                    return t;
-    
-                                // Se actualiza el coste mínimo
-                                if (t < min)
-                                    min = t;
-    
-                                // Se elimina el nodo de la ruta para probar con otro vecino
-                                ruta.remove(abajo.posicion);
-                            }
-                        }
-                    }
-                }
+        Node izquierda = new Node(new Vector2D(current.posicion.x-1, current.posicion.y ));
+		if(grid[(int) izquierda.posicion.x][(int) izquierda.posicion.y].isEmpty() || izquierda.posicion.equals(fin.posicion)){				
+			if(current.padre != null){
+				if(!izquierda.posicion.equals(current.padre.posicion)){
+					if(!path.containsKey(izquierda.posicion)){
+						izquierda.h = distMH(izquierda, fin);
+						izquierda.accion = ACTIONS.ACTION_LEFT;
+						izquierda.padre = current;
+						izquierda.g = g(izquierda);
+						izquierda.CalcF();
+						vecinos.add(izquierda);
+					}
+				}
+			}
+		}
 
-            Node izquierda = new Node(new Vector2d(current.posicion.x+1, current.posicion.y ));
-			
-				//SOLO ANDO SI HAY SUELO O META
-                if(grid[(int) izquierda.posicion.x][(int) izquierda.posicion.y].isEmpty() || izquierda.posicion.equals(fin.posicion)){				
-                    // Si el nodo no ha sido visitado en la ruta actual 
-                    if(current.padre != null){
-                        if(!izquierda.posicion.equals(current.padre.posicion)){
-                            if(!ruta.containsKey(izquierda.posicion)){
-                                // Se incluye a la ruta y se llama a la función de forma recursiva sobre
-                                // la nueva ruta
-                                ruta.put(izquierda.posicion, izquierda);
-                                var t = IDA_search(ruta, g+1, cota,fin);
-                                // Si devuelve negativo es porque se ha encontrado solución y se propaga
-                                if (t < 0)
-                                    return t;
-    
-                                // Se actualiza el coste mínimo
-                                if (t < min)
-                                    min = t;
-    
-                                // Se elimina el nodo de la ruta para probar con otro vecino
-                                ruta.remove(izquierda.posicion);
-                            }
-                        }
-                    }
-                }
-
-            Node derecha = new Node(new Vector2d(current.posicion.x, current.posicion.y -1));
-			
-				//SOLO ANDO SI HAY SUELO O META
-                if(grid[(int) derecha.posicion.x][(int) derecha.posicion.y].isEmpty() || derecha.posicion.equals(fin.posicion)){				
-                    // Si el nodo no ha sido visitado en la ruta actual 
-                    if(current.padre != null){
-                        if(!derecha.posicion.equals(current.padre.posicion)){
-                            if(!ruta.containsKey(derecha.posicion)){
-                                // Se incluye a la ruta y se llama a la función de forma recursiva sobre
-                                // la nueva ruta
-                                ruta.put(derecha.posicion, derecha);
-                                var t = IDA_search(ruta, g+1, cota,fin);
-                                // Si devuelve negativo es porque se ha encontrado solución y se propaga
-                                if (t < 0)
-                                    return t;
-    
-                                // Se actualiza el coste mínimo
-                                if (t < min)
-                                    min = t;
-    
-                                // Se elimina el nodo de la ruta para probar con otro vecino
-                                ruta.remove(derecha.posicion);
-                            }
-                        }
-                    }
-                }
+		Node derecha = new Node(new Vector2D(current.posicion.x+1, current.posicion.y ));			
+		if(grid[(int) derecha.posicion.x][(int) derecha.posicion.y].isEmpty() || derecha.posicion.equals(fin.posicion)){
+			if(current.padre != null){
+				if(!derecha.posicion.equals(current.padre.posicion)){
+					if(!path.containsKey(derecha.posicion)){
+						derecha.h = distMH(derecha, fin);
+						derecha.accion = ACTIONS.ACTION_RIGHT;
+						derecha.padre = current;
+						derecha.g = g(derecha);
+						derecha.CalcF();
+						vecinos.add(derecha);
+					}
+				}
+			}
+		}
 
 
+		Collections.sort(vecinos, new Comparator<Node>() {
+			public int compare(Node o1, Node o2){
+     			return o1.compareTo(o2);
+  			}
+		});
 
-
-
-
+		for(Node n : vecinos){
+			if(!path.containsKey(n.posicion)){
+				path.put(n.posicion, n);
+				var t = IDA_search(path, g+1, cota,fin);
+				if (t < 0)
+					return t;
+				// Se actualiza el coste mínimo
+				if (t < min)
+					min = t;
+				path.remove(n.posicion);
+			}
+		}
+	
 		return (int)min;
+			
 	}
 
 
 
     public AgenteIDAStar(StateObservation stateObs, ElapsedCpuTimer elapsedTimer){
-		fescala = new Vector2d(stateObs.getWorldDimension().width / stateObs.getObservationGrid().length,
+		fescala = new Vector2D(stateObs.getWorldDimension().width / stateObs.getObservationGrid().length,
 				stateObs.getWorldDimension().height / stateObs.getObservationGrid()[0].length);
 
 		ArrayList<Observation>[] portales = stateObs.getPortalsPositions();
@@ -351,10 +328,10 @@ public class AgenteIDAStar  extends AbstractPlayer{
 		portal.x = Math.floor(portal.x / fescala.x);
 		portal.y = Math.floor(portal.y / fescala.y);
 		
-		avatar =  new Vector2d(stateObs.getAvatarPosition().x / fescala.x, stateObs.getAvatarPosition().y / fescala.y);
+		avatar =  new Vector2D(stateObs.getAvatarPosition().x / fescala.x, stateObs.getAvatarPosition().y / fescala.y);
 
 
-		path = new ArrayList<ACTIONS>();
+
 		grid = stateObs.getObservationGrid();
 	}
 
@@ -363,25 +340,26 @@ public class AgenteIDAStar  extends AbstractPlayer{
         ACTIONS accion = ACTIONS.ACTION_NIL;
 		
 		Node inicial = new Node(avatar);
-		Node objetivo = new Node(portal);
+		Node objetivo = new Node();
+		objetivo.posicion = new Vector2D(portal.x, portal.y);
 		inicial.h = distMH(inicial, objetivo);
 		inicial.g = 0;
 		inicial.CalcF();
 
-		if(path.isEmpty()){
+		if(ansPath.isEmpty()){
 			IDAStar(inicial, objetivo);
 			
-			Collections.reverse(path);
-			path.remove(0); //El primer es nil
+			Collections.reverse((List<?>) ansPath);
+			ansPath.remove(); //El primer es nil
 			
-			System.out.println("path: " + path);
-			System.out.println("Tamaño de la path: " + path.size());
+			System.out.println("path: " + ansPath);
+			System.out.println("Tamaño de la path: " + ansPath.size());
 			System.out.println("Tiempo de cálculo: " + elapsedTimer);
 			System.out.println("Nodos expandidos: " + nodosExpandidos); 
 			System.out.println("Nodos en memoria: " + nodosMemoria);
 		}
 		
-		accion = path.remove(0);
+		accion = ansPath.remove();
 		return accion;
     }
     

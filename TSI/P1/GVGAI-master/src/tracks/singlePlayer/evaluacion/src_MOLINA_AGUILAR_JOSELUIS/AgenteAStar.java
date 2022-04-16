@@ -2,8 +2,10 @@ package tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Map.Entry;
 
 import core.game.Observation;
 import core.game.StateObservation;
@@ -14,8 +16,8 @@ import tools.Vector2d;
 
 public class AgenteAStar  extends AbstractPlayer {
 
-    Vector2d avatar; 	//Posicion del avatar
-	Vector2d fescala; 	//Escala pix grid
+    Vector2D avatar; 	//Posicion del avatar
+	Vector2D fescala; 	//Escala pix grid
 	Vector2d portal;	//Salida/meta
 	
 	ArrayList<ACTIONS> path;
@@ -28,7 +30,7 @@ public class AgenteAStar  extends AbstractPlayer {
 
 	// Struct nodo
 	public static class Node implements Comparable<Node>{
-		public Vector2d posicion;
+		public Vector2D posicion;
 		public ACTIONS accion;
 		public Node padre;
         public int f,g,h;
@@ -36,7 +38,7 @@ public class AgenteAStar  extends AbstractPlayer {
 		
 
 		public Node() {
-			posicion = new Vector2d(0, 0);
+			posicion = new Vector2D(0, 0);
 			accion = ACTIONS.ACTION_NIL;
 			padre = null;
             f = 0;
@@ -50,12 +52,19 @@ public class AgenteAStar  extends AbstractPlayer {
 			this.posicion = o.posicion;
 		}
 
-		public Node(Vector2d pos){
+		/*public Node(Vector2d pos){
+			posicion.x = pos.x;
+			posicion.y = pos.y;
+			accion = ACTIONS.ACTION_NIL;
+			padre = null;
+		}*/
+
+		public Node(Vector2D pos){
 			posicion = pos;
 			accion = ACTIONS.ACTION_NIL;
 			padre = null;
 		}
-        public Node(Vector2d pos, int new_g,int new_h){
+        public Node(Vector2D pos, int new_g,int new_h){
 			posicion = pos;
 			accion = ACTIONS.ACTION_NIL;
 			padre = null;
@@ -63,12 +72,13 @@ public class AgenteAStar  extends AbstractPlayer {
 			h = new_h;
             //f = g+h;
 		}
-		public Node(Vector2d pos, int new_g){
+		public Node(Vector2D pos, int new_g){
 			posicion = pos;
 			accion = ACTIONS.ACTION_NIL;
 			padre = null;
 			g = new_g;
 		}
+
 		public void CalcF(){
 			this.f = this.g+this.h;
 		}
@@ -174,37 +184,43 @@ public class AgenteAStar  extends AbstractPlayer {
 		// (VISTO Y DEMOSTRADO EN TEORÍA)
 
     public void AStar(Node inicio, Node fin){
+		HashMap<Vector2D, Node> abiertosMap = new HashMap<>();
         PriorityQueue<Node> abiertos = new  PriorityQueue<>();
-		ArrayList<Node> cerrados = new ArrayList<Node>();
+		HashMap<Vector2D,Node> cerrados =  new HashMap<>();
+
+		abiertosMap.put(inicio.posicion, inicio);
 		abiertos.add(inicio);
+
 		Node current = new Node();
-		Node aux = new Node(new Vector2d(0,0));
+		Node aux = new Node(new Vector2D(0,0));
 		aux.g = 1;
 		int iter = 0;
-		while(true && !abiertos.isEmpty()){
+		while(true){
 			//System.out.println("------------------------------------------------------------------");
 			iter++;
-			current = abiertos.remove();	
+
+			current = abiertosMap.get(abiertos.poll().posicion);
 			//System.out.println("CURRENT "+ current.toString());
+			abiertosMap.remove(current.posicion);
+				
 			if(current.posicion.equals(fin.posicion))
 				break;
 			nodosExpandidos++;
 
-			cerrados.add(current);
+			cerrados.put(current.posicion, current);
 			current.h = distMH(current,fin);
-			if(iter == 1 )
-				current.padre = aux;
+			if(iter == 1 ) current.padre = aux;////
 
 			/*-------------------Arriba ------------------------*/
-			Node arriba = new Node(new Vector2d(current.posicion.x, current.posicion.y -1));
+			Node arriba = new Node(new Vector2D(current.posicion.x, current.posicion.y -1));
 			
 				//SOLO ANDO SI HAY SUELO O META
 			if(grid[(int) arriba.posicion.x][(int) arriba.posicion.y].isEmpty() || arriba.posicion.equals(fin.posicion)){				
 				if(arriba.posicion.equals(current.padre.posicion)){
 					//System.out.println("Padre VISITADO !!");
 				}else{
-					boolean cerrados_contein = cerrados.contains(arriba);
-					boolean abiertos_contein = abiertos.contains(arriba);
+					boolean cerrados_contein = cerrados.containsKey(arriba.posicion);
+					boolean abiertos_contein = abiertosMap.containsKey(arriba.posicion);
 					arriba.h = distMH(arriba, fin);
 					arriba.accion = ACTIONS.ACTION_UP;
 					arriba.padre = current;
@@ -213,28 +229,28 @@ public class AgenteAStar  extends AbstractPlayer {
 					//System.out.println("->Arriba "+ arriba.toString());
 					if(!cerrados_contein && !abiertos_contein){
 						abiertos.add(arriba);
+						abiertosMap.put(arriba.posicion,arriba);
 						//System.out.println("Entro3");
 					}else{ 
-						Node i = getElement(abiertos, arriba);
-						//System.out.println("Nodo i " +i);
-						if(abiertos_contein && i != null && arriba.g < i.g){
+						if(abiertos_contein && arriba.g < abiertosMap.get(arriba.posicion).g){
 							//System.out.println("Actualizar nodo");
-							abiertos.remove(i);
+							abiertos.remove(abiertosMap.get(arriba.posicion));
 							abiertos.add(arriba);
+							abiertosMap.put(arriba.posicion,arriba);
 						}
 					}
 				}
 			}
 
 			/*-------------------Abajo ------------------------*/
-			Node abajo = new Node(new Vector2d(current.posicion.x, current.posicion.y +1));
+			Node abajo = new Node(new Vector2D(current.posicion.x, current.posicion.y +1));
 			if(grid[(int) abajo.posicion.x][(int) abajo.posicion.y].isEmpty() || abajo.posicion.equals(fin.posicion)){
 				if(abajo.posicion.equals(current.padre.posicion)){
 					//System.out.println("Padre VISITADO !! ");
 					
 				}else{
-					boolean cerrados_contein = cerrados.contains(abajo);
-					boolean abiertos_contein = abiertos.contains(abajo);
+					boolean cerrados_contein = cerrados.containsKey(abajo.posicion);
+					boolean abiertos_contein = abiertosMap.containsKey(abajo.posicion);
 					abajo.h = distMH(abajo, fin);
 					abajo.accion = ACTIONS.ACTION_DOWN;
 					abajo.padre = current;
@@ -244,21 +260,22 @@ public class AgenteAStar  extends AbstractPlayer {
 					//System.out.println("->Abajo "+ abajo.toString());
 					if(!cerrados_contein && !abiertos_contein){
 						abiertos.add(abajo);
+						abiertosMap.put(abajo.posicion,abajo);
 						//System.out.println("Entro3");
 					}else{ 
-						Node i = getElement(abiertos, abajo);
-						//System.out.println("Nodo i " +i);
-						if(abiertos_contein && i != null && abajo.g < i.g){
+
+						if(abiertos_contein && abajo.g < abiertosMap.get(abajo.posicion).g){
 							//System.out.println("Actualizar nodo");
-							abiertos.remove(i);
+							abiertos.remove(abiertosMap.get(abajo.posicion));
 							abiertos.add(abajo);
+							abiertosMap.put(abajo.posicion,abajo);
 						}
 					}
 				}
 				
 			}
 
-			Node izquierda  = new Node(new Vector2d(current.posicion.x-1, current.posicion.y));
+			Node izquierda  = new Node(new Vector2D(current.posicion.x-1, current.posicion.y));
 			izquierda.h = distMH(izquierda, fin);
 			izquierda.accion = current.accion;
 			
@@ -271,8 +288,8 @@ public class AgenteAStar  extends AbstractPlayer {
 				if(izquierda.posicion.equals(current.padre.posicion)){
 					//System.out.println("Padre VISITADO !!");
 				}else{
-					boolean cerrados_contein = cerrados.contains(izquierda);
-					boolean abiertos_contein = abiertos.contains(izquierda);
+					boolean cerrados_contein = cerrados.containsKey(izquierda.posicion);
+					boolean abiertos_contein = abiertosMap.containsKey(izquierda.posicion);
 					izquierda.h = distMH(izquierda, fin);
 					izquierda.accion = ACTIONS.ACTION_LEFT;
 					izquierda.padre = current;
@@ -282,21 +299,21 @@ public class AgenteAStar  extends AbstractPlayer {
 
 					if(!cerrados_contein && !abiertos_contein){
 						abiertos.add(izquierda);
+						abiertosMap.put(izquierda.posicion,izquierda);
 						//System.out.println("Entro3");
 					}else{ 
-						Node i = getElement(abiertos, izquierda);
-						//System.out.println("Nodo i " +i);
-						if(abiertos_contein && i != null && izquierda.g < i.g){
+						if(abiertos_contein && izquierda.g < abiertosMap.get(izquierda.posicion).g){
 							//System.out.println("Actualizar nodo");
-							abiertos.remove(i);
+							abiertos.remove(abiertosMap.get(izquierda.posicion));
 							abiertos.add(izquierda);
+							abiertosMap.put(izquierda.posicion,izquierda);
 						}
 					}
 				}
 				
 			}
 
-			Node derecha = new Node(new Vector2d(current.posicion.x+1, current.posicion.y ));
+			Node derecha = new Node(new Vector2D(current.posicion.x+1, current.posicion.y ));
 			derecha.h = distMH(derecha, fin);
 			derecha.accion = ACTIONS.ACTION_RIGHT;
 			
@@ -309,8 +326,8 @@ public class AgenteAStar  extends AbstractPlayer {
 				if(derecha.posicion.equals(current.padre.posicion)){
 					//System.out.println("Padre VISITADO !!");
 				}else{
-					boolean cerrados_contein = cerrados.contains(derecha);
-					boolean abiertos_contein = abiertos.contains(derecha);
+					boolean cerrados_contein = cerrados.containsKey(derecha.posicion);
+					boolean abiertos_contein = abiertosMap.containsKey(derecha.posicion);
 					derecha.h = distMH(derecha, fin);
 					derecha.accion = ACTIONS.ACTION_RIGHT;
 					
@@ -320,29 +337,30 @@ public class AgenteAStar  extends AbstractPlayer {
 					//System.out.println("->Derecha "+ derecha.toString());
 					if(!cerrados_contein && !abiertos_contein){
 						abiertos.add(derecha);
+						abiertosMap.put(derecha.posicion,derecha);
 						//System.out.println("Entro3");
 					}else{ 
-						Node i = getElement(abiertos, derecha);
-						//System.out.println("Nodo i " +i);
-						if(abiertos_contein && i != null && derecha.g < i.g){
+						if(abiertos_contein && derecha.g < abiertosMap.get(derecha.posicion).g){
 							//System.out.println("Actualizar nodo");
-							abiertos.remove(i);
+							abiertos.remove(abiertosMap.get(derecha.posicion));
 							abiertos.add(derecha);
+							abiertosMap.put(derecha.posicion,derecha);
 						}
 					}	
 				}
 			}
-				
 			/*System.out.println("\tLista de abiertos " + abiertos.size());
+			
 			Queue<Node> abiertos_aux = new PriorityQueue<>(abiertos);
 		
 			while (!abiertos_aux.isEmpty()) {
 				System.out.println("\t"+abiertos_aux.remove());
 			}
 			System.out.println("\tLista de cerrados "+ cerrados.size());
-			for(Node n : cerrados)
-				System.out.println("\t"+n);
-			*/
+			for (Entry<Vector2D, Node> entry : cerrados.entrySet()) {
+				System.out.println("\t" + entry.getKey() + " = " + entry.getValue());
+			}*/
+			
 			if(abiertos.size() > nodosMemoria){
 				nodosMemoria = abiertos.size();
 			}
@@ -351,6 +369,7 @@ public class AgenteAStar  extends AbstractPlayer {
 				nodosMemoria = cerrados.size();
 			}
 		}
+		
 		while(current.padre != null){
 			path.add(current.accion);
 			current = current.padre;
@@ -358,7 +377,7 @@ public class AgenteAStar  extends AbstractPlayer {
     }
 
 	public AgenteAStar(StateObservation stateObs, ElapsedCpuTimer elapsedTimer){
-		fescala = new Vector2d(stateObs.getWorldDimension().width / stateObs.getObservationGrid().length,
+		fescala = new Vector2D(stateObs.getWorldDimension().width / stateObs.getObservationGrid().length,
 				stateObs.getWorldDimension().height / stateObs.getObservationGrid()[0].length);
 
 		ArrayList<Observation>[] portales = stateObs.getPortalsPositions();
@@ -366,7 +385,7 @@ public class AgenteAStar  extends AbstractPlayer {
 		portal.x = Math.floor(portal.x / fescala.x);
 		portal.y = Math.floor(portal.y / fescala.y);
 		
-		avatar =  new Vector2d(stateObs.getAvatarPosition().x / fescala.x, stateObs.getAvatarPosition().y / fescala.y);
+		avatar =  new Vector2D(stateObs.getAvatarPosition().x / fescala.x, stateObs.getAvatarPosition().y / fescala.y);
 
 
 		path = new ArrayList<ACTIONS>();
@@ -379,7 +398,8 @@ public class AgenteAStar  extends AbstractPlayer {
         ACTIONS accion = ACTIONS.ACTION_NIL;
 		
 		Node inicial = new Node(avatar);
-		Node objetivo = new Node(portal);
+		Node objetivo = new Node();
+		objetivo.posicion = new Vector2D(portal.x, portal.y);
 		inicial.h = distMH(inicial, objetivo);
 		inicial.g = 0;
 		inicial.CalcF();
@@ -390,7 +410,7 @@ public class AgenteAStar  extends AbstractPlayer {
 			Collections.reverse(path);
 			path.remove(0); //El primer es nil
 			
-			System.out.println("path: " + path);
+			//System.out.println("path: " + path);
 			System.out.println("Tamaño de la path: " + path.size());
 			System.out.println("Tiempo de cálculo: " + elapsedTimer);
 			System.out.println("Nodos expandidos: " + nodosExpandidos); 

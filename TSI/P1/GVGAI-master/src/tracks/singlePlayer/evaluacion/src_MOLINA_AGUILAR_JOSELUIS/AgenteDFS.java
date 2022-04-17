@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import core.game.Observation;
 import core.game.StateObservation;
@@ -12,7 +11,7 @@ import core.player.AbstractPlayer;
 import ontology.Types.ACTIONS;
 import tools.ElapsedCpuTimer;
 import tools.Vector2d;
-import tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.Vector2D;
+
 
 public class AgenteDFS extends AbstractPlayer {
 
@@ -24,9 +23,9 @@ public class AgenteDFS extends AbstractPlayer {
 
 	ArrayList<ACTIONS> path;
 	ArrayList<Observation> grid[][];
+	//HashMap para almacenar los nodos visitados, optimo em busquedaa, insercion y
 	HashMap<Vector2D, Boolean> visited;
 	
-	// Parametros a medir
 	int nodosExpandidos = 0;
 
 	// Struct nodo
@@ -38,7 +37,7 @@ public class AgenteDFS extends AbstractPlayer {
 		@Override
     	public int hashCode() {
         return Objects.hash(posicion);
-    }
+    	}
 
 		public Node() {
 			posicion = new Vector2D();
@@ -60,7 +59,8 @@ public class AgenteDFS extends AbstractPlayer {
 	    }
     }
 
-    void DFS(Node inicial, Node objetivo)  {
+    void DFS(Node inicial, Node objetivo){
+		//Si no he visitado el nodo actual(inicial) lo visito y lo añado como visitado
         if(!visited.containsKey(inicial.posicion)){
             visited.put(inicial.posicion,true);
         }
@@ -68,18 +68,19 @@ public class AgenteDFS extends AbstractPlayer {
     }
 
     void DFS_search(Node current, Node objetivo) {
+		//Si encuantro la solucion
         if(current.posicion.equals(objetivo.posicion)){
+			//Reconstruyo la path pero al reves
             while(current.padre != null){
-                //Reconstruyo la path pero al reves
-
                 path.add(current.accion);
                 current = current.padre;
             }
         }else{
-            
+			//Expando nodos
 			nodosExpandidos++;
 			// Casilla arriba
 			Node arriba = new Node(new Vector2D(current.posicion.x, current.posicion.y - 1));
+			//Si no lo he visitado y puedo moverme hacia alli, exploro esa rama
 			if(!visited.containsKey(arriba.posicion)){
 				if(grid[(int) arriba.posicion.x][(int) arriba.posicion.y].isEmpty() || arriba.posicion.equals(objetivo.posicion)){
 					arriba.accion = ACTIONS.ACTION_UP;
@@ -159,12 +160,11 @@ public class AgenteDFS extends AbstractPlayer {
 			Collections.reverse(path);
 			
 			//System.out.println("path: " + path);
-			System.out.println("Tamaño de la path: " + path.size());
+			System.out.println("Tamaño de la ruta: " + path.size());
 			System.out.println("Tiempo de cálculo: " + elapsedTimer);
 			System.out.println("Nodos expandidos: " + nodosExpandidos);
 			System.out.println("Nodos en memoria: " + visited.size());
 		}
-		
 		accion = path.remove(0);
 		return accion;
     }

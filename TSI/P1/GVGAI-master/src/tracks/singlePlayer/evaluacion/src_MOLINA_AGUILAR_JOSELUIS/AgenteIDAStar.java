@@ -6,11 +6,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Stack;
-
-import javax.swing.Action;
 
 import core.game.Observation;
 import core.game.StateObservation;
@@ -127,9 +123,7 @@ public class AgenteIDAStar  extends AbstractPlayer{
 
 			return 0;
     	}
-		public Object getPos() {
-			return posicion;
-		}
+
 		@Override
 		public boolean equals(Object o){
 			if (o == this) {
@@ -146,50 +140,35 @@ public class AgenteIDAStar  extends AbstractPlayer{
 			return true;
 		}
     }
-
+	//Distancia heuristica
 	private int distMH(Node i, Node destino) {
 		return (int) (Math.abs(i.posicion.x - destino.posicion.x) + Math.abs(i.posicion.y - destino.posicion.y));
 	}
-
-	int g(Node n){
+	//Calcula el valor de  g de un nodo n a partir del numero de padres que tenga
+	public int g(Node n){
 		Node aux = new Node(n);
 		int g = 0;
 		while(aux.padre != null){
 			aux = aux.padre;
 			g++;
 		}
-		return g-1;
+		return g-1; //El primer padre es nil
 	}
-
-	public Node getElement(final PriorityQueue<Node> cola, Node ele){
-		PriorityQueue<Node> aux = new PriorityQueue<>(cola);
-		Node ans = new Node();
-		boolean found = false;
-		while(!aux.isEmpty() && !found){
-			ans = aux.remove();
-			if(ans.equals(ele)){
-				found = true;
-				return ans;
-			}
-		}
-		return null;
-	}
-
 
     public void IDAStar(Node inicio, Node fin){
         
 		Node inicial = new Node(inicio);
 		Node solucion = inicial;
 		int cota = inicial.h;
+		//Añado a la ruta el nodo inicial
 		path.put(inicial.posicion, inicial);
 		Node aux = new Node(new Vector2D(0,0));
 		aux.g = 1;
 
 		while(true){
-			
 			solucion.padre = aux;
-			int t = IDA_search(path, 0, cota,fin);
-			if (t < 0){
+			int t = IDA_search(path, 0, cota,fin);	//Lanzo la busqueda hasta cierta cota, inicialmente h
+			if (t < 0){									//Si devulve negativo tenemos solucion 
 				Vector2D currKey = new ArrayList<>(path.keySet()).get(path.size() - 1);
 				solucion = path.get(currKey);
 				Node reconstSol = solucion;
@@ -200,10 +179,10 @@ public class AgenteIDAStar  extends AbstractPlayer{
 				nodosMemoria = path.size();
 				return;
 			}
-			if (t == Double.POSITIVE_INFINITY){
+			if (t == Double.POSITIVE_INFINITY){//Si devulve inf no tenemos solucion 
 				throw new ArithmeticException("No se ha encontrado solución");
 			}
-			cota = t;
+			cota = t;	//Actualizamos la cota
 		}
 
 
@@ -214,18 +193,16 @@ public class AgenteIDAStar  extends AbstractPlayer{
 		Vector2D currKey = new ArrayList<>(path.keySet()).get(path.size() - 1);
 		Node current = path.get(currKey);
 
-		// Se calcula el coste del nodo y, si sobrepasa la cota, se devuelve y no se
-		// continua explorando la ruta actual
 		int f = g + current.h;
-		if (f > cota){ 
+		if (f > cota){  //Si pasa la cota lo devulve
 			return f;
 		}
-		nodosExpandidos++;
-		// Si el nodo actual es objetivo el algoritmo ha terminado	
+		nodosExpandidos++; //Expandimos los nodos
+		// Si encontramos la salida
 		if (current.posicion.equals(fin.posicion)) { solucion = current; return -1; }
 
 		// Se expande del nodo actual
-		var min = Double.POSITIVE_INFINITY;
+		double min = Double.POSITIVE_INFINITY;
 
 		//Vector donde ordeno los sucesores del nodo actual
 		ArrayList<Node> vecinos = new ArrayList<>();
@@ -300,10 +277,13 @@ public class AgenteIDAStar  extends AbstractPlayer{
   			}
 		});
 
+		//Para todos los hijos generados, compruebo si ya he pasado por el
 		for(Node n : vecinos){
 			if(!path.containsKey(n.posicion)){
+				//Exploro rama
 				path.put(n.posicion, n);
-				var t = IDA_search(path, g+1, cota,fin);
+					//Llamada recursiva con el nuevo path, actualizando la evaluacion
+				int t = IDA_search(path, g+1, cota,fin);
 				if (t < 0)
 					return t;
 				// Se actualiza el coste mínimo
@@ -312,9 +292,7 @@ public class AgenteIDAStar  extends AbstractPlayer{
 				path.remove(n.posicion);
 			}
 		}
-	
 		return (int)min;
-			
 	}
 
 
@@ -329,9 +307,6 @@ public class AgenteIDAStar  extends AbstractPlayer{
 		portal.y = Math.floor(portal.y / fescala.y);
 		
 		avatar =  new Vector2D(stateObs.getAvatarPosition().x / fescala.x, stateObs.getAvatarPosition().y / fescala.y);
-
-
-
 		grid = stateObs.getObservationGrid();
 	}
 
@@ -352,13 +327,12 @@ public class AgenteIDAStar  extends AbstractPlayer{
 			Collections.reverse((List<?>) ansPath);
 			ansPath.remove(); //El primer es nil
 			
-			System.out.println("path: " + ansPath);
-			System.out.println("Tamaño de la path: " + ansPath.size());
+			//System.out.println("path: " + ansPath);
+			System.out.println("Tamaño de la ruta: " + ansPath.size());
 			System.out.println("Tiempo de cálculo: " + elapsedTimer);
 			System.out.println("Nodos expandidos: " + nodosExpandidos); 
 			System.out.println("Nodos en memoria: " + nodosMemoria);
 		}
-		
 		accion = ansPath.remove();
 		return accion;
     }

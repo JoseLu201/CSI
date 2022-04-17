@@ -25,10 +25,7 @@ public class Test {
 		String sampleMCTSController = "tracks.singlePlayer.advanced.sampleMCTS.Agent";
         String sampleRSController = "tracks.singlePlayer.advanced.sampleRS.Agent";
         String sampleRHEAController = "tracks.singlePlayer.advanced.sampleRHEA.Agent";
-		String sampleOLETSController = "tracks.singlePlayer.advanced.olets.Agent";*/
-		//String a_Estrlla = "src/tools/pathfinder/Agent";
-		String testA_ESTRELLA2 =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgenteAStar2";
-		
+		String sampleOLETSController = "tracks.singlePlayer.advanced.olets.Agent";*/	
 		
 		String AgenteBFS =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgenteBFS";
 		String AgenteDFS =  "tracks.singlePlayer.evaluacion.src_MOLINA_AGUILAR_JOSELUIS.AgenteDFS";
@@ -47,7 +44,7 @@ public class Test {
 		// Game and level to play
 		//5,6,7,8
 		int gameIdx = 58;
-		int levelIdx =6; // level names from 0 to 8 (game_lvlN.txt).
+		int levelIdx =5; // level names from 0 to 8 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
 		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx+"_eval");
@@ -79,16 +76,16 @@ public class Test {
 			ArcadeMachine.runGames(game, new String[]{level1}, M, sampleMCTSController, null);
 		} */
 		
-		/*for(int i = 5; i < 9;i++){
+		/*for(int i = 0; i < 9;i++){
 			String level_i = game.replace(gameName, gameName + "_lvl" + i);
 			System.out.println(level_i);
-			ArcadeMachine.runOneGame(game, level_i,visuals, AgenteBFS,recordActionsFile, seed, 0);
+			ArcadeMachine.runOneGame(game, level_i,visuals, AgenteRTAStar,recordActionsFile, seed, 0);
 			TimeUnit.SECONDS.sleep(2);
 		}*/
 
 		for(int i = 5; i < 9;i++){
 			String level_i = game.replace(gameName, gameName + "_lvl" + i + "_eval");
-			ArcadeMachine.runOneGame(game, level_i,visuals, AgenteRTAStar,recordActionsFile, seed, 0);
+			ArcadeMachine.runOneGame(game, level_i,visuals, AgenteBFS,recordActionsFile, seed, 0);
 			TimeUnit.SECONDS.sleep(2);
 		}
 		

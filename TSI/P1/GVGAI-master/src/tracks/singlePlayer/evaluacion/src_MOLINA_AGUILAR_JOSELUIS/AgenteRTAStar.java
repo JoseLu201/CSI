@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import core.game.Observation;
 import core.game.StateObservation;
@@ -30,7 +32,153 @@ public class AgenteRTAStar  extends AbstractPlayer{
     Node current;
     int path_size = 0;
 
-    
+    public static class Node implements Comparable<Node>{
+		public Vector2D posicion;
+		public ACTIONS accion;
+		public Node padre;
+        public int f,g,h;
+        //Hashmap para ir almacenando los valores de H
+        static private HashMap<Vector2D, Integer> learningRule = new HashMap<>();
+		
+
+		public Node() {
+			posicion = new Vector2D(0, 0);
+			accion = ACTIONS.ACTION_NIL;
+			padre = null;
+            f = 0;
+		}
+
+        public Node(Node o) {
+			this.accion = o.accion;
+			this.f = o.f;
+			this.g = o.g;
+			this.h = o.h;
+			this.padre = o.padre;
+			this.posicion = o.posicion;
+		}
+
+		public Node(Vector2D pos){
+			posicion = pos;
+			accion = ACTIONS.ACTION_NIL;
+			padre = null;
+		}
+        public Node(Vector2D pos, int new_g,int new_h){
+			posicion = pos;
+			accion = ACTIONS.ACTION_NIL;
+			padre = null;
+			g = new_g;
+			h = new_h;
+            //f = g+h;
+		}
+		public Node(Vector2D pos, int new_g){
+			posicion = pos;
+			accion = ACTIONS.ACTION_NIL;
+			padre = null;
+			g = new_g;
+		}
+		public void CalcF(){
+			this.f = this.g+this.h;
+		}
+        public String toString(){
+            return(
+                "Posicion : " + posicion.toString() + "\t" +
+                "Accion : " + accion.toString() + "\t" +
+				"F : " + f + "\t" +
+				"G : " + g + "\t" +
+				"H : " + h + "\t" +
+				"Tiene Padre : " +(padre!=null)
+            );
+        
+	    }
+        //Ditancia manhhatan
+        public int distMH(Vector2d portal){
+            if(learningRule.containsKey(this.posicion)) return learningRule.get(this.posicion);
+            return (int) (Math.abs(this.posicion.x - portal.x) + Math.abs(this.posicion.y - portal.y));
+        }
+        public int distMH(Vector2D portal){
+            if(learningRule.containsKey(this.posicion))
+                return learningRule.get(this.posicion);
+            return (int) (Math.abs(this.posicion.x - portal.x) + Math.abs(this.posicion.y - portal.y));
+        }
+        //Seguimos la regla de aprendizaje max entre el h actual y el del segundo mejor hijo
+        public void updateH(int secondBestH) {
+		    h = Math.max(h, 1 + secondBestH);
+		    learningRule.put(posicion, h);      //Añadimos al hashmap la posicion con su h correspondiente
+        }
+
+
+        @Override
+    	public int compareTo(Node o) {
+			if(this.f < o.f){
+				return -1;}
+			else if(this.f > o.f)
+				return 1;
+			else if(this.f == o.f){
+				if(this.g < o.g)
+					return -1;
+				else if(this.g > o.g)
+					return 1;
+				else if(this.g == o.g){
+					  if(this.accion == ACTIONS.ACTION_UP && o.accion == ACTIONS.ACTION_DOWN) return -1; 
+					else if(this.accion == ACTIONS.ACTION_UP && o.accion == ACTIONS.ACTION_LEFT) return -1; 
+					else if(this.accion == ACTIONS.ACTION_UP && o.accion == ACTIONS.ACTION_RIGHT) return -1;
+
+
+					else if(this.accion == ACTIONS.ACTION_DOWN && o.accion == ACTIONS.ACTION_LEFT) return -1;
+					else if(this.accion == ACTIONS.ACTION_DOWN && o.accion == ACTIONS.ACTION_RIGHT) return -1;
+
+					else if(this.accion == ACTIONS.ACTION_LEFT && o.accion == ACTIONS.ACTION_RIGHT) return -1;
+
+					else if(this.accion == ACTIONS.ACTION_RIGHT && o.accion == ACTIONS.ACTION_LEFT) return 1; 
+					else if(this.accion == ACTIONS.ACTION_RIGHT && o.accion == ACTIONS.ACTION_DOWN) return 1;
+					else if(this.accion == ACTIONS.ACTION_RIGHT && o.accion == ACTIONS.ACTION_UP) return 1;
+
+					else if(this.accion == ACTIONS.ACTION_LEFT && o.accion == ACTIONS.ACTION_UP) return 1; 
+					else if(this.accion == ACTIONS.ACTION_LEFT && o.accion == ACTIONS.ACTION_DOWN) return 1;
+					
+					else if(this.accion == ACTIONS.ACTION_DOWN && o.accion == ACTIONS.ACTION_UP) return 1;
+				}
+			}
+
+			return 0;
+    	}
+		
+		@Override
+		public boolean equals(Object o){
+			if (o == this) {
+				return true;
+			}
+			if (o.getClass() != this.getClass()) {
+				return false;
+			}
+	
+			final Node other = (Node) o;
+			if ((this.posicion == null) ? (other.posicion != null) : !this.posicion.equals(other.posicion)) {
+				return false;
+			}
+			return true;
+		}
+    }
+
+    public void getBestChild(Node current2, ArrayList<Node> hijos) {
+        int secondBestH = 0;
+
+		if (hijos.size() > 1) secondBestH = hijos.get(1).h; // Si tengo mas de 1 hijo escogo el segundo.
+		else secondBestH = hijos.get(0).h;                  //Sino cojo el unico que tengo
+        
+		// Se actualiza el coste h del nodo con dicho mínimo
+		current.updateH(secondBestH);
+    }
+    //Calcula el valor de  g de un nodo n a partir del numero de padres que tenga
+    public int g(Node n){
+        Node aux = new Node(n);
+        int g = 0;
+        while(aux.padre != null){
+            aux = aux.padre;
+            g++;
+        }
+        return g-1;
+    }
 
     public ArrayList<Node> GenerarHijosOrdenados(Node current){
         //Vector donde ordeno los sucesores del nodo actual
@@ -93,6 +241,7 @@ public class AgenteRTAStar  extends AbstractPlayer{
                     }
                 }
             }
+            //Si no he generado ningun hijo, intento volver a generalos. (Caso de callejon sin salida)
             if(vecinos.size() == 0){
                 noneGeneratede = false;
                 current.padre.posicion = current.padre.padre.posicion;
@@ -122,13 +271,11 @@ public class AgenteRTAStar  extends AbstractPlayer{
 		
 		avatar =  new Vector2D(stateObs.getAvatarPosition().x / fescala.x, stateObs.getAvatarPosition().y / fescala.y);
         
-
         Node aux = new Node();
 		grid = stateObs.getObservationGrid();
         current = new Node(new Vector2D(avatar));
         current.g = 0;
-        current.h = current.distMH(portal);
-        
+        current.h = current.distMH(portal); //Calculo/compruebo la h del nodo actual
         current.CalcF();
         current.padre = aux;
         path_size = 0;
@@ -139,191 +286,22 @@ public class AgenteRTAStar  extends AbstractPlayer{
     public ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
 		long tInicio = System.nanoTime();
         ArrayList<Node> hijos = GenerarHijosOrdenados(current);
-        /*System.out.println("Current " + current.toString());
-        for(Node h : hijos){
-            System.out.println("-> " + h.toString());
-        }*/
-        path_size++;
-        actualizarCoste(current, hijos);
+        path_size++; 
+        getBestChild(current, hijos);
         current = hijos.get(0);
-
 		long tFin = System.nanoTime();
-		var executionTime = (tFin - tInicio);
-
-		// Si el nodo actual es objetivo el algoritmo ha terminado
-		if (current.posicion.equals(portal))
-		{
-			//expandedNodes = routeSize;
+		long executionTime = (tFin - tInicio);
+		if (current.posicion.equals(portal)){
+            //En rta los nodos expandidos son los pasos que he realizado
+			nodosExpandidos = path_size;
 			nodosMemoria = Node.learningRule.size();
-			executionTime = executionTime/1000000;
-			System.out.println("path: " + ansPath);
-			System.out.println("Tamaño de la path: " + path_size);
+			executionTime = TimeUnit.MILLISECONDS.convert(executionTime, TimeUnit.NANOSECONDS);
+			System.out.println("Tamaño de la ruta: " + path_size);
 			System.out.println("Tiempo de cálculo(Elapsed): " + elapsedTimer);
-            System.out.println("Tiempo de cálculo: " + executionTime);
+            System.out.println("Tiempo de cálculo: " + executionTime +" ms");
 			System.out.println("Nodos expandidos: " + nodosExpandidos); 
 			System.out.println("Nodos en memoria: " + nodosMemoria);
 		}
-
 		return current.accion;
-    }
-
-
-
-    private void actualizarCoste(Node current2, ArrayList<Node> hijos) {
-        var segundoMinH = 0;
-        //System.out.println(hijos.size());
-		if (hijos.size() > 1){
-            //System.out.println("mas de 1 " +hijos.get(1).toString());
-			segundoMinH = hijos.get(1).h;
-		}else{
-            //System.out.println("Menos de 1 " +hijos.get(0).toString());
-			segundoMinH = hijos.get(0).h;
-        }
-		// Se actualiza el coste h del nodo con dicho mínimo
-		current.updateH(segundoMinH);
-    }
-
-
-
-    /////////////////////////////////
-    public static class Node implements Comparable<Node>{
-		public Vector2D posicion;
-		public ACTIONS accion;
-		public Node padre;
-        public int f,g,h;
-        static private HashMap<Vector2D, Integer> learningRule = new HashMap<>();
-		
-
-		public Node() {
-			posicion = new Vector2D(0, 0);
-			accion = ACTIONS.ACTION_NIL;
-			padre = null;
-            f = 0;
-		}
-		public void updateH(int segundoMinH) {
-            // Se actualiza h como el maximo entre h actual y h del segundo mejor vecino con el coste añadido de llegar haste el
-		    h = Math.max(h, 1 + segundoMinH);
-		// Se actualiza el coste asociado a la casilla
-		    learningRule.put(posicion, h);
-        }
-        public Node(Node o) {
-			this.accion = o.accion;
-			this.f = o.f;
-			this.g = o.g;
-			this.h = o.h;
-			this.padre = o.padre;
-			this.posicion = o.posicion;
-		}
-
-		public Node(Vector2D pos){
-			posicion = pos;
-			accion = ACTIONS.ACTION_NIL;
-			padre = null;
-		}
-        public Node(Vector2D pos, int new_g,int new_h){
-			posicion = pos;
-			accion = ACTIONS.ACTION_NIL;
-			padre = null;
-			g = new_g;
-			h = new_h;
-            //f = g+h;
-		}
-		public Node(Vector2D pos, int new_g){
-			posicion = pos;
-			accion = ACTIONS.ACTION_NIL;
-			padre = null;
-			g = new_g;
-		}
-		public void CalcF(){
-			this.f = this.g+this.h;
-		}
-        public String toString(){
-            return(
-                "Posicion : " + posicion.toString() + "\t" +
-                "Accion : " + accion.toString() + "\t" +
-				"F : " + f + "\t" +
-				"G : " + g + "\t" +
-				"H : " + h + "\t" +
-				"Tiene Padre : " +(padre!=null)
-            );
-        
-	    }
-
-        public int distMH(Vector2d portal){
-            if(learningRule.containsKey(this.posicion))
-                return learningRule.get(this.posicion);
-            return (int) (Math.abs(this.posicion.x - portal.x) + Math.abs(this.posicion.y - portal.y));
-        }
-        public int distMH(Vector2D portal){
-            if(learningRule.containsKey(this.posicion))
-                return learningRule.get(this.posicion);
-            return (int) (Math.abs(this.posicion.x - portal.x) + Math.abs(this.posicion.y - portal.y));
-        }
-        
-
-        @Override
-    	public int compareTo(Node o) {
-			if(this.f < o.f){
-				return -1;}
-			else if(this.f > o.f)
-				return 1;
-			else if(this.f == o.f){
-				if(this.g < o.g)
-					return -1;
-				else if(this.g > o.g)
-					return 1;
-				else if(this.g == o.g){
-					  if(this.accion == ACTIONS.ACTION_UP && o.accion == ACTIONS.ACTION_DOWN) return -1; 
-					else if(this.accion == ACTIONS.ACTION_UP && o.accion == ACTIONS.ACTION_LEFT) return -1; 
-					else if(this.accion == ACTIONS.ACTION_UP && o.accion == ACTIONS.ACTION_RIGHT) return -1;
-
-
-					else if(this.accion == ACTIONS.ACTION_DOWN && o.accion == ACTIONS.ACTION_LEFT) return -1;
-					else if(this.accion == ACTIONS.ACTION_DOWN && o.accion == ACTIONS.ACTION_RIGHT) return -1;
-
-					else if(this.accion == ACTIONS.ACTION_LEFT && o.accion == ACTIONS.ACTION_RIGHT) return -1;
-
-					else if(this.accion == ACTIONS.ACTION_RIGHT && o.accion == ACTIONS.ACTION_LEFT) return 1; 
-					else if(this.accion == ACTIONS.ACTION_RIGHT && o.accion == ACTIONS.ACTION_DOWN) return 1;
-					else if(this.accion == ACTIONS.ACTION_RIGHT && o.accion == ACTIONS.ACTION_UP) return 1;
-
-					else if(this.accion == ACTIONS.ACTION_LEFT && o.accion == ACTIONS.ACTION_UP) return 1; 
-					else if(this.accion == ACTIONS.ACTION_LEFT && o.accion == ACTIONS.ACTION_DOWN) return 1;
-					
-					else if(this.accion == ACTIONS.ACTION_DOWN && o.accion == ACTIONS.ACTION_UP) return 1;
-				}
-			}
-
-			return 0;
-    	}
-		public Object getPos() {
-			return posicion;
-		}
-		@Override
-		public boolean equals(Object o){
-			if (o == this) {
-				return true;
-			}
-			if (o.getClass() != this.getClass()) {
-				return false;
-			}
-	
-			final Node other = (Node) o;
-			if ((this.posicion == null) ? (other.posicion != null) : !this.posicion.equals(other.posicion)) {
-				return false;
-			}
-			return true;
-		}
-        
-    
-    }
-    int g(Node n){
-        Node aux = new Node(n);
-        int g = 0;
-        while(aux.padre != null){
-            aux = aux.padre;
-            g++;
-        }
-        return g-1;
     }
 }

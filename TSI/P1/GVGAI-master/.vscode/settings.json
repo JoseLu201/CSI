@@ -1,0 +1,11 @@
+{
+    "java.dependency.packagePresentation": "hierarchical",
+    "java.configuration.runtimes": [
+
+    
+    ],
+    "java.project.sourcePaths": [
+        "src"
+    ],
+    "java.project.outputPath": "bin"
+}

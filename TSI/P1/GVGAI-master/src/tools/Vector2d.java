@@ -1,5 +1,7 @@
 package tools;
 
+import java.util.Objects;
+
 /**
  * This class represents a vector, or a position, in the map.
  * PTSP-Competition
@@ -301,6 +303,11 @@ public class Vector2d
         }
         else return new Vector2d(1,0);
     }
+
+    /*@Override
+    public int hashCode() {
+        return Objects.hash(x,y);
+    }*/
 
 }
 

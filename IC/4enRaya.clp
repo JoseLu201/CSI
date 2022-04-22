@@ -97,6 +97,16 @@
 (assert (Turno J))
 )
 
+;;;;(defrule _contrario_check_columna_libre
+;;;;(declare (salience 1))
+;;;;?f <- (Juega M ?c)
+;;;;(Tablero Juego 1 ?c ?X) 
+;;;;(test (neq ?X _))
+;;;;=>
+;;;;(printout t "Esa columna ya esta completa, tienes que jugar en otra" crlf)
+;;;;(retract ?f)
+;;;;)
+
 (defrule juega_contrario_actualiza_estado
 ?f <- (Juega J ?c)
 ?g <- (Tablero Juego ?i ?c _)
@@ -139,31 +149,30 @@
 )
 
 ;;;;;;;;;;; CLISP JUEGA SIN CRITERIO ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defrule elegir_jugada_aleatoria
-(declare (salience -9998))
-?f <- (Turno M)
-=>
-(assert (Jugar (random 1 7)))
-(retract ?f)
-)
+;(defrule elegir_jugada_aleatoria
+;(declare (salience -9998))
+;?f <- (Turno M)
+;=>
+;(assert (Jugar (random 1 7)))
+;(retract ?f)
+;)
+;
+;(defrule comprobar_posible_jugada_aleatoria
+;?f <- (Jugar ?c)
+;(Tablero Juego 1 ?c M|J)
+;=>
+;(retract ?f)
+;(assert (Turno M))
+;)
 
-(defrule comprobar_posible_jugada_aleatoria
-?f <- (Jugar ?c)
-(Tablero Juego 1 ?c M|J)
-=>
-(retract ?f)
-(assert (Turno M))
-)
-
-(defrule clisp_juega_sin_criterio
-(declare (salience -9999))
-?f<- (Jugar ?c)
-=>
-(printout t "JUEGO en la columna (sin criterio) " ?c crlf)
-(retract ?f)
-(assert (Juega M ?c))
-(printout t "Juego sin razonar, que mal"  crlf) 
-)
+;(defrule clisp_juega_sin_criterio
+;(declare (salience -9999))
+;?f<- (Jugar ?c)
+;=>
+;(retract ?f)
+;(assert (Juega M ?c))
+;(printout t "Juego sin razonar, que mal"  crlf) 
+;)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;  Comprobar si hay 4 en linea ;;;;;;;;;;;;;;;;;;;;;
@@ -301,12 +310,18 @@
 =>
 (assert (siguiente ?f ?c h ?f (+ ?c 1)))
 )
-
+;cambio
+;(defrule siguiente_vertical
+;(Tablero Juego ?f ?c _ )
+;(test (< ?f 6))
+;=>
+;(assert (siguiente ?f ?c v (+ ?f 1) ?c))
+;)
 (defrule siguiente_vertical
 (Tablero Juego ?f ?c _ )
-(test (< ?f 6))
+(test (> ?f 1))
 =>
-(assert (siguiente ?f ?c v (+ ?f 1) ?c))
+(assert (siguiente ?f ?c v (- ?f 1) ?c))
 )
 
 ;Diagonal de arriba abajo
@@ -374,12 +389,21 @@
 
 (defrule conect
 (Tablero Juego ?f1 ?c1 ?p)
+(siguiente ?f1 ?c1 ?d ?f2 ?c2)
 (Tablero Juego ?f2 ?c2 ?p)
 (test (neq ?p _)) ;Si el jugador es  blanco
-(siguiente ?f1 ?c1 ?d ?f2 ?c2)
 =>
 (assert (conectado ?d ?f1 ?c1 ?f2 ?c2 ?p))
 )
+
+;(defrule conect_ant
+;(Tablero Juego ?f1 ?c1 ?p)
+;(anterior ?f1 ?c1 ?d ?f2 ?c2)
+;(Tablero Juego ?f2 ?c2 ?p)
+;(test (neq ?p _)) ;Si el jugador no es  blanco
+;=>
+;(assert (conectado ?d ?f1 ?c1 ?f2 ?c2 ?p))
+;)
 
 
 ;3 fichas conectadas
@@ -391,8 +415,10 @@
 (siguiente ?f1 ?c1 ?d ?f2 ?c2) ; Obtengo la direccion
 (conectado ?d ?f2 ?c2 ?f3 ?c3 ?p )
 =>
+(printout t "3seguidos1"crlf)
 (assert (3_en_linea Juego ?d ?f1 ?c1 ?f3 ?c3 ?p))     
 )
+
 
 ;gana en columna
 (defrule posib_ganar
@@ -401,4 +427,223 @@
 (caeria ?f4 ?c4)
 =>
 (assert (ganaria ?p ?c4))  
+(printout t "El jugador "?p " ganaria1 en " ?c4 crlf)
 )
+
+(defrule posib_ganar_2
+(3_en_linea Juego ?d ?f1 ?c1 ?f3 ?c3 ?p)
+(siguiente ?f1 ?c1 ?d ?f4 ?c4)
+(caeria ?f4 ?c4)
+=>
+(assert (ganaria ?p ?c4))  
+(printout t "El jugador "?p " ganaria2 en " ?c4 crlf)
+)
+
+(defrule posib_ganar_a1
+(3_en_linea Juego ?d ?f1 ?c1 ?f3 ?c3 ?p)
+(anterior ?f3 ?c3 ?d ?f4 ?c4)
+(caeria ?f4 ?c4)
+=>
+(assert (ganaria ?p ?c4))  
+(printout t "El jugador "?p " ganaria3 en " ?c4 crlf)
+)
+
+(defrule posib_ganar_2_a2
+(3_en_linea Juego ?d ?f1 ?c1 ?f3 ?c3 ?p)
+(anterior ?f1 ?c1 ?d ?f4 ?c4)
+(caeria ?f4 ?c4)
+=>
+(assert (ganaria ?p ?c4))  
+(printout t "El jugador "?p " ganaria4 en " ?c4 crlf)
+)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;La del hueco xx_x
+
+;;;;;;;;;;;;;;;;;;;;;;; SI EL JUGADOR BLOQUEA UNA JUGADA GANADORA DE LA MAQUINA
+(defrule jugador_bloquea_ganadora
+(declare (salience 9999))
+?h <- (ganaria M ?columna)
+(Juega J ?columna)
+=>
+(retract ?h)
+(printout t "Peta n" crlf)
+)
+
+(defrule empezar_por_mitad
+(Tablero Juego 6 4 _)
+?f <- (Turno M)
+=>
+(retract ?f)
+(assert (Juega M 4))
+)
+
+(defrule crear_2
+(Tablero Juego ?f1 ?c1 M)
+(siguiente ?f1 ?c1 ?d ?f2 ?c2)
+(Tablero Juego ?f2 ?c2 ?p)
+(test (neq ?p _))
+?f <- (Turno M)
+=>
+(assert (Juega M ?c2))
+(printout t "Siguientescoords " ?f2 " " ?c2 crlf)
+(printout t "Early game " ?c2 crlf)
+(retract ?f)
+)
+
+;;;;;;;;;;;;;;;;;;;;;;; CUANDO LA MAQUINA TIENE LA OPCION DE GANAR LO HACE DIRECTAMENTE COMO PRIMERA JUGADA
+(defrule maquina_hace_jugada_ganadora
+(declare (salience 9999))
+?f <- (Turno M)
+?g <- (ganaria M ?columna)
+=>
+(assert (Juega M ?columna))
+(printout t "Jugada ganadora de M en " ?columna crlf)
+(retract ?f ?g)
+)
+;;;;;;;;;; bloquear jugada ganadora 
+(defrule maquina_bloquea_jugada_ganadora
+?f <- (Turno M)
+?g <- (ganaria J ?columna)
+=>
+(printout t "Bloqueo jugada ganadora en Columna " ?columna crlf)
+(retract ?g ?f)
+(assert (Juega M ?columna))
+)
+
+;;Puede fallar e intentar poner 
+(defrule 3_conect_M
+?h <- (Turno M)
+(Tablero Juego ?f1 ?c1 ?M)
+(Tablero Juego ?f2 ?c2 ?M)
+(siguiente ?f1 ?c1 ?d ?f2 ?c2) ; Obtengo la direccion
+(conectado ?d ?f2 ?c2 ?f3 ?c3 ?p )
+;(test (< ?f3 1))
+=>
+(retract ?h)
+(printout t "3 CONECTADOS DE M " ?f2 " " ?c2 " " ?f3 " " ?c3 crlf)
+(assert (Juega M ?c3))
+  
+)
+
+;;;defrule siguiente hay un hueco
+(defrule sig_hueco
+(Tablero Juego ?f1 ?c1 ?p)
+(conectado ?d ?f1 ?c1 ?f2 ?c2 ?p)
+(siguiente ?d ?f2 ?c2 ?f3 ?c3)
+(Tablero Juego ?f3 ?c3 ?blank)
+(test (neq ?blank _))
+=>
+(printout t "Peta1" crlf)
+(assert (hueco ?p ?d ?f3 ?c3)) 
+)
+
+(defrule ant_hueco
+(Tablero Juego ?f1 ?c1 ?p)
+(conectado ?d ?f1 ?c1 ?f2 ?c2 ?p)
+(anterior ?d ?f2 ?c2 ?f3 ?c3)
+(Tablero Juego ?f3 ?c3 ?blank)
+(test (neq ?blank _))
+=>
+(printout t "Peta2" crlf)
+(assert (hueco ?p ?d ?f3 ?c3)) 
+)
+;;;;
+
+(defrule ganaria_hueco_medio_sig
+(Tablero Juego ?f1 ?c1 ?jugador)
+(Tablero Juego ?f2 ?c2 ?jugador)
+(conectado ?d ?f1 ?c1 ?f2 ?c2 ?jugador)  
+(siguiente ?d ?f2 ?c2 ?f3 ?c3)
+(hueco ?jugador ?d ?f3 ?c3)
+(siguiente ?d ?f3 ?c3 ?f4 ?c4)
+(Tablero Juego ?f4 ?c4 ?sameplayer)
+(test (neq ?sameplayer ?jugador))
+;;;;;;;;;
+(caeria ?f4 ?c4)
+=>
+(printout t "Hay un 1hueco en " ?c4 "donde " ?jugador " gana" crlf)
+(assert (ganaria ?jugador ?c4))
+)
+
+(defrule ganaria_hueco_medio_ant
+(Tablero Juego ?f1 ?c1 ?jugador)
+(Tablero Juego ?f2 ?c2 ?jugador)
+(conectado ?d ?f1 ?c1 ?f2 ?c2 ?jugador)  
+(anterior ?d ?f2 ?c2 ?f3 ?c3)
+(hueco ?jugador ?d ?f3 ?c3)
+(anterior ?d ?f3 ?c3 ?f4 ?c4)
+(Tablero Juego ?f4 ?c4 ?sameplayer)
+(test (neq ?sameplayer ?jugador))
+;;;;;;;;;
+(caeria ?f4 ?c4)
+=>
+(printout t "Hay un 2hueco en " ?c4 "donde " ?jugador " gana" crlf)
+(assert (ganaria ?jugador ?c4))
+)
+
+(defrule ganaria_hueco_medio_sig_2
+(Tablero Juego ?f1 ?c1 ?jugador)
+(Tablero Juego ?f2 ?c2 ?jugador)
+(conectado ?d ?f1 ?c1 ?f2 ?c2 ?jugador)  
+(siguiente ?d ?f1 ?c1 ?f3 ?c3)
+(hueco ?jugador ?d ?f3 ?c3)
+(siguiente ?d ?f3 ?c3 ?f4 ?c4)
+(Tablero Juego ?f4 ?c4 ?sameplayer)
+(test (neq ?sameplayer ?jugador))
+;;;;;;;;;
+(caeria ?f4 ?c4)
+=>
+(printout t "Hay un 3hueco en " ?c4 "donde " ?jugador " gana" crlf)
+(assert (ganaria ?jugador ?c4))
+)
+
+(defrule ganaria_hueco_medio_ant_2
+(Tablero Juego ?f1 ?c1 ?jugador)
+(Tablero Juego ?f2 ?c2 ?jugador)
+(conectado ?d ?f1 ?c1 ?f2 ?c2 ?jugador)  
+(anterior ?d ?f1 ?c1 ?f3 ?c3)
+(hueco ?jugador ?d ?f3 ?c3)
+(anterior ?d ?f3 ?c3 ?f4 ?c4)
+(Tablero Juego ?f4 ?c4 ?sameplayer)
+(test (neq ?sameplayer ?jugador))
+;;;;;;;;;
+(caeria ?f4 ?c4)
+=>
+(printout t "Hay un 4hueco en " ?c4 "donde " ?jugador " gana" crlf)
+(assert (ganaria ?jugador ?c4))
+)
+
+(defrule BLOQUEO_hueco_medio_sig
+(Tablero Juego ?fila ?columna ?jugador)
+(test (neq ?jugador _)) 
+(conectado ?d ?fila ?columna ?fila1 ?columna1 ?jugador)  
+(Tablero Juego ?fila ?columna2 _)
+(Tablero Juego ?fila ?columna3 ?jugador)
+(test (or (and (eq ?columna2 (+ ?columna1 1)) (eq ?columna3 (+ ?columna1 2)))  (and (eq ?columna2 (- ?columna 1)) (eq ?columna3 (- ?columna 2))) ) )
+(caeria ?fila ?columna2)
+=>
+(printout t "Hay un 5hueco en " ?columna2 "donde " ?jugador " gana" crlf)
+(assert (ganaria ?jugador ?columna2))
+)
+
+
+(defrule clisp_juega_con_criterio
+(declare (salience 9999))
+?f<- (Jugar ?c)
+=>
+(printout t "------------------------------------------------" crlf) 
+(printout t "Juego razonando en " ?c  crlf) 
+(printout t "------------------------------------------------" crlf) 
+(retract ?f)
+(assert (Juega M ?c))
+)
+
+;(defrule elegir_jugada_aleatoria
+;;(declare (salience -9998))
+;?f <- (Turno M)
+;(Juega M ?c2))
+;=>
+;(assert (Juega M ?c2))
+;(retract ?f)
+;)

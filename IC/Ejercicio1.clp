@@ -115,7 +115,7 @@
 (defrule pregunta
 (declare (salience 1000)) 
 =>
-   (printout t "Dime la relacion que desea buscar " crlf)
+   (printout t "Dime la relacion que desea buscar (en mayusculas) " crlf)
    (assert (relacion (read))))
    
    ;;;;; Solicitamos el nombre de la persona 
@@ -128,21 +128,47 @@
    (assert (persona (read))))
 
 ;;;;; Hacemos que nos diga por pantalla la relacion entre las persona introducida. Como la forma de expresarlo dependera del sexo, usamos dos reglas, una para cada sexo
+(defrule init_not_found
+=>
+(assert (solucion NOTF))
+)
 
 (defrule relacionmasculino
    (relacion ?r)     
    (persona ?x)
+   ;; y es "relacion" de x
    (Relacion (tipo ?r) (sujeto ?y) (objeto ?x))
-   ;(hombre ?x)
- =>
-   (printout t "EL/La/Los/Las  " ?r " de " ?x " son " ?y crlf) )
-
-
-
- (defrule SalidaEstandar
+   (hombre ?y)
+   ?f <- (solucion NOTF)
+   =>
+   (retract ?f)
+   (assert (solucion FOUND))
+   (printout t "El  " ?r " de " ?x " es " ?y crlf) 
+    ;(printout t "la " ?fem crlf) 
+)
+(defrule relacionfem
    (relacion ?r)     
    (persona ?x)
+   ;; y es "relacion" de x
    (Relacion (tipo ?r) (sujeto ?y) (objeto ?x))
-   (test (eq ?y nil))
- =>
-   (printout t "No he encontrado ninguna relacion" crlf)
+   (mujer ?y)
+   (femenino ?r ?fem)
+   ;?f <- (solucion NOTF)
+   =>
+   ;Los abuelos de juanito son tal
+   ;(printout t "EL/La/Los/Las  " ?r " de " ?x " son " ?y crlf)
+   (assert (solucion FOUND))
+   ;(retract ?f)
+   (printout t "La  " ?fem " de " ?x " es " ?y crlf) 
+)
+
+
+(defrule SalidaEstandar
+(declare (salience -999))
+(relacion ?r)     
+(persona ?x)
+(solucion ?ans)
+(test (neq ?ans FOUND))
+=>
+(printout t "No he encontrado ninguna relacion " ?ans crlf)
+)

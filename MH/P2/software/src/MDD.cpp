@@ -60,19 +60,23 @@ La idea de este es calcular fitness añadiendo un elemento, eso seria pasrle un 
 
 */
 float MDD::fit_adding(vector<int> posib, int new_i){
-    float new_diff;
-    if(posib[new_i] != 0){
+    float new_diff =std::numeric_limits<double>::infinity(); 
+    if(posib[new_i] != 1){
         posib.at(new_i) = 1;
         new_diff = diff(posib);
         posib.at(new_i) = 0;
-    }else cout << "ERROR: El valor añadido ya esta en la solucion " << endl;
-   
+    }else {cout << "ERROR: El valor añadido ya esta en la solucion " << endl;
+    for(auto& i : posib)
+        cout << i << " ";
+    cout << "Index" << new_i << endl;
+
+   }
     return new_diff;
 }
 
 //Este es el bueno
 vector<int> MDD::greedy(){
-    vector<int> solucion;
+    vector<int> solucion(this->n,0);
     vector<int> cand;
 
     for(int i = 0; i < this->n;i++){
@@ -80,25 +84,33 @@ vector<int> MDD::greedy(){
     }
     int max = this->n;
     auto rand = Random::get(0,max);
-    auto select = cand.at(rand);//Seleccion inicial
-    //Seleccionar la primera solucion de forma aleatoria
-    solucion.push_back(select);
-    auto delete_ps = cand.begin()+rand;
-    cand.erase(delete_ps);
-
-    while(solucion.size() < this->m ){
+    solucion.at(rand) = 1;
+    cout << "First select1 " << rand << endl;
+    std::remove(cand.begin(),cand.end(),rand);
+    cand.resize(cand.size()-1);
+    while(count(solucion.begin(), solucion.end(), 1) != this->m ){
         float new_fitness;
         int pos = 0;
         float min = 10000000.0f;
-        for(auto ele : cand){
+
+        for(auto ele : cand){            
             new_fitness = fit_adding(solucion,ele);
+            cout << "Fitness añadiendo " << ele << " es " << new_fitness << endl;
             if(new_fitness < min){
                 pos = ele;
                 min = new_fitness;    
             }
-        }   
-        solucion.push_back(pos);
+        }
+        cout << "Minimo encontrado en " << pos << endl;   
+        for(auto& i : solucion)
+                cout << i << " ";
+            cout << endl;
+        if(solucion.at(pos) != 1){
+            //cout << "Elemento seleccionado" << pos << endl;
+            solucion.at(pos)= 1;
+        }
         std::remove(cand.begin(),cand.end(),pos);
+        cand.resize(cand.size()-1);
     }
     return solucion;
 }

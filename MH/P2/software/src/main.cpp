@@ -77,7 +77,7 @@ int main(int argc, char *argv[]){
 
 int main(int argc, char *argv[]){
     string nombreArchivo = "datos_MDD/GKD-b_6_n25_m7.txt";
-    
+    Random::seed(0); 
     ifstream file(nombreArchivo);
     pair<int,int> dim  = read_dimension(nombreArchivo);
     MDD instance(dim.first,dim.second);
@@ -85,5 +85,10 @@ int main(int argc, char *argv[]){
     instance.leer_fichero(nombreArchivo);
     vector<int> ins = {0,1,0,1,1,1};
     //instance.print_check();
-    cout << instance.diff(ins);
+    vector<int> sol  =  instance.greedy();
+    for(auto& i : sol)
+        cout << i << " ";
+    cout << endl;
+    cout << "DIF " << instance.diff(sol) << endl;
+    
 }

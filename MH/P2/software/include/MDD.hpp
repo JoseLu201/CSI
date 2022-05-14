@@ -15,8 +15,6 @@ class MDD{
         int n,m;
         vector<vector<float>> datos;
         
-
-        
     public:
         vector<float> distan;
         MDD(int n,int m );
@@ -34,6 +32,15 @@ class MDD{
         vector<int> BL();
         void printDatos();
 
+        vector<int> generarHijosUniforme(vector<int> p1,vector<int> p2);
+        pair<vector<int>,vector<int>> generarHijosPosicion(vector<int> p1,vector<int> p2);
+        vector<int> reparar(vector<int> hijo);
+
+        vector<int> AGG_uniforme();
+        vector<int> AGG_posicion();
+        vector<int> generarPoblacion();
+        int torneo(vector<vector<int>> poblacion, vector<float> fitness_i,int indiv_torneo);
+        vector<vector<int>> seleccion(vector<vector<int>> poblacion,vector<float> fitness_i);
         
 
 };

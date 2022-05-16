@@ -1,0 +1,16 @@
+Media de la dispersion 0;Media de la tiempos 2807
+Media de la dispersion 0;Media de la tiempos 2942
+Media de la dispersion 0;Media de la tiempos 2840
+Media de la dispersion 0;Media de la tiempos 3132
+Media de la dispersion 0;Media de la tiempos 3020
+Media de la dispersion 12.718;Media de la tiempos 9918
+Media de la dispersion 14.0988;Media de la tiempos 9550
+Media de la dispersion 16.7612;Media de la tiempos 9783
+Media de la dispersion 17.0692;Media de la tiempos 9553
+Media de la dispersion 23.2651;Media de la tiempos 9761
+Media de la dispersion 1.92615;Media de la tiempos 9212
+Media de la dispersion 2.05127;Media de la tiempos 8643
+Media de la dispersion 2.3623;Media de la tiempos 9014
+Media de la dispersion 1.66321;Media de la tiempos 8880
+Media de la dispersion 2.85315;Media de la tiempos 8885
+Media de la dispersion 51.5475;Media de la tiempos 34848

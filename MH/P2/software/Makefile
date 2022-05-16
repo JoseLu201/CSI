@@ -1,5 +1,5 @@
 CXX := g++
-CXX_FLAGS := -std=c++17 -ggdb
+CXX_FLAGS := -std=c++17 -O3 -funroll-loops -march=native -mfpmath=sse 
 
 BIN := BIN
 SRC := src

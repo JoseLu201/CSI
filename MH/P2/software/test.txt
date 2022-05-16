@@ -1,2 +1,57 @@
-0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 0 1 1 1 0 1 
-DIF 12.718
+Media de la dispersion 0;Media de la tiempos 1408
+Media de la dispersion 0;Media de la tiempos 1466
+Media de la dispersion 0;Media de la tiempos 1443
+Media de la dispersion 0;Media de la tiempos 1396
+Media de la dispersion 0;Media de la tiempos 1562
+Media de la dispersion 12.718;Media de la tiempos 4378
+Media de la dispersion 14.0988;Media de la tiempos 4617
+Media de la dispersion 16.7612;Media de la tiempos 4436
+Media de la dispersion 17.0692;Media de la tiempos 4440
+Media de la dispersion 26.238;Media de la tiempos 4490
+Media de la dispersion 1.92615;Media de la tiempos 4086
+Media de la dispersion 2.91382;Media de la tiempos 3984
+Media de la dispersion 3.08163;Media de la tiempos 4038
+Media de la dispersion 3.74121;Media de la tiempos 4074
+Media de la dispersion 2.85315;Media de la tiempos 3986
+Media de la dispersion 69.0885;Media de la tiempos 17075
+Media de la dispersion 66.7358;Media de la tiempos 17183
+Media de la dispersion 73.1334;Media de la tiempos 17061
+Media de la dispersion 78.6036;Media de la tiempos 16772
+Media de la dispersion 88.663;Media de la tiempos 17169
+Media de la dispersion 32.6772;Media de la tiempos 12652
+Media de la dispersion 28.7942;Media de la tiempos 12572
+Media de la dispersion 25.0621;Media de la tiempos 12329
+Media de la dispersion 17.9513;Media de la tiempos 12471
+Media de la dispersion 25.2507;Media de la tiempos 12548
+Media de la dispersion 329.619;Media de la tiempos 104411
+Media de la dispersion 266.229;Media de la tiempos 105209
+Media de la dispersion 253.68;Media de la tiempos 104641
+Media de la dispersion 291.212;Media de la tiempos 104723
+Media de la dispersion 314.139;Media de la tiempos 105249
+Media de la dispersion 29.782;Media de la tiempos 17927
+Media de la dispersion 49.4594;Media de la tiempos 18340
+Media de la dispersion 42.9775;Media de la tiempos 18006
+Media de la dispersion 44.2627;Media de la tiempos 18017
+Media de la dispersion 34.0464;Media de la tiempos 18069
+Media de la dispersion 305.092;Media de la tiempos 198374
+Media de la dispersion 526.518;Media de la tiempos 213595
+Media de la dispersion 387.172;Media de la tiempos 212585
+Media de la dispersion 424.125;Media de la tiempos 215472
+Media de la dispersion 445.437;Media de la tiempos 214251
+Media de la dispersion 55.0293;Media de la tiempos 29507
+Media de la dispersion 57.3472;Media de la tiempos 30690
+Media de la dispersion 61.0236;Media de la tiempos 30932
+Media de la dispersion 44.3014;Media de la tiempos 30541
+Media de la dispersion 38.8276;Media de la tiempos 30774
+Media de la dispersion 592.102;Media de la tiempos 394791
+Media de la dispersion 619.441;Media de la tiempos 392003
+Media de la dispersion 558.634;Media de la tiempos 387876
+Media de la dispersion 609.875;Media de la tiempos 399438
+Media de la dispersion 649.56;Media de la tiempos 389810
+
+
+
+
+
+
+

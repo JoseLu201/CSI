@@ -43,7 +43,7 @@ class MDD{
         vector<int> AGE_posicion();
         vector<int> generarPoblacion();
         int torneo(vector<vector<int>> poblacion, vector<float> fitness_i,int indiv_torneo);
-        vector<int> seleccion(vector<vector<int>> poblacion,vector<float> fitness_i);
+        vector<int> seleccion(vector<vector<int>> poblacion,vector<float> fitness_i,int n);
         
 
 };

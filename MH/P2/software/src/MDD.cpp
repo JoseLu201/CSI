@@ -248,7 +248,7 @@ vector<int> MDD::BL(){
              rand = Random::get(0,this->n-1);
              solucion.push_back(rand);
         }
-    }
+    } 
     Random::shuffle( cand.begin( ), cand.end( ) );
 
 
@@ -331,8 +331,7 @@ pair<vector<int>,vector<int>> MDD::generarHijosUniforme(vector<int> p1,vector<in
             hijo2[i] = Random::get(0,1);
         }
     }
-
-    
+        
     reparar(hijo1);
     reparar(hijo2);
     ans.first = hijo1;
@@ -441,9 +440,9 @@ int MDD::torneo(vector<vector<int>> poblacion, vector<float> fitness_i, int indi
     return winner;
 }
 
-vector<int> MDD::seleccion(vector<vector<int>> poblacion,vector<float> fitness_i){
+vector<int> MDD::seleccion(vector<vector<int>> poblacion,vector<float> fitness_i, int n){
     vector<int> winner;
-    for(auto i : poblacion){
+    for(int i = 0; i< n ;i++){
         winner.push_back( torneo(poblacion,fitness_i,2));
     }
 
@@ -616,6 +615,7 @@ vector<int> MDD::AGG_posicion(){
                 hijos.insert(hijos.begin()+desp ,*row);
                 desp++;
             }
+            iters++;
         }
 
         //Tocar MUTAR
@@ -654,7 +654,7 @@ vector<int> MDD::AGG_posicion(){
             fitness_i[worst_i] = best_fit;
             *(poblacion.begin() + worst_i) = best_father;
         }
-       iters++;
+       
     }
 
 
@@ -692,7 +692,7 @@ vector<int> MDD::AGE_uniforme(){
 
         //Seleccionamos
 
-        auto selected = seleccion(poblacion,fitness_i);
+        auto selected = seleccion(poblacion,fitness_i,2);
 
 
         int desp = 0;
@@ -817,8 +817,7 @@ vector<int> MDD::AGE_posicion(){
         //Seleccionamos
 
 
-    auto selected = seleccion(poblacion,fitness_i);
-
+        auto selected = seleccion(poblacion,fitness_i,2);
 
         int desp = 0;
         pair<vector<int>,vector<int>> pair_child;
@@ -842,7 +841,7 @@ vector<int> MDD::AGE_posicion(){
        
         int count = 0;
         int num_mutaciones_esperado = 0.1*2 * this->n;
-        
+        cout << "Numero esperado de mutaciones Generacional " << num_mutaciones_esperado << endl;
         while(count != num_mutaciones_esperado){
             //inicioCruce = high_resolution_clock::now();
             int cromos = Random::get(0,TAM-1);

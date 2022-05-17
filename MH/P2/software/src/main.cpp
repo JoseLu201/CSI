@@ -113,7 +113,7 @@ int main(int argc, char *argv[]){
 
     instance.leer_fichero(nombreArchivo);
 
-    Random::seed(0);
+    Random::seed(1);
     vector<float> dispersion;
     vector<milliseconds> times;
     milliseconds tiempo;

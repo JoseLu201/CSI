@@ -727,7 +727,7 @@ vector<int> MDD::AGE_uniforme(){
 
         //Tocar MUTAR
          //inicioMuta= high_resolution_clock::now();
-        int num_mutaciones_esperado = 0.1*this->n * this->m;
+        int num_mutaciones_esperado = 0.1*this->n * TAM;
         int count = 0;
         
         while(count != num_mutaciones_esperado){
@@ -829,10 +829,12 @@ vector<int> MDD::AGE_posicion(){
         auto first = selected.at(0);
         pair_child = generarHijosPosicion(*(poblacion.begin()+selected.at(0)), *(poblacion.begin()+selected.at(1)));
         hijos.push_back(pair_child.first);
-        fitness_i.push_back(diff(pair_child.first));
+        float fit_first = diff(pair_child.first);
+        //fitness_i.push_back(diff(pair_child.first));
 
         hijos.push_back(pair_child.second);
-        fitness_i.push_back(diff(pair_child.second));
+        float fit_second = diff(pair_child.second);
+        //fitness_i.push_back(diff(pair_child.second));
 
         
 
@@ -840,11 +842,12 @@ vector<int> MDD::AGE_posicion(){
          //inicioMuta= high_resolution_clock::now();
        
         int count = 0;
-        int num_mutaciones_esperado = 0.1*2 * this->n;
+         int num_mutaciones_esperado = 0.1*this->n * TAM;
+        int hijos_size = hijos.size();
         cout << "Numero esperado de mutaciones Generacional " << num_mutaciones_esperado << endl;
         while(count != num_mutaciones_esperado){
             //inicioCruce = high_resolution_clock::now();
-            int cromos = Random::get(0,TAM-1);
+            int cromos = Random::get(0,hijos_size-1);
             int gen1,gen2;
             
             do{ 
@@ -862,23 +865,27 @@ vector<int> MDD::AGE_posicion(){
             }
             count++;
         }
-        
 
 
-        
-        poblacion.clear();
-        poblacion.resize(TAM,vector<int>(this->n-1,0));
-        
-        poblacion = hijos;
-        hijos.clear();
-
-        //cout << "Best padre " << best_fit << endl;
-        //Si no encuentro reemplazo el peor 
-        if( find(fitness_i.begin(), fitness_i.end(), best_fit) == fitness_i.end() ){
+        //if( find(fitness_i.begin(), fitness_i.end(), best_fit) == fitness_i.end() ){
+            auto copy = fitness_i;
             int worst_i =  std::max_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
-            fitness_i[worst_i] = best_fit;
-            *(poblacion.begin() + worst_i) = best_father;
-        }
+            copy[worst_i] = -1;
+            int second_worst = std::max_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
+            copy[second_worst] = -1;
+
+
+            if(fit_first < fit_second){ // Si el primero tiene mejor fitnes que el segundo
+                 if(fitness_i[worst_i] >= fit_first)
+                fitness_i[worst_i = ]
+
+            }
+           
+
+            (*(poblacion.begin()+worst_i)) = (*(hijos.begin()))
+
+            
+        //}
 
 
 

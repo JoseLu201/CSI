@@ -1,6 +1,6 @@
 #!/bin/bash
 
-array=( $( ls ./datos_MDD -1v -r) )
+array=( $( ls ./datos_MDD -1v ) )
 
 i=0
 len=${#array[@]}

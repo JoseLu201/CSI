@@ -22,9 +22,11 @@ class MDD{
         void read_dimension(string fichero);
         void leer_fichero(string nombre_fichero);
         float distPuntoRestoElemenetos(int f,vector<int> v);
+        float distPuntoRestoElemenetosNonBin(int f,vector<int> v);
         float distFactorizada(vector<int> sol,pair<int,int> cambio);
+        float distFactorizadaNonBin(vector<int> sol,pair<int,int> cambio);
         float diff(vector<int> posib);
-        float diff2(vector<int> posib);
+        float diffNonBin(vector<int> posib);
         float fit_adding(vector<int> posib,int new_i);
         vector<int> greedy();
         void mostrarDatos();
@@ -32,6 +34,7 @@ class MDD{
         void print_check();
 
         vector<int> BL();
+        vector<int> Bin_BL(vector<int> data);
         void printDatos();
 
         pair<vector<int>,vector<int>> generarHijosUniforme(vector<int> p1,vector<int> p2);
@@ -45,6 +48,9 @@ class MDD{
         vector<int> generarPoblacion();
         int torneo(vector<vector<int>> poblacion, vector<float> fitness_i,int indiv_torneo);
         set<int> seleccion(vector<vector<int>> poblacion,vector<float> fitness_i,int n);
+
+        
+        vector<int> AM();
         
 
 };

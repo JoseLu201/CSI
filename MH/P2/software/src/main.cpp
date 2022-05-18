@@ -77,7 +77,8 @@ int main(int argc, char *argv[]){
 
 
 */
-int main(int argc, char *argv[]){
+
+/*int main(int argc, char *argv[]){
     string algo = argv[1];
     string nombreArchivo = argv[2];
     
@@ -120,16 +121,16 @@ int main(int argc, char *argv[]){
     for(auto t : times){
         sum_tiempo+=t.count();
     }
-    /*for(int i = 0; i < sol.size();i++){
+    /*for(int i = 0; i < sol.size();i++)
         if(sol[i] == 1)
             cout << i << ",";
-    }
-    //cout << endl;*/
+    cout << endl;
     cout <<"Media de la dispersion " << sum/dispersion.size() << ";";
     cout << "Media de la tiempos " << sum_tiempo/times.size() <<endl;
     return 0;   
-}
-/*
+}*/
+
+
 
 int main(int argc, char *argv[]){
     //string nombreArchivo = "datos_MDD/GKD-b_50_n150_m45.txt";
@@ -147,7 +148,7 @@ int main(int argc, char *argv[]){
     vector<int> ins = {0,1,0,1,1,1};
     //instance.print_check();
     inicio = high_resolution_clock::now();
-    vector<int> sol  =  instance.AGE_posicion();
+    vector<int> sol  =  instance.AM();
     //vector<int> sol  =  instance.AGG_posicion();
     fin = high_resolution_clock::now();
      tiempo = duration_cast<std::chrono::milliseconds>(fin - inicio);
@@ -157,4 +158,4 @@ int main(int argc, char *argv[]){
     cout << "Coste " << instance.diff(sol) << endl;
     cout << "Tiempo " << tiempo.count() << endl;
     
-}*/
+}

@@ -76,7 +76,7 @@ int main(int argc, char *argv[]){
 
 
 
-/*
+*/
 int main(int argc, char *argv[]){
     string algo = argv[1];
     string nombreArchivo = argv[2];
@@ -124,12 +124,12 @@ int main(int argc, char *argv[]){
         if(sol[i] == 1)
             cout << i << ",";
     }
-    //cout << endl;
+    //cout << endl;*/
     cout <<"Media de la dispersion " << sum/dispersion.size() << ";";
     cout << "Media de la tiempos " << sum_tiempo/times.size() <<endl;
     return 0;   
-}*/
-
+}
+/*
 
 int main(int argc, char *argv[]){
     //string nombreArchivo = "datos_MDD/GKD-b_50_n150_m45.txt";
@@ -157,4 +157,4 @@ int main(int argc, char *argv[]){
     cout << "Coste " << instance.diff(sol) << endl;
     cout << "Tiempo " << tiempo.count() << endl;
     
-}
+}*/

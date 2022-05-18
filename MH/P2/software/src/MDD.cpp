@@ -806,23 +806,25 @@ vector<int> MDD::AGE_posicion(){
     vector<float> fitness_hijo;
     int iters = 0;
 
-    bool sustitucion = false; 
+    bool sustitucion = true; 
     
     for(auto &row : poblacion){
         row = generarPoblacion();
         fitness_i.push_back(diff(row)); 
     }
      
+     int worst_i,second_worst;
+    //float fit_first,fit_second;
     while(iters < MAX_ITERS){
        auto inicioLoop = high_resolution_clock::now();
        
         //auto iniciosel= high_resolution_clock::now();
         set<int> selected = MDD::seleccion(poblacion,fitness_i,2);
         //auto finsel= high_resolution_clock::now();
-        cout << "Selecciono  "  ;
+        /*cout << "Selecciono  "  ;
         for(auto i : selected)
             cout << i << " ";
-        cout << endl; 
+        cout << endl; */
         //cout <<"La seleccion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finsel - iniciosel)).count() << endl;
 
         
@@ -879,47 +881,50 @@ vector<int> MDD::AGE_posicion(){
 
         
         //Busco los 2 peores elementos de 
-        
-        if(!sustitucion)
-            int worst_i =  std::max_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
+       
+        if(sustitucion){
+            worst_i =  std::max_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
             float tmp1 = fitness_i[worst_i];
             fitness_i[worst_i] = -1;
-            int second_worst = std::max_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
+            second_worst = std::max_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
             fitness_i[worst_i] = tmp1;
 
+        } 
+        float fit_first = fitness_hijo.at(0);
+        float fit_second = fitness_hijo.at(1);
 
-            float fit_first = fitness_hijo.at(0);
-            float fit_second = fitness_hijo.at(1);
+        //cout << "Peores elementos " << worst_i <<" con "<< fitness_i[worst_i] <<" , " << second_worst <<" con "<< fitness_i[second_worst]  <<endl;
+        //cout << "Fit de los hijos " << fit_first<< " , " << fit_second<<endl;
 
-        cout << "Peores elementos " << worst_i <<" con "<< fitness_i[worst_i] <<" , " << second_worst <<" con "<< fitness_i[second_worst]  <<endl;
-        cout << "Fit de los hijos " << fit_first<< " , " << fit_second<<endl;
-
-        
+          
         if(fit_first < fit_second){ //Si el primer hijo es mejor que el segundo
             if(fit_first < fitness_i[worst_i] ){ // Cambio el mejor por el peor
-                cout << "Subsitucion 1" << endl;
+                //cout << "Subsitucion 1" << endl;
                 (*(poblacion.begin()+worst_i)) = (*(hijos.begin()));
                 fitness_i[worst_i] = fit_first;
+                sustitucion = true;
                 if(fit_second < fitness_i[second_worst] ){ // Cambio el mejor por el peor
                     (*(poblacion.begin()+second_worst)) = (*(hijos.begin()+1));
                     fitness_i[second_worst] = fit_second;
 
-                }
-                sustitucion = true;
-            }
+                }//else sustitucion = false;
+                
+            }else sustitucion = false;
 
         }else{
             if(fit_second < fitness_i[worst_i] ){ // Cambio el mejor por el peor
-                cout << "Subsitucion 2" << endl;
+                //cout << "Subsitucion 2" << endl;
                 (*(poblacion.begin()+worst_i)) = (*(hijos.begin()+1));
                 fitness_i[worst_i] = fit_second;
+                sustitucion = true;
                 if(fit_first < fitness_i[second_worst] ){
                     (*(poblacion.begin()+second_worst)) = (*(hijos.begin()));
                     fitness_i[second_worst] = fit_first;
-                }
-                sustitucion = true;
-            }
+                }//else sustitucion = false;
+                
+            }else sustitucion = false;
         }
+        
 
         hijos.clear();
         fitness_hijo.clear();
@@ -930,12 +935,12 @@ vector<int> MDD::AGE_posicion(){
 
         
         //cout << endl << "---------------------------------------------------------------"<<endl;
-        cout << endl << "------  GENERACION  "<<  iters <<"  --------------------" << endl;
+        //cout << endl << "------  GENERACION  "<<  iters <<"  --------------------" << endl;
         //cout << endl << "---------------------------------------------------------------"<<endl;
         iters++;
 
         auto finLoop = high_resolution_clock::now();
-         cout <<" La generacion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finLoop - inicioLoop)).count() << endl;
+         //cout <<" La generacion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finLoop - inicioLoop)).count() << endl;
     }
 
      /*for(auto row : poblacion){
@@ -950,11 +955,11 @@ vector<int> MDD::AGE_posicion(){
     //cout << "Best index " << best << endl;
     //Escogo el mejor
     hijo = (*(poblacion.begin()+ best));    
-    cout << "Best individuo " << endl; 
+    /*cout << "Best individuo " << endl; 
     for(auto e : hijo)
         cout << e << " ";
     cout << endl;
-    cout << "Real cost " << diff(hijo) << endl;
+    cout << "Real cost " << diff(hijo) << endl;*/
 return hijo;
 
 }

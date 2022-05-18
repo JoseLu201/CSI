@@ -5,6 +5,7 @@
 #include "random.hpp"
 #include <vector>
 #include <set>
+#include<queue>
 
 
 using namespace std;
@@ -425,27 +426,26 @@ vector<int> MDD::generarPoblacion(){
 
 int MDD::torneo(vector<vector<int>> poblacion, vector<float> fitness_i, int indiv_torneo){
     set<int> torneo;
-    float best_fit = std::numeric_limits<double>::infinity();
+    float worst = std::numeric_limits<double>::infinity();
     int winner = -1;
-
+    int TAM = poblacion.size();
+    /*Selecciono "indiv_torneo" individuos diferentes*/
     while(torneo.size() != indiv_torneo)
-        torneo.insert( Random::get(0,this->n-1));
-    
+        torneo.insert( Random::get(0,TAM-1));
+    //Me quedo con el que tenga mejor fitness
     for(auto i : torneo){
-        if(best_fit < fitness_i[i]){
-            best_fit = fitness_i[i];
+        if(fitness_i[i] < worst  ){
+            worst = fitness_i[i];
             winner = i;
         }
     }
     return winner;
 }
 
-vector<int> MDD::seleccion(vector<vector<int>> poblacion,vector<float> fitness_i, int n){
-    vector<int> winner;
-    for(int i = 0; i< n ;i++){
-        winner.push_back( torneo(poblacion,fitness_i,2));
-    }
-
+set<int> MDD::seleccion(vector<vector<int>> poblacion,vector<float> fitness_i, int n){
+    set<int> winner;
+    for(int i = 0; i< n /*&& winner.size() != n*/;i++)
+        winner.insert( torneo(poblacion,fitness_i,n));
     return winner;
 }
 
@@ -584,6 +584,7 @@ vector<int> MDD::AGG_posicion(){
     
    
     //inicioLoop = high_resolution_clock::now();
+    auto inicioLoop = high_resolution_clock::now();
     while(iters < MAX_ITERS){
         //inicioCruce = high_resolution_clock::now();
         //Nesesito buscar el mejor padre
@@ -655,7 +656,11 @@ vector<int> MDD::AGG_posicion(){
             *(poblacion.begin() + worst_i) = best_father;
         }
        
+    auto finLoop = high_resolution_clock::now();
+         cout <<" La generacion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finLoop - inicioLoop)).count() << endl;
+    
     }
+    
 
 
     
@@ -692,7 +697,7 @@ vector<int> MDD::AGE_uniforme(){
 
         //Seleccionamos
 
-        auto selected = seleccion(poblacion,fitness_i,2);
+        //auto selected = seleccion(poblacion,fitness_i,2);
 
 
         int desp = 0;
@@ -793,116 +798,162 @@ return hijo;
 vector<int> MDD::AGE_posicion(){
     const int TAM = 50;
     const int MAX_ITERS = 100000;
+    int idx = 0;
     vector<int> hijo(this->n-1,0);
     vector<vector<int>> poblacion(TAM,vector<int>(this->n-1,0));
     vector<vector<int>> hijos;
     vector<float> fitness_i;
-    vector<float> fitness_padre;
+    vector<float> fitness_hijo;
     int iters = 0;
     
     for(auto &row : poblacion){
         row = generarPoblacion();
         fitness_i.push_back(diff(row)); 
     }
-    
-   
-    //inicioLoop = high_resolution_clock::now();
+     
     while(iters < MAX_ITERS){
-        //inicioCruce = high_resolution_clock::now();
-        //Nesesito buscar el mejor padre
-        int best_i =  std::min_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
-        float best_fit = fitness_i[best_i];
-        vector<int> best_father = *(poblacion.begin() + best_i);
-
-        //Seleccionamos
-
-
-        auto selected = seleccion(poblacion,fitness_i,2);
-
-        int desp = 0;
-        pair<vector<int>,vector<int>> pair_child;
-        int num_cruces = 0.7*poblacion.size()*2;
-
-
-
-        //          Cruzamos
-        auto first = selected.at(0);
-        pair_child = generarHijosPosicion(*(poblacion.begin()+selected.at(0)), *(poblacion.begin()+selected.at(1)));
-        hijos.push_back(pair_child.first);
-        float fit_first = diff(pair_child.first);
-        //fitness_i.push_back(diff(pair_child.first));
-
-        hijos.push_back(pair_child.second);
-        float fit_second = diff(pair_child.second);
-        //fitness_i.push_back(diff(pair_child.second));
+       auto inicioLoop = high_resolution_clock::now();
+       
+        //auto iniciosel= high_resolution_clock::now();
+        set<int> selected = MDD::seleccion(poblacion,fitness_i,2);
+        //auto finsel= high_resolution_clock::now();
+        cout << "Selecciono  "  ;
+        for(auto i : selected)
+            cout << i << " ";
+        cout << endl; 
+        //cout <<"La seleccion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finsel - iniciosel)).count() << endl;
 
         
 
+        int desp = 0;
+        pair<vector<int>,vector<int>> pair_child;
+
+        //          Cruzamos
+        //auto iniciocruze= high_resolution_clock::now();
+        int first = *(selected.begin());
+        selected.erase(first);
+        int sec = *(selected.begin());
+
+        pair_child = generarHijosPosicion(*(poblacion.begin()+first), *(poblacion.begin()+sec));
+        hijos.push_back(pair_child.first);
+        hijos.push_back(pair_child.second);
+  
+        //auto fincruze = high_resolution_clock::now();
+        //cout <<"El cruze tarda : " <<  (duration_cast<std::chrono::milliseconds>(fincruze - iniciocruze)).count() << endl;
         //Tocar MUTAR
-         //inicioMuta= high_resolution_clock::now();
+        //auto inicioMuta= high_resolution_clock::now();
        
         int count = 0;
-         int num_mutaciones_esperado = 0.1*this->n * TAM;
+        int num_mutaciones_esperado = 0.1*2*m;
         int hijos_size = hijos.size();
-        cout << "Numero esperado de mutaciones Generacional " << num_mutaciones_esperado << endl;
+        bool mut = false;
         while(count != num_mutaciones_esperado){
             //inicioCruce = high_resolution_clock::now();
             int cromos = Random::get(0,hijos_size-1);
+            //cout << "Eligo el hijo " << cromos << endl;
             int gen1,gen2;
             
             do{ 
                 gen1 = Random::get(0,this->n-1);
                 gen2 = Random::get(0,this->n-1);
             }while(gen1 == gen2);
-            //pair<int,int> muted_gens;
-            //muted_gens = make_pair(gen1,gen2);
-             
 
-           
             if((*(hijos.begin()+cromos))[gen1] != (*(hijos.begin()+cromos))[gen2]){
                 std::iter_swap((*(hijos.begin()+cromos)).begin()+gen1, (*(hijos.begin()+cromos)).begin() + gen2);
-                fitness_i[cromos] = diff(*(hijos.begin()+cromos));
+            }
+            if(count == num_mutaciones_esperado-1){
+                mut = true;
+                fitness_hijo.push_back(diff((*(hijos.begin()))));
+                fitness_hijo.push_back(diff((*(hijos.begin()+1))));
+                
             }
             count++;
         }
 
+        if(!mut){ // Si no ha habido mutaciones
+            fitness_hijo.push_back(diff(*(hijos.begin())));
+            fitness_hijo.push_back(diff(*(hijos.begin()+1)));
+        }
 
-        //if( find(fitness_i.begin(), fitness_i.end(), best_fit) == fitness_i.end() ){
-            auto copy = fitness_i;
+        
+        //Busco los 2 peores elementos de 
+        bool sustitucion = false;
+        if(!sustitucion){
             int worst_i =  std::max_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
-            copy[worst_i] = -1;
+            float tmp1 = fitness_i[worst_i];
+            fitness_i[worst_i] = -1;
             int second_worst = std::max_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
-            copy[second_worst] = -1;
+            fitness_i[worst_i] = tmp1;
 
 
-            if(fit_first < fit_second){ // Si el primero tiene mejor fitnes que el segundo
-                 if(fitness_i[worst_i] >= fit_first)
-                fitness_i[worst_i = ]
+            float fit_first = fitness_hijo.at(0);
+            float fit_second = fitness_hijo.at(1);
+            cout << "Peores elementos " << worst_i <<" con "<< fitness_i[worst_i] <<" , " << second_worst <<" con "<< fitness_i[second_worst]  <<endl;
+            cout << "Fit de los hijos " << fit_first<< " , " << fit_second<<endl;
+        
+        
 
+        
+        if(fit_first < fit_second){ //Si el primer hijo es mejor que el segundo
+            if(fit_first < fitness_i[worst_i] ){ // Cambio el mejor por el peor
+                cout << "Subsitucion 1" << endl;
+                (*(poblacion.begin()+worst_i)) = (*(hijos.begin()));
+                fitness_i[worst_i] = fit_first;
+                if(fit_second < fitness_i[second_worst] ){ // Cambio el mejor por el peor
+                    (*(poblacion.begin()+second_worst)) = (*(hijos.begin()+1));
+                    fitness_i[second_worst] = fit_second;
+
+                }
+                sustitucion = true;
             }
-           
 
-            (*(poblacion.begin()+worst_i)) = (*(hijos.begin()))
+        }else{
+            if(fit_second < fitness_i[worst_i] ){ // Cambio el mejor por el peor
+                cout << "Subsitucion 2" << endl;
+                (*(poblacion.begin()+worst_i)) = (*(hijos.begin()+1));
+                fitness_i[worst_i] = fit_second;
+                if(fit_first < fitness_i[second_worst] ){
+                    (*(poblacion.begin()+second_worst)) = (*(hijos.begin()));
+                    fitness_i[second_worst] = fit_first;
+                }
+                sustitucion = true;
+            }
+        }
+}
+        hijos.clear();
+        fitness_hijo.clear();
 
-            
-        //}
 
-
+        //auto finMuta= high_resolution_clock::now();
+        //cout <<"La mutacion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finMuta - inicioMuta)).count() << endl;
 
         
         //cout << endl << "---------------------------------------------------------------"<<endl;
-        //cout << endl << "---------------------------  GENERACION  "<<  iters <<"  ----" << endl;
+        cout << endl << "------  GENERACION  "<<  iters <<"  --------------------" << endl;
         //cout << endl << "---------------------------------------------------------------"<<endl;
-        
+        iters++;
 
-       iters++;
+        auto finLoop = high_resolution_clock::now();
+         cout <<" La generacion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finLoop - inicioLoop)).count() << endl;
     }
 
-
-    
+     /*for(auto row : poblacion){
+        for(auto i : row){
+            cout << i << " "; 
+        }
+        cout << "\t "<<fitness_i[idx] << endl;
+        idx++;
+        }
+        idx = 0;*/
     int best =  std::min_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
+    //cout << "Best index " << best << endl;
     //Escogo el mejor
-    hijo = (*(poblacion.begin()+ best));     
+    hijo = (*(poblacion.begin()+ best));    
+    cout << "Best individuo " << endl; 
+    for(auto e : hijo)
+        cout << e << " ";
+    cout << endl;
+    cout << "Real cost " << diff(hijo) << endl;
 return hijo;
 
 }

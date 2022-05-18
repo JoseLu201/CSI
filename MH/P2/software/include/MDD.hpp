@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include "random.hpp"
+#include <set>
 using namespace std;
 
 using Random = effolkronium::random_static;
@@ -43,7 +44,7 @@ class MDD{
         vector<int> AGE_posicion();
         vector<int> generarPoblacion();
         int torneo(vector<vector<int>> poblacion, vector<float> fitness_i,int indiv_torneo);
-        vector<int> seleccion(vector<vector<int>> poblacion,vector<float> fitness_i,int n);
+        set<int> seleccion(vector<vector<int>> poblacion,vector<float> fitness_i,int n);
         
 
 };

@@ -805,6 +805,8 @@ vector<int> MDD::AGE_posicion(){
     vector<float> fitness_i;
     vector<float> fitness_hijo;
     int iters = 0;
+
+    bool sustitucion = false; 
     
     for(auto &row : poblacion){
         row = generarPoblacion();
@@ -877,8 +879,8 @@ vector<int> MDD::AGE_posicion(){
 
         
         //Busco los 2 peores elementos de 
-        bool sustitucion = false;
-        if(!sustitucion){
+        
+        if(!sustitucion)
             int worst_i =  std::max_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
             float tmp1 = fitness_i[worst_i];
             fitness_i[worst_i] = -1;
@@ -888,10 +890,9 @@ vector<int> MDD::AGE_posicion(){
 
             float fit_first = fitness_hijo.at(0);
             float fit_second = fitness_hijo.at(1);
-            cout << "Peores elementos " << worst_i <<" con "<< fitness_i[worst_i] <<" , " << second_worst <<" con "<< fitness_i[second_worst]  <<endl;
-            cout << "Fit de los hijos " << fit_first<< " , " << fit_second<<endl;
-        
-        
+
+        cout << "Peores elementos " << worst_i <<" con "<< fitness_i[worst_i] <<" , " << second_worst <<" con "<< fitness_i[second_worst]  <<endl;
+        cout << "Fit de los hijos " << fit_first<< " , " << fit_second<<endl;
 
         
         if(fit_first < fit_second){ //Si el primer hijo es mejor que el segundo
@@ -919,7 +920,7 @@ vector<int> MDD::AGE_posicion(){
                 sustitucion = true;
             }
         }
-}
+
         hijos.clear();
         fitness_hijo.clear();
 

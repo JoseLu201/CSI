@@ -1079,19 +1079,7 @@ vector<int> MDD::AM_all(){
                 fitness_i.push_back(diff(row)); 
             }
             idx++;
-        }
-        
-        
-        //iters++;
-       /*dd=0;
-        for(auto row : poblacion){
-            for(auto e : row){
-                cout << e << " ";
-            }
-            cout << "\t" << fitness_i[dd] << endl;
-            dd++;
-        }*/
-    
+        } 
     }
     
     int best =  std::min_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
@@ -1308,28 +1296,22 @@ vector<int> MDD::AM_subset(){
             *(poblacion.begin() + worst_i) = best_father;
         }
        
-        auto finLoop = high_resolution_clock::now();
-        //cout <<" La generacion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finLoop - inicioLoop)).count() << endl;
-       /* dd=0;
-        for(auto row : poblacion){
-            for(auto e : row){
-                cout << e << " ";
-            }
-            cout << "\t" << fitness_i[dd] << endl;
-            dd++;
-        }*/
+
 
         
         //cout << "->>Generacion " << iters << endl;
         if(bl){
-            fitness_i.clear();
+            //fitness_i.clear();
             //cout << "Aplicando BL " <<endl;
+            int contador = 0;
             for(auto& row : poblacion){
                 if(Random::get<bool>(0.1)){
                     auto ans = Bin_BL(row);
                     row = ans;
-                    fitness_i.push_back(diff(row)); 
+                    //fitness_i.push_back(diff(row)); 
+                    fitness_i.at(contador) = diff(row);
                 }
+                contador++;
             }
             idx++;
         }
@@ -1453,32 +1435,20 @@ vector<int> MDD::AM_best(){
             fitness_i[worst_i] = best_fit;
             *(poblacion.begin() + worst_i) = best_father;
         }
-       
-        auto finLoop = high_resolution_clock::now();
-        //cout <<" La generacion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finLoop - inicioLoop)).count() << endl;
-       /* dd=0;
-        for(auto row : poblacion){
-            for(auto e : row){
-                cout << e << " ";
-            }
-            cout << "\t" << fitness_i[dd] << endl;
-            dd++;
-        }*/
-
-        
+               
         //cout << "->>Generacion " << iters << endl;
         int mejores = 0.1* TAM;
-        auto copy = fitness_i;
         vector<int> best_index;
-        for (auto i: sort_indexes(fitness_i)) 
+        for (auto i : sort_indexes(fitness_i)) 
             best_index.push_back(i);
-    
+        
+        best_index.resize(mejores);
+        //cout << best_index.size() << endl;
         if(bl){
-            fitness_i.clear();
             for(auto i : best_index){
                 auto ans = Bin_BL(*(poblacion.begin()+i));
                 *(poblacion.begin()+i) = ans;
-                fitness_i.push_back(diff(*(poblacion.begin()+i))); 
+                fitness_i.at(i) = diff(*(poblacion.begin()+i));
             }
             idx++;
         }

@@ -77,7 +77,7 @@ int main(int argc, char *argv[]){
 
 
 */
-/*
+
 int main(int argc, char *argv[]){
     
     string algo = argv[1];
@@ -97,17 +97,55 @@ int main(int argc, char *argv[]){
 
     std::chrono::_V2::system_clock::time_point inicio,fin;
 
-    
-    if(stoi(algo) == 1){
+    switch (stoi(algo)){
+    case 1 :
         inicio = high_resolution_clock::now();
-        sol = instance.AM(); 
+        sol = instance.AGG_posicion();
+        fin = high_resolution_clock::now();
+        break;
+    case 2 :
+        inicio = high_resolution_clock::now();
+        sol = instance.AGG_uniforme();
+        fin = high_resolution_clock::now();
+        break;
+    case 3 :
+        inicio = high_resolution_clock::now();
+        sol = instance.AGE_posicion();
+        fin = high_resolution_clock::now();
+        break;
+    case 4 :
+        inicio = high_resolution_clock::now();
+        sol = instance.AGE_uniforme();
+        fin = high_resolution_clock::now();
+        break;
+    case 5 :
+        inicio = high_resolution_clock::now();
+        sol = instance.AM_all();
+        fin = high_resolution_clock::now();
+        break;
+    case 6 :
+        inicio = high_resolution_clock::now();
+        sol = instance.AM_subset();
+        fin = high_resolution_clock::now();
+        break;
+    case 7 :
+        inicio = high_resolution_clock::now();
+        sol = instance.AM_best();
+        fin = high_resolution_clock::now();
+        break;
+    default:
+        break;
+    }
+    /*if(stoi(algo) == 1){
+        inicio = high_resolution_clock::now();
+        sol = instance.AM_all(); 
         fin = high_resolution_clock::now();
     }else if(stoi(algo) == 2){
         inicio = high_resolution_clock::now();
         sol = instance.BL(); 
         fin = high_resolution_clock::now();
         
-    }
+    }*/
     
     dispersion.push_back(instance.diff(sol));
     tiempo = duration_cast<std::chrono::milliseconds>(fin - inicio);
@@ -125,10 +163,10 @@ int main(int argc, char *argv[]){
 
     
     cout <<"Media de la dispersion " << sum/dispersion.size() << ";";
-    cout << "Media de la tiempos " << sum_tiempo/times.size() <<endl;
+    cout << "Media de los tiempos " << sum_tiempo/times.size() <<endl;
     return 0;   
 }
-*/
+
 template <typename T>
 vector<size_t> sort_indexes(const vector<T> &v) {
 
@@ -145,7 +183,7 @@ vector<size_t> sort_indexes(const vector<T> &v) {
 
   return idx;
 }
-
+/*
 int main(int argc, char *argv[]){
     //string nombreArchivo = "datos_MDD/GKD-b_10_n25_m7.txt";
     string nombreArchivo = "datos_MDD/GKD-b_9_n25_m7.txt";
@@ -182,6 +220,6 @@ int main(int argc, char *argv[]){
             cout << i << ",";
     cout << endl;
     cout << "Coste " << instance.diff(sol) << endl;
-    cout << "Tiempo " << tiempo.count() << endl;*/
+    cout << "Tiempo " << tiempo.count() << endl;
     
-}
+}*/

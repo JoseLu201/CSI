@@ -59,7 +59,7 @@ float MDD::distPuntoRestoElemenetos(int f,vector<int> v){
 float MDD::diffNonBin(vector<int> posib){
     vector<float> distancias;
     for(int i = 0; i < posib.size();i++)
-        distancias.push_back(distPuntoRestoElemenetos(posib[i],posib));
+        distancias.push_back(distPuntoRestoElemenetosNonBin(posib[i],posib));
     int min =  std::min_element(distancias.begin(),distancias.end()) - distancias.begin();
     int max =  std::max_element(distancias.begin(),distancias.end()) - distancias.begin();
     return (distancias[max] - distancias[min] );
@@ -202,12 +202,14 @@ float MDD::distFactorizada(vector<int> sol,pair<int,int> cambio){
 
 float MDD::distFactorizadaNonBin(vector<int> sol,pair<int,int> cambio){
     float disp = 0;
-    for(int i = 0; i < sol.size();i++)
-        this->distan[i] = distPuntoRestoElemenetos(sol[i],sol);
+    for(int i = 0; i < sol.size();i++){
+        this->distan[i] = distPuntoRestoElemenetosNonBin(sol[i],sol);
+        //cout << sol[i] << " ";
+        }
 
     int last_pos = sol[cambio.first] ;
     sol[cambio.first] = cambio.second;
-    this->distan[cambio.first] = distPuntoRestoElemenetos(cambio.second,sol);
+    this->distan[cambio.first] = distPuntoRestoElemenetosNonBin(cambio.second,sol);
 
     for(auto i =0; i < sol.size();i++){
         if(i != cambio.first){     
@@ -976,7 +978,7 @@ return hijo;
 }
 
 
-vector<int> MDD::AM(){
+vector<int> MDD::AM_all(){
     const int TAM = 50;
     const int MAX_ITERS = 100000;
     vector<int> hijo(this->n-1,0);
@@ -986,6 +988,8 @@ vector<int> MDD::AM(){
     vector<float> fitness_padre;
     int iters = 0;
     int idx = 1;
+    int dd = 0;
+    
     
     for(auto &row : poblacion){
         row = generarPoblacion();
@@ -994,10 +998,14 @@ vector<int> MDD::AM(){
     
     auto inicioLoop = high_resolution_clock::now();
     while(iters < MAX_ITERS){
+        bool bl = false;
         //inicioCruce = high_resolution_clock::now();
         //Nesesito buscar el mejor padre
+        
         int best_i =  std::min_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
         float best_fit = fitness_i[best_i];
+       // cout << "Iteracion " << iters << endl;
+        //cout << "En esta gen encontramos el mejor elemento en " << best_i << " con fitt = " << best_fit << endl;
         vector<int> best_father = *(poblacion.begin() + best_i);
 
 
@@ -1025,8 +1033,12 @@ vector<int> MDD::AM(){
                 desp++;
             }
             iters++;
+            //cout << "Iteraciones " << iters << endl;
+            if(iters == 10*idx){
+                bl = true;
+            }
         }
-
+        //cout << "muto " <<endl;
         //Tocar MUTAR
          //inicioMuta= high_resolution_clock::now();
        
@@ -1065,27 +1077,52 @@ vector<int> MDD::AM(){
         }
        
         auto finLoop = high_resolution_clock::now();
-        cout <<" La generacion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finLoop - inicioLoop)).count() << endl;
-
-        if(iters = 10*idx){
-            for(auto row : poblacion){
-                row = Bin_BL(row);
-                fitness_i.push_back(diff(row)); 
-                idx++;
+        //cout <<" La generacion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finLoop - inicioLoop)).count() << endl;
+       /* dd=0;
+        for(auto row : poblacion){
+            for(auto e : row){
+                cout << e << " ";
             }
+            cout << "\t" << fitness_i[dd] << endl;
+            dd++;
+        }*/
+
+        
+        //cout << "->>Generacion " << iters << endl;
+        if(bl){
+            fitness_i.clear();
+            //cout << "Aplicando BL " <<endl;
+            for(auto& row : poblacion){
+                auto ans = Bin_BL(row);
+                row = ans;
+                fitness_i.push_back(diff(row)); 
+            }
+            idx++;
         }
+        
+        
+        //iters++;
+       /*dd=0;
+        for(auto row : poblacion){
+            for(auto e : row){
+                cout << e << " ";
+            }
+            cout << "\t" << fitness_i[dd] << endl;
+            dd++;
+        }*/
     
     }
     
-
-
-    
     int best =  std::min_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
     //Escogo el mejor
+    //cout << "best " << best << endl;
     hijo = (*(poblacion.begin()+ best));     
-return hijo;
+
+    return hijo;
 
 }
+
+
 
 vector<int> MDD::Bin_BL(vector<int> data){
      vector<int> solucion;
@@ -1100,10 +1137,13 @@ vector<int> MDD::Bin_BL(vector<int> data){
             solucion.push_back(i);
         }
     }
-    cout << "Solucion seria " << endl;
+    /*cout << "Solucion seria " << endl;
     for(auto s : solucion)
     cout << s << " ";
-    cout << endl;
+    cout << endl;*/
+    /*for(auto e : solucion){
+        cand.erase(std::remove(cand.begin(), cand.end(), e), cand.end());
+    }*/  //5 2 24 3 1 18 22 
     Random::shuffle( cand.begin( ), cand.end( ) );
 
 
@@ -1112,29 +1152,50 @@ vector<int> MDD::Bin_BL(vector<int> data){
     float new_disp;
     bool change = true;
     bool first = true;
-    int maxIters = 100;
+    int maxIters = 100000;
     int iter = 0;
+    bool print = false;
 
-    while(iter < maxIters && change == true){
+    while(iter < maxIters/* && change == true*/){
         if(first){
             change = false;
             first = false;
         }
+        /*if(solucion.at(0) == 19 && solucion.at(1) == 3 &&solucion.at(2) == 15)
+           print = false;*/
+         
         for(int i = 0; i < cand.size();i++){
-            float actual_disp = diff(solucion);
+            iter++;
+            float actual_disp = diffNonBin(solucion);
             cambio = make_pair(index,cand[i]);
             new_disp = distFactorizadaNonBin(solucion,cambio);  
             
-            new_disp = round( new_disp * 1000.0 ) / 1000.0; //Redondeo a 3 cifras por error en los datos
-            actual_disp = round( actual_disp * 1000.0 ) / 1000.0; 
-            cout << new_disp << " ,, " <<  actual_disp << endl;                                           
-            if(new_disp < actual_disp  ){
-                solucion[index] = cand[i];
-                index = (index +1)%(solucion.size());
-                change = true;
-                i = -1;
+            new_disp = round( new_disp * 100.0 ) / 100.0; //Redondeo a 3 cifras por error en los datos
+            actual_disp = round( actual_disp * 100.0 ) / 100.0;
+            
+            /*//if(print){
+                //cout << "-> " << i << endl;
+                cout << "Cambio " << solucion[cambio.first ]<< " " << cambio.second << endl;
+                cout << new_disp << " ,, " <<  actual_disp << endl;
 
+            //}  */                                     
+            if(new_disp < actual_disp  ){
+                if(std::find(solucion.begin(), solucion.end(), cand[i]) == solucion.end()){
+                    solucion[index] = cand[i];
+                    index = (index +1)%(solucion.size());
+                    change = true;
+                    i = -1;
+                   /* //if(print){
+                        //cout << " solucion[index] = " << solucion[index] << " -- " << cand[i] << endl;
+                        cout << "ANS " <<endl;
+                        for(auto i : solucion)
+                            cout << i << " ";
+                            cout << endl;
+                            cout << endl;
+                    //}*/
+                }
             }
+
             if(!change and solucion[index] != solucion[solucion.size()-1]){
                 if(cand[i] == cand[cand.size()-1]){
                     index = (index +1)%(solucion.size());
@@ -1148,18 +1209,333 @@ vector<int> MDD::Bin_BL(vector<int> data){
                     change = false;
                 }
             }
-            iter++;
+            
         }
         index = (index +1)%(solucion.size());
-        cout << "BL ITERS " << iter << endl;
+       /* cout << "--------Iteraciones " << iter << endl;
+        for(auto i : solucion)
+        cout << i << " ";
+        cout /*<<diffNonBin(solucion)*//* <<  endl;*/
+    
     }
     vector<int> real_s(this->n,0);
     for(auto i : solucion){
         real_s[i] = 1;
     }
-    cout << "La solucion de BL seria" << endl;
+    /*cout << "La solucion de BL seria" << endl;
     for(auto i : real_s)
         cout << i << " ";
-    cout << endl;
+    cout << endl;*/
     return real_s;
+}
+
+vector<int> MDD::AM_subset(){
+    const int TAM = 50;
+    const int MAX_ITERS = 100000;
+    vector<int> hijo(this->n-1,0);
+    vector<vector<int>> poblacion(TAM,vector<int>(this->n-1,0));
+    vector<vector<int>> hijos;
+    vector<float> fitness_i;
+    vector<float> fitness_padre;
+    int iters = 0;
+    int idx = 1;
+    int dd = 0;
+    
+    
+    for(auto &row : poblacion){
+        row = generarPoblacion();
+        fitness_i.push_back(diff(row)); 
+    }
+    
+    auto inicioLoop = high_resolution_clock::now();
+    while(iters < MAX_ITERS){
+        bool bl = false;
+        //inicioCruce = high_resolution_clock::now();
+        //Nesesito buscar el mejor padre
+        
+        int best_i =  std::min_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
+        float best_fit = fitness_i[best_i];
+       // cout << "Iteracion " << iters << endl;
+        //cout << "En esta gen encontramos el mejor elemento en " << best_i << " con fitt = " << best_fit << endl;
+        vector<int> best_father = *(poblacion.begin() + best_i);
+
+
+        int desp = 0;
+        pair<vector<int>,vector<int>> pair_child;
+        int num_cruces = 0.7*poblacion.size()*2;
+
+        //          Cruzamos
+       
+        for(auto row = poblacion.begin(); row != poblacion.end();row++){
+            auto p2 = next(row);
+            if(Random::get<bool>(0.7) && p2 != poblacion.end()){
+                //Generar una pareja de hijos
+                pair_child = generarHijosPosicion(*row, *p2);
+
+                hijos.insert(hijos.begin()+desp ,pair_child.first);
+                fitness_i[desp] = diff(pair_child.first);
+
+                hijos.insert(hijos.begin()+desp+1 ,pair_child.second);
+                fitness_i[desp+1] = diff(pair_child.second);
+                desp+=2;
+                row = std::next(row);
+            }else{
+                hijos.insert(hijos.begin()+desp ,*row);
+                desp++;
+            }
+            iters++;
+            //cout << "Iteraciones " << iters << endl;
+            if(iters == 10*idx){
+                bl = true;
+            }
+        }
+        //cout << "muto " <<endl;
+        //Tocar MUTAR
+         //inicioMuta= high_resolution_clock::now();
+       
+        int count = 0;
+        int num_mutaciones_esperado = 0.1*this->n * TAM;
+        
+        while(count != num_mutaciones_esperado){
+            //inicioCruce = high_resolution_clock::now();
+            int cromos = Random::get(0,TAM-1);
+            int gen1,gen2;
+            
+            do{ 
+                gen1 = Random::get(0,this->n-1);
+                gen2 = Random::get(0,this->n-1);
+            }while(gen1 == gen2);
+           
+            if((*(hijos.begin()+cromos))[gen1] != (*(hijos.begin()+cromos))[gen2]){
+                std::iter_swap((*(hijos.begin()+cromos)).begin()+gen1, (*(hijos.begin()+cromos)).begin() + gen2);
+                fitness_i[cromos] = diff(*(hijos.begin()+cromos));
+            }
+            count++;
+        }
+                
+        //poblacion.clear();
+        poblacion.resize(TAM,vector<int>(this->n-1,0));
+        
+        poblacion = hijos;
+        hijos.clear();
+
+        //cout << "Best padre " << best_fit << endl;
+        //Si no encuentro reemplazo el peor 
+        if( find(fitness_i.begin(), fitness_i.end(), best_fit) == fitness_i.end() ){
+            int worst_i =  std::max_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
+            fitness_i[worst_i] = best_fit;
+            *(poblacion.begin() + worst_i) = best_father;
+        }
+       
+        auto finLoop = high_resolution_clock::now();
+        //cout <<" La generacion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finLoop - inicioLoop)).count() << endl;
+       /* dd=0;
+        for(auto row : poblacion){
+            for(auto e : row){
+                cout << e << " ";
+            }
+            cout << "\t" << fitness_i[dd] << endl;
+            dd++;
+        }*/
+
+        
+        //cout << "->>Generacion " << iters << endl;
+        if(bl){
+            fitness_i.clear();
+            //cout << "Aplicando BL " <<endl;
+            for(auto& row : poblacion){
+                if(Random::get<bool>(0.1)){
+                    auto ans = Bin_BL(row);
+                    row = ans;
+                    fitness_i.push_back(diff(row)); 
+                }
+            }
+            idx++;
+        }
+        
+        
+        //iters++;
+       /*dd=0;
+        for(auto row : poblacion){
+            for(auto e : row){
+                cout << e << " ";
+            }
+            cout << "\t" << fitness_i[dd] << endl;
+            dd++;
+        }*/
+    
+    }
+    
+    int best =  std::min_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
+    //Escogo el mejor
+    //cout << "best " << best << endl;
+    hijo = (*(poblacion.begin()+ best));     
+
+    return hijo;
+
+}
+
+vector<int> MDD::AM_best(){
+    const int TAM = 50;
+    const int MAX_ITERS = 100000;
+    vector<int> hijo(this->n-1,0);
+    vector<vector<int>> poblacion(TAM,vector<int>(this->n-1,0));
+    vector<vector<int>> hijos;
+    vector<float> fitness_i;
+    vector<float> fitness_padre;
+    int iters = 0;
+    int idx = 1;
+    int dd = 0;
+    
+    
+    for(auto &row : poblacion){
+        row = generarPoblacion();
+        fitness_i.push_back(diff(row)); 
+    }
+    
+    auto inicioLoop = high_resolution_clock::now();
+    while(iters < MAX_ITERS){
+        bool bl = false;
+        //inicioCruce = high_resolution_clock::now();
+        //Nesesito buscar el mejor padre
+        
+        int best_i =  std::min_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
+        float best_fit = fitness_i[best_i];
+       // cout << "Iteracion " << iters << endl;
+        //cout << "En esta gen encontramos el mejor elemento en " << best_i << " con fitt = " << best_fit << endl;
+        vector<int> best_father = *(poblacion.begin() + best_i);
+
+
+        int desp = 0;
+        pair<vector<int>,vector<int>> pair_child;
+        int num_cruces = 0.7*poblacion.size()*2;
+
+        //          Cruzamos
+       
+        for(auto row = poblacion.begin(); row != poblacion.end();row++){
+            auto p2 = next(row);
+            if(Random::get<bool>(0.7) && p2 != poblacion.end()){
+                //Generar una pareja de hijos
+                pair_child = generarHijosPosicion(*row, *p2);
+
+                hijos.insert(hijos.begin()+desp ,pair_child.first);
+                fitness_i[desp] = diff(pair_child.first);
+
+                hijos.insert(hijos.begin()+desp+1 ,pair_child.second);
+                fitness_i[desp+1] = diff(pair_child.second);
+                desp+=2;
+                row = std::next(row);
+            }else{
+                hijos.insert(hijos.begin()+desp ,*row);
+                desp++;
+            }
+            iters++;
+            //cout << "Iteraciones " << iters << endl;
+            if(iters == 10*idx){
+                bl = true;
+            }
+        }
+        //cout << "muto " <<endl;
+        //Tocar MUTAR
+         //inicioMuta= high_resolution_clock::now();
+       
+        int count = 0;
+        int num_mutaciones_esperado = 0.1*this->n * TAM;
+        
+        while(count != num_mutaciones_esperado){
+            //inicioCruce = high_resolution_clock::now();
+            int cromos = Random::get(0,TAM-1);
+            int gen1,gen2;
+            
+            do{ 
+                gen1 = Random::get(0,this->n-1);
+                gen2 = Random::get(0,this->n-1);
+            }while(gen1 == gen2);
+           
+            if((*(hijos.begin()+cromos))[gen1] != (*(hijos.begin()+cromos))[gen2]){
+                std::iter_swap((*(hijos.begin()+cromos)).begin()+gen1, (*(hijos.begin()+cromos)).begin() + gen2);
+                fitness_i[cromos] = diff(*(hijos.begin()+cromos));
+            }
+            count++;
+        }
+                
+        //poblacion.clear();
+        poblacion.resize(TAM,vector<int>(this->n-1,0));
+        
+        poblacion = hijos;
+        hijos.clear();
+
+        //cout << "Best padre " << best_fit << endl;
+        //Si no encuentro reemplazo el peor 
+        if( find(fitness_i.begin(), fitness_i.end(), best_fit) == fitness_i.end() ){
+            int worst_i =  std::max_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
+            fitness_i[worst_i] = best_fit;
+            *(poblacion.begin() + worst_i) = best_father;
+        }
+       
+        auto finLoop = high_resolution_clock::now();
+        //cout <<" La generacion tarda : " <<  (duration_cast<std::chrono::milliseconds>(finLoop - inicioLoop)).count() << endl;
+       /* dd=0;
+        for(auto row : poblacion){
+            for(auto e : row){
+                cout << e << " ";
+            }
+            cout << "\t" << fitness_i[dd] << endl;
+            dd++;
+        }*/
+
+        
+        //cout << "->>Generacion " << iters << endl;
+        int mejores = 0.1* TAM;
+        auto copy = fitness_i;
+        vector<int> best_index;
+        for (auto i: sort_indexes(fitness_i)) 
+            best_index.push_back(i);
+    
+        if(bl){
+            fitness_i.clear();
+            for(auto i : best_index){
+                auto ans = Bin_BL(*(poblacion.begin()+i));
+                *(poblacion.begin()+i) = ans;
+                fitness_i.push_back(diff(*(poblacion.begin()+i))); 
+            }
+            idx++;
+        }
+        
+        
+        //iters++;
+       /*dd=0;
+        for(auto row : poblacion){
+            for(auto e : row){
+                cout << e << " ";
+            }
+            cout << "\t" << fitness_i[dd] << endl;
+            dd++;
+        }*/
+    
+    }
+    
+    int best =  std::min_element(fitness_i.begin(),fitness_i.end()) - fitness_i.begin();
+    //Escogo el mejor
+    //cout << "best " << best << endl;
+    hijo = (*(poblacion.begin()+ best));     
+
+    return hijo;
+
+}
+template <typename T>
+vector<size_t> sort_indexes(const vector<T> &v) {
+
+  // initialize original index locations
+  vector<size_t> idx(v.size());
+  iota(idx.begin(), idx.end(), 0);
+
+  // sort indexes based on comparing values in v
+  // using std::stable_sort instead of std::sort
+  // to avoid unnecessary index re-orderings
+  // when v contains elements of equal values 
+  stable_sort(idx.begin(), idx.end(),
+       [&v](size_t i1, size_t i2) {return v[i1] < v[i2];});
+
+  return idx;
 }

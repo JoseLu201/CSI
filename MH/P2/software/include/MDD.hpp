@@ -50,7 +50,9 @@ class MDD{
         set<int> seleccion(vector<vector<int>> poblacion,vector<float> fitness_i,int n);
 
         
-        vector<int> AM();
+        vector<int> AM_all();
+        vector<int> AM_subset();
+        vector<int> AM_best();
         
 
 };

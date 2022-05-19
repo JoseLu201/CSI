@@ -295,4 +295,84 @@ ya que el valor de $m$ es menor que en el intervalo [35 - 40]
 \end{figure}
 
 
+\section{P2}
+En esta practica tendremos que cambiar la representacion de las solución de enteras a binarias, por lo
+que ahora tendremos que cada solución tendrá un vector de $n$ elementos donde $m$ de esos elementos tienen que ser
+obligatoriamente 1 lo que significará que esos genes estan activos.
+
+\subsection{Funcion para generar una población}
+
+Esta funcion crea UN individuo respetando las restricciones.
+
+Pseudocodigo de \textbf{generarPoblacion}
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$generarPoblacion()$}{}
+      \State $poblacion \gets \emptyset $\Comment{Creamos una poblacion vacia}
+      \While{$count(poblacion,1) != m $} \Comment{El numero de 1 sea distinto de m}
+        \State $idx \gets Random(0,n)$ \Comment{Obtenemos un numero de 0 a n}
+        \If{$poblacion[idx] == 0$}
+          \State{$poblacion[idx] = 1$}
+        \Else{ continue;}
+      \EndWhile
+      \State \Return{$poblacion$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Entonces a la hora de crear una poblacion ejecutaremos esta funcion tantas veces como individuos queramos, para después
+guardarlo en una matriz de todos los individuos llamada poblacion.
+Ademas tendremos un vector llamadao \textbf{fitness\_i} en la cual guardaremos el fitness de cada individuo.
+
+Pseudocodigo de \textbf{torneo(poblacion,fitness\_i, indiv)}
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$generarPoblacion()$}{}
+      \State $torneo \gets \emptyset $\Comment{Creamos un torneo vacia}
+      \State $worst \gets \infty$
+      \While{$|torneo| != indiv $} \Comment{Tenemos indiv diferentes }
+        \State $torneo \gets torneo \cap Random(0,|poblacion|)$ \Comment{Obtenemos un numero de 0 a n}
+
+      \EndWhile
+      \For{$i in torneo$}
+        \If{$fitness\_i[i] < worst$}
+          \State $worst \gets fitness\_i[i] $
+          \State $winner \gets i$
+        \EndIf
+      \EndFor
+      \State \Return{$winner$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Funcion que escoge n elementos ganadores del torneo
+Pseudocodigo de \textbf{seleccion(poblacion,fitness\_i, indiv,n)}
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$seleccion(poblacion,fitness\_i, indiv,n)$}{}
+      \State $winner \gets \emptyset $
+      \For{$i in n$}
+          \State $winner \gets winner \cap torneo(poblacion,fitness\_i,n)$
+      \EndFor
+      \State \Return{$winner$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Funcion que genera una pareja de hijos de forma uniforme dados 2 padres
+
+Pseudocodigo de \textbf{generarHijosUniforme(padre1,padre2)}
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$seleccion(poblacion,fitness\_i, indiv,n)$}{}
+      \State $winner \gets \emptyset $
+      \For{$i in n$}
+          \State $winner \gets winner \cap torneo(poblacion,fitness\_i,n)$
+      \EndFor
+      \State \Return{$winner$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+
 \end{document}

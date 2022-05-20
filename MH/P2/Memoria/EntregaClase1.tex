@@ -294,15 +294,40 @@ ya que el valor de $m$ es menor que en el intervalo [35 - 40]
   \label{gra3}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \section{P2 : Basados en Poblaciones}
 En esta practica tendremos que cambiar la representacion de las solución de enteras a binarias, por lo
 que ahora tendremos que cada solución tendrá un vector de $n$ elementos donde $m$ de esos elementos tienen que ser
-obligatoriamente 1 lo que significará que esos genes estan activos.
+obligatoriamente 1's lo que significará que esos genes estan activos.
+Cambiaremos a esta representacion ya que es idone para realizar ejercicios basados en poblacion gracias a la facilidad 
+de generar, cruzar y mutar individuos.\\
 
-\subsection{Funcion para generar una población}
+Nos ayudaremos de funciones para realizar estos algoritmos
+\\begin{itemize}
+  \item \textbf{generarPoblacion()} Esta funcion nos permite generar individuos aleatoriamente respentando las 
+  restricciones que se nos proponen, si ejecutamos esta funcion $N$ veces obtendremos una poblacion de $N$ individuos.
+  Una vez que tenemos una poblacion es siguiendo punto importante seria ser capaz de seleccionar individuos de la misma
+   con el fin de cruzarlos y generar hijo, para ello
+  \item  \textbf{seleccion(poblacion, n)} Esta funcion nos permitira elegir $n$ individuos de la poblacion.
+  Una vez que tenemos a los individuos seleccionados tenemos que generar una seria de hijos de estos individuos seleccionados, para ello tenemos dos opciones
+  
+  \begin{itemize}
+    \item  \textbf{generarHijosPosicion(padre1, padre2)} Esta funcion cruzara dos padres, mantendra los genes comunes y 
+    eligira aleatoriamente el resto de ambos genes para decidir el resto de genes.\\
+    De esta forma los hijos generados comparten un poco menos de informacion con los padres.
+    \item  \textbf{generarHijosUniforme(padre1, padre2)} Esta función cruzamos dos padres, manteniendo los genes comunes y 
+    eligiendo aleatoriamente el resto, esto puede provocar que los hijos que obtengamos no cumplan las restricciones, por lo que 
+    a veces en necesario reparlos,
+    \item  \textbf{repair(hijo)} La manera en la que reparamos se basa en si faltan elementos,
+     añadir los que minimizen la disperion y si sobran elementos eliminar aquellos que minimizen la dispersion.  
+  \end{itemize}
 
-Esta funcion crea UN individuo respetando las restricciones.
+\end{itemize}
 
 Pseudocodigo de \textbf{generarPoblacion}
 \begin{algorithm}[H]
@@ -325,9 +350,6 @@ Entonces a la hora de crear una poblacion ejecutaremos esta funcion tantas veces
 guardarlo en una matriz de todos los individuos llamada poblacion.
 Ademas tendremos un vector llamadao \textbf{fitness\_i} en la cual guardaremos el fitness de cada individuo.\\
 
-
-Necesitaremos tambien una función para seleccionar individuos, en nuestro caso mediante un torneo binario, devolviendo
-el mejor de los individuos
 Pseudocodigo de \textbf{torneo(poblacion,fitness\_i, indiv)}
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
@@ -363,7 +385,6 @@ Pseudocodigo de \textbf{seleccion(poblacion,fitness\_i, indiv,n)}
   \end{algorithmic}
 \end{algorithm}
 
-Funcion que genera una pareja de hijos de forma uniforme dados 2 padres.\\
 
 Pseudocodigo de \textbf{generarHijosUniforme(padre1,padre2)}
 \begin{algorithm}[H]
@@ -453,12 +474,13 @@ Pseudocodigo de \textbf{generarHijosPosicion(padre1,padre2)}
 Algoritmos geneticos:\\
 Implentaremos 2 tipos de algorimos geneticos,\\
 AGG( algorimo genetico generacional )\\
-AGG se basa en un algorimo que generada una poblacion aleatoria, se escogen mediante un torneo binario tantos individuos como
+AGG se basa en un algorimo que genera una poblacion aleatoria,despues se escogen mediante un torneo binario tantos individuos como
 poblacion del mismo y se cruzan, en nuestro caso diferenciaremos dos tipos de cruze uniforme y posicion (cuyos Pseudocodigo estas explicado arriba)
 para seguidamente mutar algunos de sus genes con probabilidad $P_M$ y reemplazar la nueva poblacion obtenida por la nueva y conservando el mejor de ambas(elitismo).\\
 AGE( algorimo genetico Estacional )\\  
 Este es practicamente igual, la unica diferencia es que a laa hora de selecionar los individuos, solo se seleccionan 2, estos seran los que se cruzaran y cuyos hijos mutaran, 
 para seguidamente, si mejoran los peores individuos de la poblacion sustituirlos.
+
 
 
 \begin{algorithm}[H]
@@ -676,7 +698,19 @@ para seguidamente, si mejoran los peores individuos de la poblacion sustituirlos
 \end{algorithm}
 
 Algoritmo Memético
-Este algoritmo consiste en hibridar el AGG con una busqueda local
+Este algoritmo consiste en hibridar el AGG con una busqueda local, sabemos que  BL obtiene buenos resultados en poco tiempo, por lo que La
+idea de este algoritmo seria mejorar la poblacion mediante BL de esta forma la solucion seria bastante aproximada, pero si seguimos ejecutando cruces y mutaciones
+salir del espacio de busqueda local para seguir explorando mejores soluciones.
+La diferencia de entre estos tres algoritmos Memeticos será sobre que individuos aplicar la BL.
+\begin{itemize}
+  \item Cuando aplicamos la BL sobre toda la poblacion obtenemos muy buenas poblaciones, por lo que a la hora de seguir cruzando y mutando los individuos, como comparten genes seguiremos obtendendo buenos resultados. 
+  \item Si aplicamos BL sobre un subconjunto de la poblacion mejoraremos un poco esos individuos, pero como el cruze se hace con toda la poblacion no se mejora tanto la poblacion, o en cualquir caso tardara mas iteraciones en mejorar toda la solucion
+  \item En el ultimo caso solo aplicamos BL sobre los mejores individuos (0.1) esto implica que esos individuos obtienen muy buenas soluciones, pero al cruzarse con una poblacion no tan buena tienen a no ser muy buena idea, aunque igualmente obtiene buenos resultados
+
+\end{itemize}
+
+Cabe destavar que el algoritmo de BL usado es el mismo que el de la practica 1 excepto que en vez de generar una solucion se la pasamos como parametro,
+como esa solucion que le pasamos esta en representacion binaria tenemos que transformarla a representacion entera y una vez encontrada la solucion volver a pasarla a representación binaria
 Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre todos los elementos de la poblacion.
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
@@ -888,7 +922,7 @@ de generar una solucion aleatoria, se la pasamos como parametro y ese parametro 
 Si metemos muchas iteraciones en el generacional obtenemos soluciones mejores que las dadas como mejores en las tablas, pero
 requiere mucho tiempo.\\
 
-\begin{table}[]
+\begin{table}[H]
   \begin{tabular}{|l|l|l|}
   \hline
   \multicolumn{1}{|c|}{Algoritmo}   & \multicolumn{1}{l|}{Desv}                  & \multicolumn{1}{c|}{Tiempo}           \\ \hline
@@ -903,5 +937,7 @@ requiere mucho tiempo.\\
   AM-(10,0.1mej)                    & \textbf{0,3886030957}                      & \textbf{5175,8}                      \\ \hline
   \end{tabular}
   \end{table}
+
+
 
 \end{document}

@@ -400,6 +400,7 @@ vector<int>  MDD::change_rep2(vector<int> hijo){
     }
     return ans;
 }
+
 vector<int> MDD::reparar(vector<int> hijo){
 
     int v = count(hijo.begin(), hijo.end(),1);

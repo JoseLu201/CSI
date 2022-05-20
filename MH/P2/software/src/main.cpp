@@ -136,16 +136,7 @@ int main(int argc, char *argv[]){
     default:
         break;
     }
-    /*if(stoi(algo) == 1){
-        inicio = high_resolution_clock::now();
-        sol = instance.AM_all(); 
-        fin = high_resolution_clock::now();
-    }else if(stoi(algo) == 2){
-        inicio = high_resolution_clock::now();
-        sol = instance.BL(); 
-        fin = high_resolution_clock::now();
-        
-    }*/
+
     
     dispersion.push_back(instance.diff(sol));
     tiempo = duration_cast<std::chrono::milliseconds>(fin - inicio);
@@ -162,8 +153,10 @@ int main(int argc, char *argv[]){
     }
 
     
-    cout <<"Media de la dispersion " << sum/dispersion.size() << ";";
-    cout << "Media de los tiempos " << sum_tiempo/times.size() <<endl;
+    //cout <<"Media de la dispersion " << sum/dispersion.size() << ";";
+    //cout << "Media de los tiempos " << sum_tiempo/times.size() <<endl;
+    cout << sum/dispersion.size() << ";";
+    cout << sum_tiempo/times.size() <<endl;
     return 0;   
 }
 
@@ -185,8 +178,8 @@ vector<size_t> sort_indexes(const vector<T> &v) {
 }
 /*
 int main(int argc, char *argv[]){
-    //string nombreArchivo = "datos_MDD/GKD-b_10_n25_m7.txt";
-    string nombreArchivo = "datos_MDD/GKD-b_9_n25_m7.txt";
+    string nombreArchivo = "datos_MDD/GKD-b_11_n50_m5.txt";
+    //string nombreArchivo = "datos_MDD/GKD-b_9_n25_m7.txt";
     Random::seed(0); 
 
     milliseconds tiempo;
@@ -197,25 +190,16 @@ int main(int argc, char *argv[]){
     MDD instance(dim.first,dim.second);
 
     instance.leer_fichero(nombreArchivo);
-    vector<int> ins = {0,1,0,1,1,1};
+    vector<int> ins = {0,1,0,1,0,1,0,0,0,0,0};
     //instance.print_check();
     inicio = high_resolution_clock::now();
 
-    vector<int> v = {13,18,0,3,5,60,4}; 
-    for (auto i: sort_indexes(v)) {
-        cout << i << " ";
-    }  
-    cout << endl;
-    for(auto e : v){
-        cout << e << " ";
-    }
-    cout << endl;
-    //vector<int> sol  =  instance.AM();
-    //vector<int> sol  =  instance.AGG_posicion();
+    instance.reparar(ins);
+
     fin = high_resolution_clock::now();
      tiempo = duration_cast<std::chrono::milliseconds>(fin - inicio);
 
-    /*for(int i = 0;i< sol.size();i++)
+    for(int i = 0;i< sol.size();i++)
         if(sol[i] == 1)
             cout << i << ",";
     cout << endl;

@@ -295,7 +295,7 @@ ya que el valor de $m$ es menor que en el intervalo [35 - 40]
 \end{figure}
 
 
-\section{P2}
+\section{P2 : Basados en Poblaciones}
 En esta practica tendremos que cambiar la representacion de las solución de enteras a binarias, por lo
 que ahora tendremos que cada solución tendrá un vector de $n$ elementos donde $m$ de esos elementos tienen que ser
 obligatoriamente 1 lo que significará que esos genes estan activos.
@@ -314,6 +314,7 @@ Pseudocodigo de \textbf{generarPoblacion}
         \If{$poblacion[idx] == 0$}
           \State{$poblacion[idx] = 1$}
         \Else{ continue;}
+        \EndIf
       \EndWhile
       \State \Return{$poblacion$}
     \EndFunction
@@ -322,19 +323,22 @@ Pseudocodigo de \textbf{generarPoblacion}
 
 Entonces a la hora de crear una poblacion ejecutaremos esta funcion tantas veces como individuos queramos, para después
 guardarlo en una matriz de todos los individuos llamada poblacion.
-Ademas tendremos un vector llamadao \textbf{fitness\_i} en la cual guardaremos el fitness de cada individuo.
+Ademas tendremos un vector llamadao \textbf{fitness\_i} en la cual guardaremos el fitness de cada individuo.\\
 
+
+Necesitaremos tambien una función para seleccionar individuos, en nuestro caso mediante un torneo binario, devolviendo
+el mejor de los individuos
 Pseudocodigo de \textbf{torneo(poblacion,fitness\_i, indiv)}
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
-    \Function{$generarPoblacion()$}{}
+    \Function{$torneo(poblacion,fitness\_i, indiv)$}{}
       \State $torneo \gets \emptyset $\Comment{Creamos un torneo vacia}
       \State $worst \gets \infty$
       \While{$|torneo| != indiv $} \Comment{Tenemos indiv diferentes }
-        \State $torneo \gets torneo \cap Random(0,|poblacion|)$ \Comment{Obtenemos un numero de 0 a n}
+        \State $torneo \gets torneo \cup Random(0,|poblacion|)$ \Comment{Obtenemos un numero de 0 a n}
 
       \EndWhile
-      \For{$i in torneo$}
+      \For{$i$ in $torneo$}
         \If{$fitness\_i[i] < worst$}
           \State $worst \gets fitness\_i[i] $
           \State $winner \gets i$
@@ -345,31 +349,387 @@ Pseudocodigo de \textbf{torneo(poblacion,fitness\_i, indiv)}
   \end{algorithmic}
 \end{algorithm}
 
-Funcion que escoge n elementos ganadores del torneo
+Funcion que escoge n elementos ganadores del torneo.\\
 Pseudocodigo de \textbf{seleccion(poblacion,fitness\_i, indiv,n)}
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
     \Function{$seleccion(poblacion,fitness\_i, indiv,n)$}{}
       \State $winner \gets \emptyset $
-      \For{$i in n$}
-          \State $winner \gets winner \cap torneo(poblacion,fitness\_i,n)$
+      \For{$i$ in $n$}
+          \State $winner \gets winner \cup torneo(poblacion,fitness\_i,n)$
       \EndFor
       \State \Return{$winner$}
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
 
-Funcion que genera una pareja de hijos de forma uniforme dados 2 padres
+Funcion que genera una pareja de hijos de forma uniforme dados 2 padres.\\
 
 Pseudocodigo de \textbf{generarHijosUniforme(padre1,padre2)}
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
-    \Function{$seleccion(poblacion,fitness\_i, indiv,n)$}{}
-      \State $winner \gets \emptyset $
-      \For{$i in n$}
-          \State $winner \gets winner \cap torneo(poblacion,fitness\_i,n)$
+    \Function{$generarHijosUniforme(padre1,padre2)$}{}
+      \State $hijos \gets \emptyset$
+      \For{$i = 0 in |padre|$}
+      \If{$padre1[i] == padre2[i]$}
+          \State $hijos[i] \gets padre1[i]$
+      \Else
+          \State $hijos[i] \gets Random(0,1)$
+      \EndIf
       \EndFor
-      \State \Return{$winner$}
+      \State $reparar(hijos)$
+      \State \Return{$hijos$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Esta funcion repara la generacionde hijos cuando se generar de forma uniforme creando lo mejores hijos manteniendo 
+los genes de los padres.\\
+
+Pseudocodigo de \textbf{reparar(hijo)}
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$reparar(hijo)$}{}
+      \State $v \gets count(hijos,1)$
+      
+      \If{$v == m $}
+        \State \Return{$hijo$}
+      \ElsIf{$v > m $} \Comment{Si te sobran elementos}
+        \While{$v $ !=$  m $}
+          \State escoger los genes que minimizan la dispersion
+        \EndWhile
+      \ElsIf{$v < m $} \Comment{Si te faltan elementos}
+        \While{$v $ != $ m $}
+          \State escoger los genes que minimizan la dispersion
+        \EndWhile
+      \EndIf
+
+      \State \Return{$hijo$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Funcion que genera una pareja de hijos que mantiene la posicoon de los genes de los padres y los que no coinciden
+se selecionan aleatoriamente pero respetando las restricciones.\\
+Pseudocodigo de \textbf{generarHijosPosicion(padre1,padre2)}
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$generarHijosPosicion(padre1,padre2)$}{}
+      \State $hijos \gets \emptyset$
+      \State $restos \gets \emptyset$
+
+      \If{$padre1 == padre2$}
+        \State $hijos = padre1,padre2$  \Comment{Devolvemos los mismos padres}
+      \EndIf
+
+      \For{$i = 0 in |padre|$}
+        \If{$padre1[i] != padre2[i]$}
+          \If{$padre1[i] == 0 $ and $ padre2[i] == 1 $}
+            \State $resto \gets resto \cup 0$
+          \ElsIf{$padre1[i] == 1$ and $ padre2[i] == 0 $}
+            \State $resto \gets resto \cup 1$
+          \EndIf
+        \Else
+          \State$continue$
+        \EndIf
+      \EndFor
+      \State $shuffle(resto)$
+      \State $j \gets 0$
+      \For{$i = 0 in |padre|$}
+        \If{$padre1[i] == padre2[i]$}
+            \State $hijos[i] \gets padre1[i] $
+        \Else
+            \State $hijos[i] \gets resto[j] $
+            \State $j \gets j +1$
+        \EndIf
+      \EndFor
+
+      \State \Return{$hijos$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+
+Algoritmos geneticos:\\
+Implentaremos 2 tipos de algorimos geneticos,\\
+AGG( algorimo genetico generacional )\\
+AGG se basa en un algorimo que generada una poblacion aleatoria, se escogen mediante un torneo binario tantos individuos como
+poblacion del mismo y se cruzan, en nuestro caso diferenciaremos dos tipos de cruze uniforme y posicion (cuyos Pseudocodigo estas explicado arriba)
+para seguidamente mutar algunos de sus genes con probabilidad $P_M$ y reemplazar la nueva poblacion obtenida por la nueva y conservando el mejor de ambas(elitismo).\\
+AGE( algorimo genetico Estacional )\\  
+Este es practicamente igual, la unica diferencia es que a laa hora de selecionar los individuos, solo se seleccionan 2, estos seran los que se cruzaran y cuyos hijos mutaran, 
+para seguidamente, si mejoran los peores individuos de la poblacion sustituirlos.
+
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$AGG\_uniforme()$}{}
+      \State $TAM = 50$
+      \State $MAX\_ITERS = 100000$
+      \State $iters = 0$
+
+      \State $poblacion \gets \emptyset$ \Comment{Matriz de TAM individuos}
+      \State $hijo \gets \emptyset$ \Comment{Este sera el hijo solucion}
+      \State $hijos \gets \emptyset$
+      \State $fitness\_i \gets \emptyset$
+      
+      \For{$row $ in $poblacion$}
+        \State $row \gets generarPoblacion()$
+        \State $fitness\_i \gets fitness\_i \cup diff(row)$
+      \EndFor
+
+      \While{$iters < MAX\_ITERS$}
+        \State $best\_father \gets  best(poblacion)$ \Comment{Individuo de la poblacion con la menor dispersión}
+
+        \For{$row$ in $|poblacion|$}
+          \State $padre2 \gets next(row)$ \Comment{Siguiente individuo}
+          \If{$bool Random(0.7)$}
+            \State $hijos \gets hijos \cup generarHijosUniforme(row,padre2)$
+            \State $fitness\_i \gets fitness\_i \cup diff(hijos)$  \Comment{Actualizamos la dispersion de los nuevos hijos}
+          \Else
+            \State $hijos \gets hijos \cup row$
+          \EndIf
+        \EndFor
+        \State $spected\_mutations \gets 0.1*n*m$
+        \State $count = 0$
+        \While{$count != spected\_mutations$}
+          \State $cromosoma \gets Random(0,TAM)$ \Comment{Elegimos el Individuo a mutar}
+          \State $gen1 \gets Random(0,n)$
+          \State $gen2 \gets Random(0,n)$ \Comment{Elegimos dos genes Diferentes}
+
+          \If{$hijos at cromosoma[gen1] !=  hijos at cromosoma[gen2]$} \Comment{Si los genes del individuos elegido en hijos son distintos}
+            \State $swap(hijos at cromosoma[gen1], hijos at cromosoma[gen2])$
+          \EndIf
+          \State $count \gets count +1 $
+        \EndWhile
+
+        \State $poblacion \gets hijos$ \Comment{Los hijos sustituyen a la poblacion actual}
+
+        \If{$!find(fitness\_i, best\_father)$} \Comment{Si no encuentro el mejor individuo de la poblacion  sustituyo el peor por el mejor de la anterior}
+          \State $poblacion at peor elemento \gets best\_father$
+        \EndIf
+      \EndWhile
+
+      \State $hijo \gets min(poblacion)$
+      
+      \State \Return{$hijo$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$AGG\_posicion()$}{}
+      \State $TAM = 50$
+      \State $MAX\_ITERS = 100000$
+      \State $iters = 0$
+
+      \State $poblacion \gets \emptyset$ \Comment{Matriz de TAM individuos}
+      \State $hijo \gets \emptyset$ \Comment{Este sera el hijo solucion}
+      \State $hijos \gets \emptyset$
+      \State $fitness\_i \gets \emptyset$
+      
+      \For{$row $ in $poblacion$}
+        \State $row \gets generarPoblacion()$
+        \State $fitness\_i \gets fitness\_i \cup diff(row)$
+      \EndFor
+
+      \While{$iters < MAX\_ITERS$}
+        \State $best\_father \gets  best(poblacion)$ \Comment{Individuo de la poblacion con la menor dispersión}
+
+        \For{$row$ in $|poblacion|$}
+          \State $padre2 \gets next(row)$ \Comment{Siguiente individuo}
+          \If{$bool Random(0.7)$}
+            \State $hijos \gets hijos \cup generarHijosPosicion(row,padre2)$
+            \State $fitness\_i \gets fitness\_i \cup diff(hijos)$  \Comment{Actualizamos la dispersion de los nuevos hijos}
+          \Else
+            \State $hijos \gets hijos \cup row$
+          \EndIf
+        \EndFor
+        \State $spected\_mutations \gets 0.1*n*m$
+        \State $count = 0$
+        \While{$count != spected\_mutations$}
+          \State $cromosoma \gets Random(0,TAM)$ \Comment{Elegimos el Individuo a mutar}
+          \State $gen1 \gets Random(0,n)$
+          \State $gen2 \gets Random(0,n)$ \Comment{Elegimos dos genes Diferentes}
+
+          \If{$hijos at cromosoma[gen1] !=  hijos at cromosoma[gen2]$} \Comment{Si los genes del individuos elegido en hijos son distintos}
+            \State $swap(hijos at cromosoma[gen1], hijos at cromosoma[gen2])$
+          \EndIf
+          \State $count \gets count +1 $
+        \EndWhile
+
+        \State $poblacion \gets hijos$ \Comment{Los hijos sustituyen a la poblacion actual}
+
+        \If{$!find(fitness\_i, best\_father)$} \Comment{Si no encuentro el mejor individuo de la poblacion  sustituyo el peor por el mejor de la anterior}
+          \State $poblacion at peor elemento \gets best\_father$
+        \EndIf
+      \EndWhile
+
+      \State $hijo \gets min(poblacion)$
+      
+      \State \Return{$hijo$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$AGE\_uniforme()$}{}
+      \State $TAM = 50$
+      \State $MAX\_ITERS = 100000$
+      \State $iters = 0$
+
+      \State $poblacion \gets \emptyset$ \Comment{Matriz de TAM individuos}
+      \State $hijo \gets \emptyset$ \Comment{Este sera el hijo solucion}
+      \State $hijos \gets \emptyset$
+      \State $fitness\_i \gets \emptyset$
+      \State $fitness\_hijo \gets \emptyset$
+      
+      \For{$row $ in $poblacion$}
+        \State $row \gets generarPoblacion()$
+        \State $fitness\_i \gets fitness\_i \cup diff(row)$
+      \EndFor
+
+      \While{$iters < MAX\_ITERS$}
+        
+        \State $selected \gets seleccion(poblacion,fitness\_i,2)$\Comment{Eligo los 2 padres}
+        \State $hijos \gets generarHijosUniforme(selected[0],selected[1])$\Comment{Cruzo los 2 padres}
+        
+        \State $spected\_mutations \gets 0.1*n*2$
+        \State $count = 0$
+        \While{$count != spected\_mutations$}
+          \State $cromosoma \gets Random(0,|hijos|)$ \Comment{Elegimos el Individuo a mutar}
+          \State $gen1 \gets Random(0,n)$
+          \State $gen2 \gets Random(0,n)$ \Comment{Elegimos dos genes Diferentes}
+
+          \If{$hijos at cromosoma[gen1] !=  hijos at cromosoma[gen2]$} \Comment{Si los genes del individuos elegido en hijos son distintos}
+            \State $swap(hijos at cromosoma[gen1], hijos at cromosoma[gen2])$ \Comment{Intercambio cromosomas}
+            \State $fitness\_hijo \gets fitness\_hijo \cup hijos at cromosoma$ \Comment{Actualizo dispersion}
+          \EndIf
+          \State $count \gets count +1 $
+        \EndWhile
+
+        \State $worst\_i,second\_worst \gets max(fitness\_i)$ \Comment{Obtengo los dos peores padres}
+       
+        \State $poblacion \gets poblacion \cap \{worst\_i,second\_worst\}$
+        \State $poblacion \gets poblacion \cup {hijos}$ \Comment{Sustituyo los peores padres por los mejores hijos}
+      
+      \EndWhile
+      
+      \State $hijo \gets min(poblacion)$
+      \State \Return{$hijo$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$AGE\_posicion()$}{}
+      \State $TAM = 50$
+      \State $MAX\_ITERS = 100000$
+      \State $iters = 0$
+
+      \State $poblacion \gets \emptyset$ \Comment{Matriz de TAM individuos}
+      \State $hijo \gets \emptyset$ \Comment{Este sera el hijo solucion}
+      \State $hijos \gets \emptyset$
+      \State $fitness\_i \gets \emptyset$
+      \State $fitness\_hijo \gets \emptyset$
+      
+      \For{$row $ in $poblacion$}
+        \State $row \gets generarPoblacion()$
+        \State $fitness\_i \gets fitness\_i \cup diff(row)$
+      \EndFor
+
+      \While{$iters < MAX\_ITERS$}
+        
+        \State $selected \gets seleccion(poblacion,fitness\_i,2)$\Comment{Eligo los 2 padres}
+        \State $hijos \gets generarHijosPosicion(selected[0],selected[1])$\Comment{Cruzo los 2 padres}
+        
+        \State $spected\_mutations \gets 0.1*n*2$
+        \State $count = 0$
+        \While{$count != spected\_mutations$}
+          \State $cromosoma \gets Random(0,|hijos|)$ \Comment{Elegimos el Individuo a mutar}
+          \State $gen1 \gets Random(0,n)$
+          \State $gen2 \gets Random(0,n)$ \Comment{Elegimos dos genes Diferentes}
+
+          \If{$hijos at cromosoma[gen1] !=  hijos at cromosoma[gen2]$} \Comment{Si los genes del individuos elegido en hijos son distintos}
+            \State $swap(hijos at cromosoma[gen1], hijos at cromosoma[gen2])$ \Comment{Intercambio cromosomas}
+            \State $fitness\_hijo \gets fitness\_hijo \cup hijos at cromosoma$ \Comment{Actualizo dispersion}
+          \EndIf
+          \State $count \gets count +1 $
+        \EndWhile
+
+        \State $worst\_i,second\_worst \gets max(fitness\_i)$ \Comment{Obtengo los dos peores padres}
+       
+        \State $poblacion \gets poblacion \cap \{worst\_i,second\_worst\}$
+        \State $poblacion \gets poblacion \cup {hijos}$ \Comment{Sustituyo los peores padres por los mejores hijos}
+      
+      \EndWhile
+      
+      \State $hijo \gets min(poblacion)$
+      \State \Return{$hijo$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Algoritmo Memético
+Este algoritmo consiste en hibridar el AGG con una busqueda local
+Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre todos los elementos de la poblacion.
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$AM_all()$}{}
+      \State $TAM = 50$
+      \State $MAX\_ITERS = 100000$
+      \State $iters = 0$
+
+      \State $poblacion \gets \emptyset$ \Comment{Matriz de TAM individuos}
+      \State $hijo \gets \emptyset$ \Comment{Este sera el hijo solucion}
+      \State $hijos \gets \emptyset$
+      \State $fitness\_i \gets \emptyset$
+      
+      \For{$row $ in $poblacion$}
+        \State $row \gets generarPoblacion()$
+        \State $fitness\_i \gets fitness\_i \cup diff(row)$
+      \EndFor
+
+      \While{$iters < MAX\_ITERS$}
+        \State $best\_father \gets  best(poblacion)$ \Comment{Individuo de la poblacion con la menor dispersión}
+
+        \For{$row$ in $|poblacion|$}
+          \State $padre2 \gets next(row)$ \Comment{Siguiente individuo}
+          \If{$bool Random(0.7)$}
+            \State $hijos \gets hijos \cup generarHijosPosicion(row,padre2)$
+            \State $fitness\_i \gets fitness\_i \cup diff(hijos)$  \Comment{Actualizamos la dispersion de los nuevos hijos}
+          \Else
+            \State $hijos \gets hijos \cup row$
+          \EndIf
+        \EndFor
+        \State $spected\_mutations \gets 0.1*n*m$
+        \State $count = 0$
+        \While{$count != spected\_mutations$}
+          \State $cromosoma \gets Random(0,TAM)$ \Comment{Elegimos el Individuo a mutar}
+          \State $gen1 \gets Random(0,n)$
+          \State $gen2 \gets Random(0,n)$ \Comment{Elegimos dos genes Diferentes}
+
+          \If{$hijos at cromosoma[gen1] !=  hijos at cromosoma[gen2]$} \Comment{Si los genes del individuos elegido en hijos son distintos}
+            \State $swap(hijos at cromosoma[gen1], hijos at cromosoma[gen2])$
+          \EndIf
+          \State $count \gets count +1 $
+        \EndWhile
+
+        \State $poblacion \gets hijos$ \Comment{Los hijos sustituyen a la poblacion actual}
+
+        \If{$!find(fitness\_i, best\_father)$} \Comment{Si no encuentro el mejor individuo de la poblacion  sustituyo el peor por el mejor de la anterior}
+          \State $poblacion at peor elemento \gets best\_father$
+        \EndIf
+      \EndWhile
+
+      \State $hijo \gets min(poblacion)$
+      
+      \State \Return{$hijo$}
     \EndFunction
   \end{algorithmic}
 \end{algorithm}

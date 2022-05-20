@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1649469335 "EntregaClase1.tex" "EntregaClase1.pdf" "EntregaClase1" 1649469337
+["pdflatex"] 1653008690 "EntregaClase1.tex" "EntregaClase1.pdf" "EntregaClase1" 1653008691
   "/etc/texmf/web2c/texmf.cnf" 1640614679 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/joselu/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecsx1095.600pk" 1648167979 24004 b6cd5f8c5571537afbfa7ab6a6c52867 ""
   "/home/joselu/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecsx1200.600pk" 1648167978 27316 123382651dc64f870469f21476a8ae67 ""
@@ -40,6 +40,7 @@
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1248133631 35752 024fb6c41858982481f6968b5fc26508 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/rsfs/rsfs10.pfb" 1229303445 16077 4737ac34f0fb5608550f3780a0202c22 ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb" 1136849748 33709 b09d2e140b7e807d3a97058263ab6693 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb" 1136849748 44729 811d6c62865936705a31c797a1d5dada ""
   "/usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb" 1136849748 46026 6dab18b61c907687b520c72847215a68 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb" 1136849748 45458 a3faba884469519614ca56ba5f6b1de1 ""
@@ -107,10 +108,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1581979058 38841 ce3692aa899bb693b90b87eaa5d4d84e ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1648211613 165012 f177baa1c39a3ebd62c3096a43521a0d ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1648211618 4936373 2981688062aad6374327e3b745f33fc3 ""
-  "EntregaClase1.aux" 1649469336 2452 c916c4f8ef18c1a3d81d8c5a821ffdba "pdflatex"
-  "EntregaClase1.lof" 1649469336 331 80026f43e53e95aede72b36ee5a0fa07 "pdflatex"
-  "EntregaClase1.tex" 1649469334 13065 d606549e0a3a51220a3c042c1f6de644 ""
-  "EntregaClase1.toc" 1649469336 532 61e997b801a74ef31eca9ca6c1f949ad "pdflatex"
+  "EntregaClase1.aux" 1653008691 2693 741115917ffc9d2daaa5796de0cafad2 "pdflatex"
+  "EntregaClase1.lof" 1653008691 331 80026f43e53e95aede72b36ee5a0fa07 "pdflatex"
+  "EntregaClase1.tex" 1653008688 30350 1cd1bd18a892c58275f6a60ef9d3b850 ""
+  "EntregaClase1.toc" 1653008691 691 02a524525fb659c5b0eab2f59cc0193b "pdflatex"
   "algorithmicx.sty" 1114628400 26750 ce139c05a983e19ddca355b43e29c395 ""
   "algpseudocode.sty" 1114628520 3457 d9077efe6b74c5a094199256af8d7d9a ""
   "images/desv.png" 1649467494 46809 279332f3d5a7f2f85bb3f23b46b50470 ""
@@ -118,8 +119,8 @@
   "images/tiempos.png" 1649468468 23667 037c14cb3741ea8161bb166ae0b697a7 ""
   "preambuloSimple.tex" 1649437026 3043 6a1ab5931f58927a2b863f38505e39ff ""
   (generated)
-  "EntregaClase1.toc"
-  "EntregaClase1.log"
-  "EntregaClase1.pdf"
-  "EntregaClase1.lof"
   "EntregaClase1.aux"
+  "EntregaClase1.pdf"
+  "EntregaClase1.log"
+  "EntregaClase1.toc"
+  "EntregaClase1.lof"

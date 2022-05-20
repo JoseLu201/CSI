@@ -44,6 +44,7 @@ class MDD{
         vector<int> AGG_uniforme();
         vector<int> AGG_posicion();
         vector<int> AGE_uniforme();
+        vector<int> AGE_uniforme_antiguo();
         vector<int> AGE_posicion();
         vector<int> generarPoblacion();
         int torneo(vector<vector<int>> poblacion, vector<float> fitness_i,int indiv_torneo);

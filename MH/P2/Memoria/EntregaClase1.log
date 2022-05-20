@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.3.25)  9 APR 2022 03:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.3.25)  20 MAY 2022 03:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -532,6 +532,8 @@ Package tocbasic Info: Using my definition of `\numberline' on input line 5.
 Package tocbasic Info: Using my definition of `\numberline' on input line 6.
 Package tocbasic Info: Using my definition of `\numberline' on input line 7.
 Package tocbasic Info: Using my definition of `\numberline' on input line 8.
+Package tocbasic Info: Using my definition of `\numberline' on input line 9.
+Package tocbasic Info: Using my definition of `\numberline' on input line 10.
 )
 \tf@toc=\write3
 \openout3 = `EntregaClase1.toc'.
@@ -621,7 +623,39 @@ File: images/tiempos.png Graphic file (type png)
 Package pdftex.def Info: images/tiempos.png  used on input line 292.
 (pdftex.def)             Requested size: 376.42744pt x 206.20023pt.
  [9 <./images/desv.png> <./images/tiempos.png>]
-(./EntregaClase1.aux
+Underfull \hbox (badness 10000) in paragraph at lines 324--327
+
+ []
+
+
+Overfull \hbox (14.96648pt too wide) in paragraph at lines 329--350
+\T1/ptm/m/n/10.95 tor-neo bi-na-rio, de-vol-vien-do el me-jor de los in-di-vi-d
+uos Pseu-do-co-di-go de \T1/ptm/b/n/10.95 tor-neo(poblacion,fitness_i,
+ []
+
+[10]
+Underfull \hbox (badness 10000) in paragraph at lines 366--367
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 386--388
+
+ []
+
+[11] [12] [13]
+Overfull \vbox (36.33377pt too high) has occurred while \output is active []
+
+
+[14]
+Overfull \vbox (36.33377pt too high) has occurred while \output is active []
+
+
+[15] [16] [17]
+Overfull \vbox (36.33377pt too high) has occurred while \output is active []
+
+
+[18] (./EntregaClase1.aux
 LaTeX Info: Redefining \. on input line 8.
 LaTeX Info: Redefining \% on input line 8.
 )
@@ -630,10 +664,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 8950 strings out of 483048
- 156919 string characters out of 5962772
- 519899 words of memory out of 5000000
- 23834 multiletter control sequences out of 15000+600000
+ 8958 strings out of 483048
+ 157029 string characters out of 5962772
+ 526899 words of memory out of 5000000
+ 23842 multiletter control sequences out of 15000+600000
  595353 words of font info for 98 fonts, out of 8000000 for 9000
  85 hyphenation exceptions out of 8191
  56i,10n,65p,10136b,521s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -646,12 +680,13 @@ e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texl
 ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dis
 t/fonts/type1/public/rsfs/rsfs10.pfb></usr/share/texlive/texmf-dist/fonts/type1
-/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr
-8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on EntregaClase1.pdf (9 pages, 243647 bytes).
+/urw/symbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8
+a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on EntregaClase1.pdf (18 pages, 268374 bytes).
 PDF statistics:
- 211 PDF objects out of 1000 (max. 8388607)
- 60 compressed objects within 1 object stream
+ 250 PDF objects out of 1000 (max. 8388607)
+ 82 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

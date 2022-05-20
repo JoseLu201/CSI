@@ -70,7 +70,8 @@ class MDD{
         [&v](size_t i1, size_t i2) {return v[i1] < v[i2];});
 
         return idx;
-}
+    }
+    vector<int>  change_rep2(vector<int> hijo);
         
 
 };

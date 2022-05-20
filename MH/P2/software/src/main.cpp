@@ -178,8 +178,9 @@ vector<size_t> sort_indexes(const vector<T> &v) {
 }
 /*
 int main(int argc, char *argv[]){
-    string nombreArchivo = "datos_MDD/GKD-b_11_n50_m5.txt";
+    //string nombreArchivo = "datos_MDD/GKD-b_11_n50_m5.txt";
     //string nombreArchivo = "datos_MDD/GKD-b_9_n25_m7.txt";
+    string nombreArchivo = "datos_MDD/GKD-b_6_n25_m7.txt";
     Random::seed(0); 
 
     milliseconds tiempo;
@@ -190,12 +191,10 @@ int main(int argc, char *argv[]){
     MDD instance(dim.first,dim.second);
 
     instance.leer_fichero(nombreArchivo);
-    vector<int> ins = {0,1,0,1,0,1,0,0,0,0,0};
-    //instance.print_check();
+
     inicio = high_resolution_clock::now();
 
-    instance.reparar(ins);
-
+    auto sol = instance.AGE_posicion();
     fin = high_resolution_clock::now();
      tiempo = duration_cast<std::chrono::milliseconds>(fin - inicio);
 
@@ -205,5 +204,4 @@ int main(int argc, char *argv[]){
     cout << endl;
     cout << "Coste " << instance.diff(sol) << endl;
     cout << "Tiempo " << tiempo.count() << endl;
-    
 }*/

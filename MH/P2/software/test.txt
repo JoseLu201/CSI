@@ -1,52 +1,286 @@
-Media de la dispersion 0;Media de los tiempos 147
-Media de la dispersion 0;Media de los tiempos 150
-Media de la dispersion 0;Media de los tiempos 137
-Media de la dispersion 0;Media de los tiempos 140
-Media de la dispersion 0;Media de los tiempos 133
-Media de la dispersion 12.718;Media de los tiempos 1039
-Media de la dispersion 14.0988;Media de los tiempos 1059
-Media de la dispersion 16.7612;Media de los tiempos 939
-Media de la dispersion 17.0692;Media de los tiempos 1033
-Media de la dispersion 23.2651;Media de los tiempos 911
-Media de la dispersion 1.92615;Media de los tiempos 1767
-Media de la dispersion 2.91382;Media de los tiempos 1712
-Media de la dispersion 2.3623;Media de los tiempos 1665
-Media de la dispersion 1.66321;Media de los tiempos 1679
-Media de la dispersion 2.85315;Media de los tiempos 1745
-Media de la dispersion 42.7458;Media de los tiempos 7444
-Media de la dispersion 48.1075;Media de los tiempos 7858
-Media de la dispersion 43.1962;Media de los tiempos 7740
-Media de la dispersion 56.3114;Media de los tiempos 7618
-Media de la dispersion 54.7289;Media de los tiempos 7730
-Media de la dispersion 19.5066;Media de los tiempos 12417
-Media de la dispersion 17.5803;Media de los tiempos 12120
-Media de la dispersion 18.095;Media de los tiempos 12207
-Media de la dispersion 18.8597;Media de los tiempos 12293
-Media de la dispersion 20.2844;Media de los tiempos 12058
-Media de la dispersion 291.454;Media de los tiempos 61479
-Media de la dispersion 278.367;Media de los tiempos 60593
-Media de la dispersion 300.221;Media de los tiempos 62220
-Media de la dispersion 264.912;Media de los tiempos 62725
-Media de la dispersion 257.871;Media de los tiempos 62327
-Media de la dispersion 30.5837;Media de los tiempos 22288
-Media de la dispersion 27.9536;Media de los tiempos 22945
-Media de la dispersion 28.9254;Media de los tiempos 22688
-Media de la dispersion 27.9955;Media de los tiempos 22100
-Media de la dispersion 20.0801;Media de los tiempos 22533
-Media de la dispersion 391.543;Media de los tiempos 124236
-Media de la dispersion 426.259;Media de los tiempos 124286
-Media de la dispersion 455.725;Media de los tiempos 123283
-Media de la dispersion 407.042;Media de los tiempos 119787
-Media de la dispersion 479.08;Media de los tiempos 122269
-Media de la dispersion 37.6863;Media de los tiempos 41644
-Media de la dispersion 49.1576;Media de los tiempos 42426
-Media de la dispersion 48.5358;Media de los tiempos 42662
-Media de la dispersion 44.2687;Media de los tiempos 41501
-Media de la dispersion 38.6772;Media de los tiempos 40749
-Media de la dispersion 666.454;Media de los tiempos 226880
-Media de la dispersion 561.306;Media de los tiempos 228877
-Media de la dispersion 572.386;Media de los tiempos 229672
-Media de la dispersion 570.532;Media de los tiempos 234695
-Media de la dispersion 674.761;Media de los tiempos 232651
-
-
+Cada generacion de hijos 3
+Cada gen tarda 4
+Cada generacion de hijos 2
+Cada gen tarda 3
+Cada generacion de hijos 0
+Cada gen tarda 1
+Cada generacion de hijos 3
+Cada gen tarda 4
+Cada generacion de hijos 0
+Cada gen tarda 1
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 3
+Cada gen tarda 4
+Cada generacion de hijos 1
+Cada gen tarda 2
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 6
+Cada gen tarda 7
+Cada generacion de hijos 0
+Cada gen tarda 0
+Cada generacion de hijos 0
+Cada gen tarda 0
+Cada generacion de hijos 2
+Cada gen tarda 3
+Cada generacion de hijos 1
+Cada gen tarda 2
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 6
+Cada gen tarda 6
+Cada generacion de hijos 6
+Cada gen tarda 7
+Cada generacion de hijos 1
+Cada gen tarda 2
+Cada generacion de hijos 4
+Cada gen tarda 5
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 3
+Cada gen tarda 4
+Cada generacion de hijos 10
+Cada gen tarda 10
+Cada generacion de hijos 8
+Cada gen tarda 8
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 6
+Cada gen tarda 7
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 4
+Cada gen tarda 5
+Cada generacion de hijos 4
+Cada gen tarda 5
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 5
+Cada gen tarda 5
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 5
+Cada gen tarda 6
+Cada generacion de hijos 2
+Cada gen tarda 3
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 0
+Cada gen tarda 1
+Cada generacion de hijos 3
+Cada gen tarda 4
+Cada generacion de hijos 0
+Cada gen tarda 1
+Cada generacion de hijos 3
+Cada gen tarda 4
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 6
+Cada gen tarda 6
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 0
+Cada gen tarda 0
+Cada generacion de hijos 5
+Cada gen tarda 6
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 3
+Cada gen tarda 4
+Cada generacion de hijos 6
+Cada gen tarda 7
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 7
+Cada gen tarda 7
+Cada generacion de hijos 7
+Cada gen tarda 8
+Cada generacion de hijos 2
+Cada gen tarda 3
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 2
+Cada gen tarda 3
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 1
+Cada gen tarda 2
+Cada generacion de hijos 2
+Cada gen tarda 3
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 0
+Cada gen tarda 0
+Cada generacion de hijos 6
+Cada gen tarda 6
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 0
+Cada gen tarda 1
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 0
+Cada gen tarda 0
+Cada generacion de hijos 5
+Cada gen tarda 6
+Cada generacion de hijos 7
+Cada gen tarda 7
+Cada generacion de hijos 3
+Cada gen tarda 4
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 2
+Cada gen tarda 3
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 11
+Cada gen tarda 11
+Cada generacion de hijos 2
+Cada gen tarda 3
+Cada generacion de hijos 6
+Cada gen tarda 6
+Cada generacion de hijos 1
+Cada gen tarda 2
+Cada generacion de hijos 4
+Cada gen tarda 5
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 2
+Cada gen tarda 3
+Cada generacion de hijos 8
+Cada gen tarda 8
+Cada generacion de hijos 3
+Cada gen tarda 4
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 5
+Cada gen tarda 5
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 0
+Cada gen tarda 0
+Cada generacion de hijos 8
+Cada gen tarda 9
+Cada generacion de hijos 4
+Cada gen tarda 5
+Cada generacion de hijos 5
+Cada gen tarda 5
+Cada generacion de hijos 0
+Cada gen tarda 1
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 0
+Cada gen tarda 0
+Cada generacion de hijos 5
+Cada gen tarda 6
+Cada generacion de hijos 1
+Cada gen tarda 2
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 5
+Cada gen tarda 5
+Cada generacion de hijos 2
+Cada gen tarda 3
+Cada generacion de hijos 9
+Cada gen tarda 10
+Cada generacion de hijos 0
+Cada gen tarda 1
+Cada generacion de hijos 8
+Cada gen tarda 8
+Cada generacion de hijos 0
+Cada gen tarda 0
+Cada generacion de hijos 1
+Cada gen tarda 2
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 5
+Cada gen tarda 6
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 3
+Cada gen tarda 3
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 1
+Cada gen tarda 2
+Cada generacion de hijos 5
+Cada gen tarda 5
+Cada generacion de hijos 4
+Cada gen tarda 4
+Cada generacion de hijos 0
+Cada gen tarda 0
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 1
+Cada gen tarda 1
+Cada generacion de hijos 2
+Cada gen tarda 3
+Cada generacion de hijos 7
+Cada gen tarda 7
+Cada generacion de hijos 2
+Cada gen tarda 2
+Cada generacion de hijos 2
+Cada gen tarda 3

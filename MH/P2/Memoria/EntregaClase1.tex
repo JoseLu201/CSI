@@ -680,7 +680,7 @@ Este algoritmo consiste en hibridar el AGG con una busqueda local
 Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre todos los elementos de la poblacion.
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
-    \Function{$AM_all()$}{}
+    \Function{$AM\_all()$}{}
       \State $TAM = 50$
       \State $MAX\_ITERS = 100000$
       \State $iters = 0$
@@ -725,6 +725,15 @@ Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre todos los elemen
         \If{$!find(fitness\_i, best\_father)$} \Comment{Si no encuentro el mejor individuo de la poblacion  sustituyo el peor por el mejor de la anterior}
           \State $poblacion at peor elemento \gets best\_father$
         \EndIf
+
+        \If{$iters == 10*k$} \Comment{Cada 10 iters}
+          \State $ fitness\_i \gets \emptyset$
+          \For{$row$ in $|poblacion|$}
+            \State $row = BL(row)$ \Comment{Actualizoel individuo aplicandole la BL}
+            \State $fitness\_i \gets fitness\_i \cup diff(row)$
+          \EndFor
+        \EndIf
+
       \EndWhile
 
       \State $hijo \gets min(poblacion)$
@@ -734,5 +743,165 @@ Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre todos los elemen
   \end{algorithmic}
 \end{algorithm}
 
+Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre el 10\% de la poblacion
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$AM\_subset()$}{}
+      \State $TAM = 50$
+      \State $MAX\_ITERS = 100000$
+      \State $iters = 0$
+
+      \State $poblacion \gets \emptyset$ \Comment{Matriz de TAM individuos}
+      \State $hijo \gets \emptyset$ \Comment{Este sera el hijo solucion}
+      \State $hijos \gets \emptyset$
+      \State $fitness\_i \gets \emptyset$
+      
+      \For{$row $ in $poblacion$}
+        \State $row \gets generarPoblacion()$
+        \State $fitness\_i \gets fitness\_i \cup diff(row)$
+      \EndFor
+
+      \While{$iters < MAX\_ITERS$}
+        \State $best\_father \gets  best(poblacion)$ \Comment{Individuo de la poblacion con la menor dispersión}
+
+        \For{$row$ in $|poblacion|$}
+          \State $padre2 \gets next(row)$ \Comment{Siguiente individuo}
+          \If{$bool Random(0.7)$}
+            \State $hijos \gets hijos \cup generarHijosPosicion(row,padre2)$
+            \State $fitness\_i \gets fitness\_i \cup diff(hijos)$  \Comment{Actualizamos la dispersion de los nuevos hijos}
+          \Else
+            \State $hijos \gets hijos \cup row$
+          \EndIf
+        \EndFor
+        \State $spected\_mutations \gets 0.1*n*m$
+        \State $count = 0$
+        \While{$count != spected\_mutations$}
+          \State $cromosoma \gets Random(0,TAM)$ \Comment{Elegimos el Individuo a mutar}
+          \State $gen1 \gets Random(0,n)$
+          \State $gen2 \gets Random(0,n)$ \Comment{Elegimos dos genes Diferentes}
+
+          \If{$hijos at cromosoma[gen1] !=  hijos at cromosoma[gen2]$} \Comment{Si los genes del individuos elegido en hijos son distintos}
+            \State $swap(hijos at cromosoma[gen1], hijos at cromosoma[gen2])$
+          \EndIf
+          \State $count \gets count +1 $
+        \EndWhile
+
+        \State $poblacion \gets hijos$ \Comment{Los hijos sustituyen a la poblacion actual}
+
+        \If{$!find(fitness\_i, best\_father)$} \Comment{Si no encuentro el mejor individuo de la poblacion  sustituyo el peor por el mejor de la anterior}
+          \State $poblacion at peor elemento \gets best\_father$
+        \EndIf
+
+        \If{$iters == 10*k$} \Comment{Cada 10 iters}
+          \State $ fitness\_i \gets \emptyset$
+          \For{$row$ in $|poblacion|$}
+            \If{$Random<bool>(0.1)$} \Comment{Con un 10\% de probabilidad de aplicar BL}
+              \State $row = BL(row)$ 
+              \State $fitness\_i \gets fitness\_i \cup diff(row)$ \Comment{Actualizo fitness para ese individuo}
+            \EndIf
+          \EndFor
+        \EndIf
+
+      \EndWhile
+
+      \State $hijo \gets min(poblacion)$
+      
+      \State \Return{$hijo$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+
+Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre el 10\% de los mejores individuos de la poblacion
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Function{$AM\_bests()$}{}
+      \State $TAM = 50$
+      \State $MAX\_ITERS = 100000$
+      \State $iters = 0$
+
+      \State $poblacion \gets \emptyset$ \Comment{Matriz de TAM individuos}
+      \State $hijo \gets \emptyset$ \Comment{Este sera el hijo solucion}
+      \State $hijos \gets \emptyset$
+      \State $fitness\_i \gets \emptyset$
+      
+      \For{$row $ in $poblacion$}
+        \State $row \gets generarPoblacion()$
+        \State $fitness\_i \gets fitness\_i \cup diff(row)$
+      \EndFor
+
+      \While{$iters < MAX\_ITERS$}
+        \State $best\_father \gets  best(poblacion)$ \Comment{Individuo de la poblacion con la menor dispersión}
+
+        \For{$row$ in $|poblacion|$}
+          \State $padre2 \gets next(row)$ \Comment{Siguiente individuo}
+          \If{$bool Random(0.7)$}
+            \State $hijos \gets hijos \cup generarHijosPosicion(row,padre2)$
+            \State $fitness\_i \gets fitness\_i \cup diff(hijos)$  \Comment{Actualizamos la dispersion de los nuevos hijos}
+          \Else
+            \State $hijos \gets hijos \cup row$
+          \EndIf
+        \EndFor
+        \State $spected\_mutations \gets 0.1*n*m$
+        \State $count = 0$
+        \While{$count != spected\_mutations$}
+          \State $cromosoma \gets Random(0,TAM)$ \Comment{Elegimos el Individuo a mutar}
+          \State $gen1 \gets Random(0,n)$
+          \State $gen2 \gets Random(0,n)$ \Comment{Elegimos dos genes Diferentes}
+
+          \If{$hijos at cromosoma[gen1] !=  hijos at cromosoma[gen2]$} \Comment{Si los genes del individuos elegido en hijos son distintos}
+            \State $swap(hijos at cromosoma[gen1], hijos at cromosoma[gen2])$
+          \EndIf
+          \State $count \gets count +1 $
+        \EndWhile
+
+        \State $poblacion \gets hijos$ \Comment{Los hijos sustituyen a la poblacion actual}
+
+        \If{$!find(fitness\_i, best\_father)$} \Comment{Si no encuentro el mejor individuo de la poblacion  sustituyo el peor por el mejor de la anterior}
+          \State $poblacion at peor elemento \gets best\_father$
+        \EndIf
+
+        \State $best\_5 \gets sort_ind(poblacion,0.1*TAM)$  \Comment{Obtengo el 0.1 de los mejores individuos}
+        
+        \If{$iters == 10*k$} \Comment{Cada 10 iters}
+          \State $ fitness\_i \gets \emptyset$
+          \For{$row$ in $best\_5$}
+            \State $row = BL(row)$ 
+            \State $fitness\_i \gets fitness\_i \cup diff(row)$ \Comment{Actualizo fitness para ese individuo}
+          \EndFor
+        \EndIf
+
+      \EndWhile
+
+      \State $hijo \gets min(poblacion)$
+      
+      \State \Return{$hijo$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+El bl esta ligeramente modificado para que pueda aceptar codificaion binaria, para ello simplemente hago un cambio, en vez 
+de generar una solucion aleatoria, se la pasamos como parametro y ese parametro lo pasamos a codificacion entera para ejectuarla en el BL, luego deshacemos el cambio.
+
+\section{cONCLUSOINES}
+
+Si metemos muchas iteraciones en el generacional obtenemos soluciones mejores que las dadas como mejores en las tablas, pero
+requiere mucho tiempo.\\
+
+\begin{table}[]
+  \begin{tabular}{|l|l|l|}
+  \hline
+  \multicolumn{1}{|c|}{Algoritmo}   & \multicolumn{1}{l|}{Desv}                  & \multicolumn{1}{c|}{Tiempo}           \\ \hline
+  Greedy                            & \textbf{0,6646633915}                      & \textbf{32,88}                        \\\hline
+  BL                                & \textbf{0,4815112495}                      & \textbf{706,84}                       \\\hline
+  AGG-uniforme                      & \textbf{0,384878225}                       & \textbf{4956,38}  \\\hline
+  AGG-posición                      & \textbf{0,5215188632}                      & \textbf{4279,12}                      \\\hline
+  AGE-uniforme                      & \textbf{}                      & \textbf{}                                             \\\hline
+  AGE-posición                      & \textbf{}                      & \textbf{}                                               \\\hline
+  AM-(10,1.0)                       & \textbf{0,2682065942}                      & \textbf{20142,46}                     \\ \hline
+  AM-(10,0.1)                       & \textbf{0,3943533539}                      & \textbf{4984,94}                       \\ \hline
+  AM-(10,0.1mej)                    & \textbf{0,3886030957}                      & \textbf{5175,8}                      \\ \hline
+  \end{tabular}
+  \end{table}
 
 \end{document}

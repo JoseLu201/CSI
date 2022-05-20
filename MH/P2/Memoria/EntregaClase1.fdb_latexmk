@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1653008690 "EntregaClase1.tex" "EntregaClase1.pdf" "EntregaClase1" 1653008691
+["pdflatex"] 1653011351 "EntregaClase1.tex" "EntregaClase1.pdf" "EntregaClase1" 1653011352
   "/etc/texmf/web2c/texmf.cnf" 1640614679 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/joselu/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecsx1095.600pk" 1648167979 24004 b6cd5f8c5571537afbfa7ab6a6c52867 ""
   "/home/joselu/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecsx1200.600pk" 1648167978 27316 123382651dc64f870469f21476a8ae67 ""
@@ -108,10 +108,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1581979058 38841 ce3692aa899bb693b90b87eaa5d4d84e ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1648211613 165012 f177baa1c39a3ebd62c3096a43521a0d ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1648211618 4936373 2981688062aad6374327e3b745f33fc3 ""
-  "EntregaClase1.aux" 1653008691 2693 741115917ffc9d2daaa5796de0cafad2 "pdflatex"
-  "EntregaClase1.lof" 1653008691 331 80026f43e53e95aede72b36ee5a0fa07 "pdflatex"
-  "EntregaClase1.tex" 1653008688 30350 1cd1bd18a892c58275f6a60ef9d3b850 ""
-  "EntregaClase1.toc" 1653008691 691 02a524525fb659c5b0eab2f59cc0193b "pdflatex"
+  "EntregaClase1.aux" 1653011352 2792 792a69fb0ead577baa0524d5fee8a981 "pdflatex"
+  "EntregaClase1.lof" 1653011352 331 80026f43e53e95aede72b36ee5a0fa07 "pdflatex"
+  "EntregaClase1.tex" 1653011350 38095 e9afce0d35e883321779d5bf5c0d6f0e ""
+  "EntregaClase1.toc" 1653011352 749 42d6cac4a018965f86b124897d30c668 "pdflatex"
   "algorithmicx.sty" 1114628400 26750 ce139c05a983e19ddca355b43e29c395 ""
   "algpseudocode.sty" 1114628520 3457 d9077efe6b74c5a094199256af8d7d9a ""
   "images/desv.png" 1649467494 46809 279332f3d5a7f2f85bb3f23b46b50470 ""
@@ -119,8 +119,8 @@
   "images/tiempos.png" 1649468468 23667 037c14cb3741ea8161bb166ae0b697a7 ""
   "preambuloSimple.tex" 1649437026 3043 6a1ab5931f58927a2b863f38505e39ff ""
   (generated)
-  "EntregaClase1.aux"
-  "EntregaClase1.pdf"
+  "EntregaClase1.lof"
   "EntregaClase1.log"
   "EntregaClase1.toc"
-  "EntregaClase1.lof"
+  "EntregaClase1.pdf"
+  "EntregaClase1.aux"

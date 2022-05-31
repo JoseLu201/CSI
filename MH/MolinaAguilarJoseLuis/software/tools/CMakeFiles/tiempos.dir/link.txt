@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/tiempos.dir/fact.cc.o CMakeFiles/tiempos.dir/tiempos.cc.o  -o tiempos -lm 

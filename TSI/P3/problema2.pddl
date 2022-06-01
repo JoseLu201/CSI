@@ -1,11 +1,11 @@
 (define (problem ejercicio1) 
     (:domain ejercicio1)
     (:objects 
-        ; Unidades
-        VCE1 - unidad
+        ; Añado unidades
+        VCE1 VCE2- unidad
 
-        ; Edificios
-        CentroDeMando1 - edificio
+        ; Añado edificios
+        CentroDeMando1 Extractor1 - edificio
         
         ; Localizaciones
         LOC11 LOC12 LOC13 LOC14 LOC21 LOC22 LOC23 LOC24 LOC31 LOC32 LOC33 LOC34 LOC44 - localizacion
@@ -56,24 +56,33 @@
 
         ; Asignamos la localizacion de los edificios
         (edificioEn CentroDeMando1 LOC11)
+        (construccion CentroDeMando1 LOC11)
+        (ocuapada LOC11)
 
         ; Asignamos la localizacion de las unidades
         (unidadEn VCE1 LOC11)
-
+        (unidadEn VCE2 LOC11)
+        
         ; Asignamos la localizacion de los recursos
         (depositoEn Mineral LOC22)
         (depositoEn Mineral LOC32)
+        (depositoEn GasVespeno LOC44)
 
         ; Tipos de los edificios
         (edificioEs CentroDeMando1 CentroDeMando)
+        (edificioEs Extractor1 Extractor)
 
         ; Tipos de las unidades
         (unidadEs VCE1 VCE)
+        (unidadEs VCE2 VCE)
 
         ; Unidades libres
         (libre VCE1)
+        (libre VCE2)
+
+        (edificioRequiere Extractor Mineral)
     )
     (:goal 
-        (disponibleRecu Mineral)  
+        (disponibleRecu GasVespeno)  
     )
 )

@@ -1,4 +1,4 @@
-(define (domain ejercicio1)
+(define (domain ejercicio2)
     (:requirements :strips :typing :adl)
     (:types
 		; Necesitamos crear los tipos:
@@ -52,7 +52,7 @@
         (locOcupada ?loc - localizacion)
     
         ; Cuando contruirmos un edifico de cualqiuer tipo
-        (construccion ?edi - tipoEdificio ?loc - localizacion)
+        (construccion ?e - tipoEdificio ?loc - localizacion)
     )
 
     ; Mover a una unidad entre dos localizaciones
@@ -147,11 +147,13 @@
                 (locOcupada ?loc)
 
                 ;Dependiendo de lo que hemos contruido asertamos el tipo de edificio
-                (when (edificioEs ?e Barracones ))
+                (when (edificioEs ?e Barracones )
                     (construccion Barracones ?loc)
+                )
                 
-                (when (edificioEs ?e Extractor ))
+                (when (edificioEs ?e Extractor )
                     (construccion Extractor ?loc)
+                )
             )
     )
 )

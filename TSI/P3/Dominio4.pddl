@@ -1,4 +1,4 @@
-(define (domain ejercicio3)
+(define (domain ejercicio4)
     (:requirements :strips :typing :adl)
     (:types
 		; Necesitamos crear los tipos:
@@ -8,7 +8,7 @@
     )
 
     (:constants
-        VCE - tipoUnidad
+        VCE Marine Soldado - tipoUnidad
         ; Añadimos el tipo de extractor
         CentroDeMando Barracones Extractor - tipoEdificio
         Mineral GasVespeno - recurso
@@ -40,10 +40,7 @@
         ;;;;;;;;;;;;
 
         ; Necesitamos recursos para contruir el edificio
-        (edificioRequiere ?tipoEdi - tipoEdificio ?recu - recurso)
-
-        ; Comprobar que tenemos el recurso
-        (recursoDisp ?recu - recurso)
+        (edificioRequiere ?edi - tipoEdificio ?recu - recurso)
 
         ; Determima si el edificio esta contruido
         (construido ?e - edificio)
@@ -53,6 +50,15 @@
     
         ; Cuando contruirmos un edifico de cualqiuer tipo
         (construccion ?edi - tipoEdificio ?loc - localizacion)
+
+        ; Unidad reclutada
+
+        (uniReclutada ?uni - unidad)
+
+        (unidadRequiereRecu ?tipo - tipoUnidad ?recu - recurso)
+        ; El tipo de unidad ?tipoUni requiere tener el tipo de edificio ?tipoEdi para poder reclutarla
+        (unidadRequiereEdi ?tipo - tipoUnidad ?edi - tipoEdificio)
+
     )
 
     ; Mover a una unidad entre dos localizaciones
@@ -83,7 +89,7 @@
             (and 
                 ; Solo podemos asignar unidades si estan libres
                 (libre ?uni)
-                ; La unidad tiene que ser del tipo VCE
+                ; La unidad tiene que ser del tipo VCE para ser asignada
                 (unidadEs ?uni VCE)
                 ; En la localizacion del recurso tiene que haber un recurso
                 (depositoEn ?recu ?loc)
@@ -93,19 +99,20 @@
                 (or
                     ; Hay un deposito de mineral en la loc
                     (depositoEn Mineral ?loc)
+                    ; Asignamos que hay una edificio en esa localizacion 
                     (construccion Extractor ?loc)
                 )
             )
         :effect 
             (and 
-                ; Cuando hay un depósito de Gas vespeno en la localizacion
+                ; Cuando hay un depósito de Gas vespeno en loc
                 (when (depositoEn GasVespeno ?loc) 
-                    ; Se dispone del recurso Gas Vespeno
+                    ; Tenemos ese recurso
                     (disponibleRecu GasVespeno)
                 )
-                ; Cuando hay un depósito de Mineral en la localizacion 
+                ; Cuando hay un depósito de Mineral en loc
                 (when (depositoEn Mineral ?loc) 
-                    ; Se dispone del recurso Mineral
+                    ; Tenemos ese recurso
                     (disponibleRecu Mineral)
                 )
                 ; Cambiamos la disponibilidad de la unidad
@@ -136,12 +143,14 @@
                         ; y hay un recurso de gas
                         (depositoEn GasVespeno ?loc)
                     )
+                    ; Para el caso de que no el edificio no sea un extractor
                     (not (edificioEs ?e Extractor))
                 )
                 ; Tenemos 3 tipos de casos, en los que el edificio necesita:
                 ;   -> solo mineral
                 ;   -> solo gas
                 ;   -> ambos
+                ; Por lo que necesitaremos disponibilidad de esos recursos para cada contruiccion
                 (exists (?tE - tipoEdificio)
                     (and
                         (edificioEs ?e ?tE)
@@ -163,7 +172,6 @@
                                 (disponibleRecu GasVespeno)
                             )
                         )
-                    
                     )
                 )
             )
@@ -183,6 +191,66 @@
                 (when (edificioEs ?e Extractor )
                     (construccion Extractor ?loc)
                 )
+            )
+    )
+
+
+    ; Reclutar una unidad
+    (:action reclutar
+        :parameters (?e - edificio ?uni - unidad ?loc - localizacion)
+        :precondition 
+            (and 
+                ; La unidad ?uni todavía no ha sido reclutada
+                (not (uniReclutada ?uni))
+                (exists (?tU - tipoUnidad ?tE - tipoEdificio)
+                    (and
+                        ; La unidad ?uni es de tipo ?tipoUni
+                        (unidadEs ?uni ?tU)
+                        (or
+                            (and
+                                ; Tenemos una unidad que necesita SOLAMENTE mineral para ser contruida, necesitamos
+                                ; ese material
+                                (unidadRequiereRecu ?tU Mineral)
+                                ; por lo que no necesitams gas
+                                (not (unidadRequiereRecu ?tU GasVespeno))
+                                (disponibleRecu Mineral)
+                            )
+                            (and
+                                ; Tenemos una unidad que necesita SOLAMENTE gas para ser contruida, necesitamos
+                                ; ese material
+                                (unidadRequiereRecu ?tU GasVespeno)
+                                ; por lo que no necesitams mineral
+                                (not (unidadRequiereRecu ?tU Mineral))
+
+                                (disponibleRecu GasVespeno)
+                            )
+                            (and
+                                ; Tenemos una unidad que necesita tanto gas como mineral para ser contruida, necesitamos
+                                ; ambos materiales
+                                (unidadRequiereRecu ?tU GasVespeno)
+                                (unidadRequiereRecu ?tU Mineral)
+
+                                (disponibleRecu Mineral)
+                                (disponibleRecu GasVespeno)
+                            )
+                        )
+                        
+                        ; Cada unidad requiere de untipo de edificio
+                        (edificioEs ?e ?tE)
+                        (unidadRequiereEdi ?tU ?tE)
+
+                        (edificioEn ?e ?loc)
+                    )
+                )
+            )
+        :effect 
+            (and 
+                ; Cuando reclutamos esa unidad, al principio esta libre
+                (libre ?uni)
+                ; Marcamos la unidad como ya reclutada
+                (uniReclutada ?uni)
+                ; en una posicion
+                (unidadEn ?uni ?loc)
             )
     )
 )

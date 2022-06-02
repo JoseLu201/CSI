@@ -1,8 +1,10 @@
-(define (problem ejercicio3) 
-    (:domain ejercicio3)
+(define (problem ejercicio4) 
+    (:domain ejercicio4)
     (:objects 
-        ; Necesitamos 3 unidades
+        ; Añadimos las nuevas unidades
         VCE1 VCE2 VCE3 - unidad
+        Marine1 Marine2 Soldado1 - unidad
+
 
         ; Añado edificios
         CentroDeMando1 Extractor1 Barracones1 - edificio
@@ -61,38 +63,64 @@
 
         ; Asignamos la localizacion de las unidades
         (unidadEn VCE1 LOC11)
-        (unidadEn VCE2 LOC11)
-        (unidadEn VCE3 LOC11)
+        ;;(unidadEn VCE2 LOC11)
+        ;;(unidadEn VCE3 LOC11)
         
         ; Asignamos la localizacion de los recursos
         (depositoEn Mineral LOC22)
         (depositoEn Mineral LOC32)
         (depositoEn GasVespeno LOC44)
 
-        ; Tipos de los edificios
+        ; Definimos los tipos de los edificios
         (edificioEs CentroDeMando1 CentroDeMando)
         (edificioEs Extractor1 Extractor)
         (edificioEs Barracones1 Barracones)
 
-        ; Tipos de las unidades
+        ;  Definimos los tipos de las unidades
         (unidadEs VCE1 VCE)
         (unidadEs VCE2 VCE)
         (unidadEs VCE3 VCE)
+        
+        ; Añadimos las nuevas unidades 
+        (unidadEs Marine1 Marine)
+        (unidadEs Marine2 Marine)
+        (unidadEs Soldado1 Soldado)
 
         ; Unidades libres
         (libre VCE1)
-        (libre VCE2)
-        (libre VCE3)
 
+        ; En un principio ya tenemos a una unidad reclutada
+        (uniReclutada VCE1)
+
+        ; Centro de mando ya contruido
         (construido CentroDeMando1)
 
         ; Necesitamos ciertos recursos para la contruccion.
         (edificioRequiere Extractor Mineral)
+
         (edificioRequiere Barracones Mineral)
         (edificioRequiere Barracones GasVespeno)
 
+        ; Recursos que necesitamos para el reclutamiento de cada uniadad
+        (unidadRequiereRecu VCE Mineral)
+        (unidadRequiereRecu Marine Mineral)
+        ; Los soldados necesitan ambos recursos
+        (unidadRequiereRecu Soldado Mineral)
+        (unidadRequiereRecu Soldado GasVespeno)
+
+        ; Edificio requerido por una unidad para su reclutamiento
+        (unidadRequiereEdi VCE CentroDeMando)
+        (unidadRequiereEdi Marine Barracones)
+        (unidadRequiereEdi Soldado Barracones)
+
     )
     (:goal 
-       (edificioEn Barracones1 LOC33)
+        (and
+            ; Necesitamos contruir los barracones para poder generar tropas.
+            (edificioEn Barracones1 LOC32)
+            (unidadEn Marine1 LOC31)
+            (unidadEn Marine2 LOC24)
+            (unidadEn Soldado1 LOC12)
+        )
     )
 )

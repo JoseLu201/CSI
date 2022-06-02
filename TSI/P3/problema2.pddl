@@ -1,8 +1,8 @@
-(define (problem ejercicio1) 
-    (:domain ejercicio1)
+(define (problem ejercicio2) 
+    (:domain ejercicio2)
     (:objects 
         ; Añado unidades
-        VCE1 VCE2- unidad
+        VCE1 VCE2 - unidad
 
         ; Añado edificios
         CentroDeMando1 Extractor1 - edificio
@@ -56,8 +56,7 @@
 
         ; Asignamos la localizacion de los edificios
         (edificioEn CentroDeMando1 LOC11)
-        (construccion CentroDeMando1 LOC11)
-        (ocuapada LOC11)
+        (locOcupada LOC11)
 
         ; Asignamos la localizacion de las unidades
         (unidadEn VCE1 LOC11)

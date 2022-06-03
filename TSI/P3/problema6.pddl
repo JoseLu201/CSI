@@ -1,5 +1,5 @@
-(define (problem ejercicio5) 
-    (:domain ejercicio5)
+(define (problem ejercicio6) 
+    (:domain ejercicio6)
     (:objects 
         ; Añadimos las nuevas unidades
         VCE1 VCE2 VCE3 - unidad
@@ -58,12 +58,12 @@
 
         ; Asignamos la localizacion de los edificios
         (edificioEn CentroDeMando1 LOC11)
+        
         ;(construccion CentroDeMando1 LOC11)
         (locOcupada LOC11)
 
         ; Asignamos la localizacion de las unidades
         (unidadEn VCE1 LOC11)
-        
         ;;(unidadEn VCE2 LOC11)
         ;;(unidadEn VCE3 LOC11)
         
@@ -125,6 +125,8 @@
         (invRequiereRecu SoldadoUniv Mineral)
         (invRequiereRecu SoldadoUniv GasVespeno)
 
+        (= (coste) 0)
+
     )
     (:goal 
         (and
@@ -134,6 +136,9 @@
             (unidadEn Marine2 LOC14)
             (unidadEn Soldado1 LOC14)
             (edificioEn BahiaDeIngenieria1 LOC12)
+            
+            ; Si ponemos 24 obtenemos best first search space empty! problem proven unsolvable.
+            (< (coste) 25) ; 
         )
     )
 )

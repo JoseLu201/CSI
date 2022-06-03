@@ -8,8 +8,9 @@
 (declare (salience -3))
 =>
 (printout t "Que animal te gustaria saber si vuela o no? ")
-(assert (animal_nuevo (read))
+(assert (animal_nuevo (read)))
 (assert (animal_insertado desconocido))
+)
 
 (defrule conoce_animal
 	(declare (salience-4))
@@ -86,7 +87,7 @@
 (ave ?x)
 =>
 (assert(vuela ?x si por_defecto))
-(bind Pexpl (str-cat "asumo que un " ?x " vuela, porque casi todas las aves vuelan")
+(bind Pexpl (str-cat "asumo que un " ?x " vuela, porque casi todas las aves vuelan"))
 (assert (explicacion vuela ?x ?expl))
 )
 

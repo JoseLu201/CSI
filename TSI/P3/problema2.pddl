@@ -57,6 +57,7 @@
         ; Asignamos la localizacion de los edificios
         (edificioEn CentroDeMando1 LOC11)
         (locOcupada LOC11)
+        (construido CentroDeMando1)
 
         ; Asignamos la localizacion de las unidades
         (unidadEn VCE1 LOC11)
@@ -82,6 +83,6 @@
         (edificioRequiere Extractor Mineral)
     )
     (:goal 
-        (disponibleRecu GasVespeno)  
+        (recursoDisp GasVespeno)  
     )
 )

@@ -56,8 +56,8 @@
 
         ; Asignamos la localizacion de los edificios
         (edificioEn CentroDeMando1 LOC11)
-        ;(construccion CentroDeMando1 LOC11)
         (locOcupada LOC11)
+        (construido CentroDeMando1)
 
         ; Asignamos la localizacion de las unidades
         (unidadEn VCE1 LOC11)
@@ -84,7 +84,7 @@
         (libre VCE2)
         (libre VCE3)
 
-        (construido CentroDeMando1)
+       
 
         ; Necesitamos ciertos recursos para la contruccion.
         (edificioRequiere Extractor Mineral)

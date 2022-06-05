@@ -58,7 +58,7 @@
 
         ; Asignamos la localizacion de los edificios
         (edificioEn CentroDeMando1 LOC11)
-        ;(construccion CentroDeMando1 LOC11)
+        (construido CentroDeMando1)
         (locOcupada LOC11)
 
         ; Asignamos la localizacion de las unidades
@@ -106,6 +106,10 @@
         (= (cantidad GasVespeno) 0)
 
         ;Cada VCE es capaz de recolectar 10
+
+        (= (cantidadVCEporNodo LOC22) 0)
+        (= (cantidadVCEporNodo LOC32) 0)
+        (= (cantidadVCEporNodo LOC44) 0)
 
         (= (cantidadRecoleccionVCE) 10)
 

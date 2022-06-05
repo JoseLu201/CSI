@@ -29,13 +29,13 @@
 		; Determinar si existe un camino de la localizacion origen hasta la destino
         (camino ?locOri - localizacion ?locDest - localizacion)
         
-		; Un depósito del recurso ?recu se encuentra en la localización ?loc
+		; Determina la localizacion de un recurso
         (depositoEn ?recu - recurso ?loc - localizacion)
         
-		; Se dispone del recurso ?recu
-        (disponibleRecu ?recu - recurso)
+		; Determina la disopnibilidad de dicho recurso
+        (recursoDisp ?recu - recurso)
         
-		; La unidad ?uni está libre
+		; Determina que dicha unidad esta libre
         (libre ?uni - unidad)
         ;;;;;;;;;;;;
 
@@ -123,7 +123,7 @@
             )
     )
 
-    ; Asignar un VCE a un nodo de recursos.
+    ; Asigna una unidad a una localizacion
     (:action asignar
         :parameters (?uni - unidad ?loc - localizacion ?recu - recurso)
         :precondition 
@@ -134,7 +134,7 @@
                 (unidadEs ?uni VCE)
                 ; En la localizacion del recurso tiene que haber un recurso
                 (depositoEn ?recu ?loc)
-                ; La unidad ?uni se encuentra en la localización de extracción ?loc
+               ; La unidad tiene que estar en la localizacion para extraer el recurso
                 (unidadEn ?uni ?loc)
 
                 (or
@@ -149,12 +149,12 @@
                 ; Cuando hay un depósito de Gas vespeno en loc
                 (when (depositoEn GasVespeno ?loc) 
                     ; Tenemos ese recurso
-                    (disponibleRecu GasVespeno)
+                    (recursoDisp GasVespeno)
                 )
                 ; Cuando hay un depósito de Mineral en loc
                 (when (depositoEn Mineral ?loc) 
                     ; Tenemos ese recurso
-                    (disponibleRecu Mineral)
+                    (recursoDisp Mineral)
                 )
                 ; Cambiamos la disponibilidad de la unidad
                 (not (libre ?uni))

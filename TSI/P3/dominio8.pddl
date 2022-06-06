@@ -59,6 +59,7 @@
         ; El tipo de unidad ?tipoUni requiere tener el tipo de edificio ?tipoEdi para poder reclutarla
         (unidadRequiereEdi ?tipo - tipoUnidad ?edi - tipoEdificio)
 
+        (extrayendo ?r - recurso)
     )
 
     (:functions
@@ -158,11 +159,12 @@
                 )
                 ; Cambiamos la disponibilidad de la unidad
                 (not (libre ?uni))
+                (extrayendo ?recu)
             )
     )
 
     ; Cambiamos el contruircor para añadir la necesidad de los materiales
-    (:action construir
+    (:action CONSTRUIREDIFICIO
         :parameters (?uni - unidad ?e - edificio ?loc - localizacion)
         :precondition 
             (and 
@@ -315,6 +317,7 @@
                 (exists (?uni - unidad) 
                     (unidadEn ?uni ?loc)
                 )
+                (extrayendo ?r)
                     
                 
                 ; Al recolectar no se excede el límite de 60 unidades del recurso ?recu

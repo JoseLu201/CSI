@@ -59,6 +59,7 @@
         ; El tipo de unidad ?tipoUni requiere tener el tipo de edificio ?tipoEdi para poder reclutarla
         (unidadRequiereEdi ?tipo - tipoUnidad ?edi - tipoEdificio)
 
+        (extrayendo ?r - recurso)
     )
 
     (:functions
@@ -66,7 +67,7 @@
         (cantidad ?r - recurso)
         ; Cantidad de recursos que cada VCE puede recolectar
         (cantidadRecoleccionVCE)
-        (cantidadVCEporNodo ?loc - localizacion)
+        
 
         ;Como cada unidad/edificio requiere de cierta cantidad de materiales
         (unidadRequiereRecu ?tipo - tipoUnidad ?recu - recurso)
@@ -117,7 +118,7 @@
             )
         :effect 
             (and 
-                ; Cuando hay un depósito de Gas vespeno en loc
+                 ;Cuando hay un depósito de Gas vespeno en loc
                 (when (depositoEn GasVespeno ?loc) 
                     ; Tenemos ese recurso
                     (recursoDisp GasVespeno)
@@ -129,7 +130,7 @@
                 )
                 ; Cambiamos la disponibilidad de la unidad
                 (not (libre ?uni))
-                (increase (cantidadVCEporNodo ?loc) 1)
+                (extrayendo ?recu)
             )
     )
 
@@ -272,17 +273,18 @@
                 (exists (?uni - unidad) 
                     (unidadEn ?uni ?loc)
                 )
+                (extrayendo ?r)
                     
-                (> (cantidadVCEporNodo ?loc) 0)
+                
                 ; Al recolectar no se excede el límite de 60 unidades del recurso ?recu
                 (<=
-                    (+ (cantidad ?r) (* (cantidadVCEporNodo ?loc) (cantidadRecoleccionVCE)) )
+                    (+ (cantidad ?r) (cantidadRecoleccionVCE) )
                     60
                 )
             )
         :effect 
             ; Incrementar la cantidad de recurso ?recu añadiendo la cantidad de recurso recolectados por
             ; los VCE's asignados en la localización ?loca
-            (increase (cantidad ?r) (* (cantidadVCEporNodo ?loc) (cantidadRecoleccionVCE)))
+            (increase (cantidad ?r) (cantidadRecoleccionVCE))
     )
 )

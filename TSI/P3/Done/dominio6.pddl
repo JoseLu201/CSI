@@ -254,9 +254,7 @@
                 )
                 ; Al recolectar no se excede el límite de 60 unidades del recurso ?recu
                 (<=
-                    (+
-                        (cantidad ?recu)
-                        (* (numeroVCE ?loca) (cantidadPorVCE))
+                    (+ (cantidad ?recu) (* (numeroVCE ?loca) (cantidadPorVCE))
                     )
                     60
                 )

@@ -58,13 +58,11 @@
 
         ; Asignamos la localizacion de los edificios
         (edificioEn CentroDeMando1 LOC11)
-        ;(construccion CentroDeMando1 LOC11)
+        (construido CentroDeMando1)
         (locOcupada LOC11)
 
         ; Asignamos la localizacion de las unidades
         (unidadEn VCE1 LOC11)
-        ;;(unidadEn VCE2 LOC11)
-        ;;(unidadEn VCE3 LOC11)
         
         ; Asignamos la localizacion de los recursos
         (depositoEn Mineral LOC22)
@@ -92,9 +90,6 @@
         ; En un principio ya tenemos a una unidad reclutada
         (uniReclutada VCE1)
 
-        ; Centro de mando ya contruido
-        (construido CentroDeMando1)
-
         ; Edificio requerido por una unidad para su reclutamiento
         (unidadRequiereEdi VCE CentroDeMando)
         (unidadRequiereEdi Marine Barracones)
@@ -111,12 +106,15 @@
 
         ; Cambiamos la representacion para añadir 
         (= (edificioRequiere Extractor Mineral) 10)
+        (= (edificioRequiere Extractor GasVespeno) 0)
 
         (= (edificioRequiere Barracones Mineral) 30)
         (= (edificioRequiere Barracones GasVespeno) 10)
 
         ; Recursos que necesitamos para el reclutamiento de cada uniadad
         (= (unidadRequiereRecu VCE Mineral) 5)
+        (= (unidadRequiereRecu VCE GasVespeno) 0)
+        
         (= (unidadRequiereRecu Marine Mineral) 10)
         (= (unidadRequiereRecu Marine GasVespeno) 15)
         ; Los soldados necesitan ambos recursos

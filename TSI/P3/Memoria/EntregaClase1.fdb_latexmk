@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1654647848 "EntregaClase1.tex" "EntregaClase1.pdf" "EntregaClase1" 1654647849
+["pdflatex"] 1654647848 "EntregaClase1.tex" "EntregaClase1.pdf" "EntregaClase1" 1654677712
   "/etc/texmf/web2c/texmf.cnf" 1640614679 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -85,15 +85,15 @@
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1648211618 4936373 2981688062aad6374327e3b745f33fc3 ""
   "EntregaClase1.aux" 1654647849 536 eef8074c08bbe70399d890132c826ccf "pdflatex"
   "EntregaClase1.lot" 1654647849 23 39d772808ad4a7ebd21da0b3c9cd2947 "pdflatex"
-  "EntregaClase1.tex" 1654647846 3522 ec128ad78532e0e9b42b738a048d5e1b ""
+  "EntregaClase1.tex" 1654647872 3522 ec128ad78532e0e9b42b738a048d5e1b ""
   "EntregaClase1.toc" 1654647849 199 d2fab6cd94697f035bf9d2557425c65e "pdflatex"
   "algorithmicx.sty" 1114628400 26750 ce139c05a983e19ddca355b43e29c395 ""
   "algpseudocode.sty" 1114628520 3457 d9077efe6b74c5a094199256af8d7d9a ""
   "fourier.sty" 1651936785 0 d41d8cd98f00b204e9800998ecf8427e ""
   "preambuloSimple.tex" 1651937157 3043 4482fe88e9a171dfec86e43b2a8dc035 ""
   (generated)
-  "EntregaClase1.toc"
+  "EntregaClase1.log"
+  "EntregaClase1.lot"
   "EntregaClase1.aux"
   "EntregaClase1.pdf"
-  "EntregaClase1.lot"
-  "EntregaClase1.log"
+  "EntregaClase1.toc"

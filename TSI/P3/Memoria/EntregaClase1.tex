@@ -1,0 +1,91 @@
+\input{preambuloSimple.tex}
+
+\everymath{\displaystyle}
+%----------------------------------------------------------------------------------------
+%	TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+
+\title{	
+\normalfont \normalsize 
+\textsc{\textbf{Técnicas de los Sistemas Inteligentes} \\ Grado en Ingeniería Informática \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Práctica 3: Representación de dominios y resolución de problemas con técnicas de planificación  \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{José Luis Molina Aguilar} % Nombre y apellidos
+
+\date{\normalsize\today} % Incluye la fecha actual
+
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+
+\maketitle % Muestra el Título
+  \begin{large}
+    \centering
+  \vfill
+  
+  Curso 2021-2022\\
+  Correo : joselu201@correo.ugr.es
+  \vfill
+  \end{large}
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+\listoftables
+
+
+\newpage
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 1
+%----------------------------------------------------------------------------------------
+\newpage
+\section{Tabla de Resultados}
+En esta tabla podemos ver el numero de acciones que se han tomado para conseguir su objetivo,
+seguido del tiempo empleado por MetricFF, en el ejercicio 8 ademas se incluye el coste.
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|c|c|c|}
+  \hline
+  \textbf{Ejercicio} & \textbf{Nº Acciones}      & \textbf{Time} \\ \hline
+  \textbf{1}         & \textbf{3}                & \textbf{0.00}    \\ \hline
+  \textbf{2}         & \textbf{11}               & \textbf{0.00}    \\ \hline
+  \textbf{3}         & \textbf{16}               & \textbf{0.01} \\ \hline
+  \textbf{4}         & \textbf{28}               & \textbf{0.01} \\ \hline
+  \textbf{5}         & \textbf{24}               & \textbf{0.00} \\ \hline
+  \textbf{6}         & \textbf{24}               & \textbf{0.02} \\ \hline
+  \textbf{7}         & \textbf{45}               & \textbf{0.7}  \\ \hline
+  \textbf{8}         & \textbf{46 (Coste = 493)} & \textbf{0.2}  \\ \hline
+  \end{tabular}
+  \end{table}
+
+
+Como podemos ver por la tabla anterior conforme aumentamos la complejidad del sistema
+vemos que tarda más tiempo, esto se debe a : \\
+"seconds searching, evaluating 21073 states, to a max depth of 0"\\
+Conforme más estados busquemos mas tiempo tardara porque esa variable es la que más tiempo consume de media
+en la resolución del ejercicio.
+Esto se incrementa cuando intentamos buscar óptimos ya que tendra que buscar en un espacio de estados mucho mayor.
+  
+que le cuesta encontrar soluciones cada vez más, sobre todo si se exige la solución óptima.
+  
+
+\section{Pregunta 1:  }
+En mi caso podemos ver que en la mayoria de llamadas obtengo el mismo tiempo 0.01 (+/- 0.01), esta poca 
+variacion cambiando el coste se debe a que ya en principio encuentra el plan optimo sin necesidad de acudir a 
+la modificacion del coste, sin embargo si no se consiguiese el optimo tendriamos que ampliar el espacio de busqueda 
+lo cual aumentaria el tiempo de computo.
+
+\section{Pregunta 2:}
+
+
+\end{document}

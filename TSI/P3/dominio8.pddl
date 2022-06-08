@@ -56,7 +56,7 @@
         (uniReclutada ?uni - unidad)
 
        
-        ; El tipo de unidad ?tipoUni requiere tener el tipo de edificio ?tipoEdi para poder reclutarla
+        ; Cada unidad requiere de ciertos edificios
         (unidadRequiereEdi ?tipo - tipoUnidad ?edi - tipoEdificio)
 
         (extrayendo ?r - recurso)
@@ -242,11 +242,11 @@
         :parameters (?e - edificio ?uni - unidad ?loc - localizacion)
         :precondition 
             (and 
-                ; La unidad ?uni todavía no ha sido reclutada
+                ; La unidad no esta reclutada
                 (not (uniReclutada ?uni))
                 (exists (?tU - tipoUnidad ?tE - tipoEdificio)
                     (and
-                        ; La unidad ?uni es de tipo ?tipoUni
+                        ; La unidad es de ese tipo
                         (unidadEs ?uni ?tU)
                         (>= (cantidad Mineral) (unidadRequiereRecu ?tU Mineral))
                         (>= (cantidad GasVespeno) (unidadRequiereRecu ?tU GasVespeno))
@@ -279,7 +279,7 @@
                         (increase (tiempo) (tUnidad VCE))
                     )
                 )
-                ; Cuando la unidad ?uni es un Marine
+                ; Cuando la unidad es un Marine
                 (when (unidadEs ?uni Marine) 
                     (and
                         ; Decrementar la cantidad de recursos de Mineral quitando la cantidad requerida por el Marine
@@ -291,12 +291,12 @@
                         (increase (tiempo) (tUnidad Marine))
                     )
                 )
-                ; Cuando la unidad ?uni es un Soldado
+                ; Cuando la unidad es un Soladado
                 (when (unidadEs ?uni Soldado) 
                     (and
-                        ; Decrementar la cantidad de recursos de Mineral quitando la cantidad requerida por el Segador
+                        ; Decrementar la cantidad de recursos de Mineral quitando la cantidad requerida por el Soldado
                         (decrease (cantidad Mineral) (unidadRequiereRecu Soldado Mineral))
-                        ; Decrementar la cantidad de recursos de Gas vespeno quitando la cantidad requerida por el Segador
+                        ; Decrementar la cantidad de recursos de Gas vespeno quitando la cantidad requerida por el Soldado
                         (decrease (cantidad GasVespeno) (unidadRequiereRecu Soldado GasVespeno))
 
                         ; Añadimos el incremento del tiempo
@@ -311,16 +311,16 @@
         :parameters (?r - recurso ?loc - localizacion)
         :precondition 
             (and 
-                ; Hay un deposito del recurso ?recu en la localización ?loca
+                ; Tenemos recursos en la loc
                 (depositoEn ?r ?loc)
-                ; Hay al menos un VCE asignado a la localización ?loca
+                ; Tenemos una unidad en esa localizacion
                 (exists (?uni - unidad) 
                     (unidadEn ?uni ?loc)
                 )
                 (extrayendo ?r)
                     
                 
-                ; Al recolectar no se excede el límite de 60 unidades del recurso ?recu
+                ; Definimos el maximo de almacenamiento
                 (<=
                     (+ (cantidad ?r) (cantidadRecoleccionVCE) )
                     60
@@ -328,8 +328,7 @@
             )
         :effect
             (and 
-                ; Incrementar la cantidad de recurso ?recu añadiendo la cantidad de recurso recolectados por
-                ; los VCE's asignados en la localización ?loca
+                ; Aumentamos los recuros recolectados
                 (increase (cantidad ?r) (cantidadRecoleccionVCE))
 
                 ; Incrementamos el tiempo con el tiempo que se tarda en recolectar

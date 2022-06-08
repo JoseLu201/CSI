@@ -135,10 +135,4 @@
             (unidadEn Marine1 LOC14)
             (unidadEn Marine2 LOC14)
             (unidadEn Soldado1 LOC14)
-            (edificioEn BahiaDeIngenieria1 LOC12)
-            
-            ; Si ponemos 24 obtenemos best first search space empty! problem proven unsolvable.
-            (< (coste) 25)  
-        )
-    )
-)
+            (

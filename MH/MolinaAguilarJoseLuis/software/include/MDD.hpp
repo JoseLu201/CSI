@@ -34,16 +34,19 @@ class MDD{
         ///
 
         vector<int> BL();
-        vector<int> BL_2(vector<int >solucion,int iteraciones);
+        vector<int> BL_2(vector<int >solucion,int iteraciones, float& sol_fit);
 
         //P3
         vector<int> generarSolucionAleatoria();
-        vector<int> EnfriamientoSimulado(int MAX_ITERS);
-        vector<int> generarVecino(vector<int> solucion, float &disp_vecino);   
-        vector<int> BMB(int n_sol, int MAX_ITERS);
-
-        vector<int> ILS(int ILS_ITERS);
+        vector<int> generarVecino(vector<int> solucion, float &disp_vecino);
         vector<int> mutarSolucion(vector<int> solucion,float percent);
+ 
+        vector<int> EnfriamientoSimulado(int MAX_ITERS, float& sol_fit);
+        vector<int> EnfriamientoSimulado2(int MAX_ITERS, float& sol_fit, vector<int> solucion); 
+        vector<int> BMB(int n_sol, int MAX_ITERS);
+        vector<int> ILS(int n_sol, int BL_ITERS);
+        vector<int> ILS_ES(int n_sol, int ES_ITERS);
+        
 
 };
 

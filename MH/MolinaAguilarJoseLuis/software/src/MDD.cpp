@@ -43,9 +43,12 @@ void printi(vector<int> v){
 
 float MDD::diff(vector<int> posib){
     vector<float> distancias;
-    for(int i = 0; i < posib.size();i++)
+    for(int i = 0; i < posib.size();i++){
         distancias.push_back(distPuntoRestoElemenetos(posib[i],posib));
+        
+    }
     sort(distancias.begin(), distancias.end());
+    
     return (distancias[distancias.size()-1] - distancias[0] );
 }
 
@@ -235,15 +238,17 @@ vector<int> MDD::BL(){
 }
 
 
-vector<int> MDD::BL_2(vector<int > solucion, int iteraciones){
-    //vector<int> solucion;
-    vector<int> cand;
+vector<int> MDD::BL_2(vector<int> solucion, int iteraciones, float& sol_fit){
 
+   
+    
+    vector<int> cand;
+    
     for(int i = 0; i < this->n;i++)
         cand.push_back(i);
 
     Random::shuffle( cand.begin( ), cand.end( ) );
-
+    
     pair<int,int> cambio;
     int index = 0;
     float new_disp;
@@ -252,7 +257,8 @@ vector<int> MDD::BL_2(vector<int > solucion, int iteraciones){
     int maxIters = iteraciones;
     int iter = 0;
     float actual_disp = diff(solucion);
-    while(iter < maxIters && change == true){
+
+    while(iter < maxIters /*&& change == true*/){
         if(first){
             change = false;
             first = false;
@@ -262,16 +268,17 @@ vector<int> MDD::BL_2(vector<int > solucion, int iteraciones){
              
             cambio = make_pair(index,cand[i]);
             new_disp = distFactorizada(solucion,cambio);  
-            new_disp = round( new_disp * 1000.0 ) / 1000.0; //Redondeo a 3 cifras por error en los datos
-            actual_disp = round( actual_disp * 1000.0 ) / 1000.0;     
+            //new_disp = round( new_disp * 1000.0 ) / 1000.0; //Redondeo a 3 cifras por error en los datos
+            //actual_disp = round( actual_disp * 1000.0 ) / 1000.0;     
             //cout << "Cambiando el " << solucion[index] << "  por " << cand[i] << endl;
-            //cout << "actual diff " << actual_disp <<" , " << new_disp << endl;  
+            //cout << "actual diff " << actual_disp <<" , " << new_disp << endl ;  
             if(new_disp < actual_disp && (find(solucion.begin(), solucion.end(), cand[i]) == solucion.end()) ){
-                //cout << "MEJORO " << endl;
+                //cout << "MEJORO " << endl << endl;
                 solucion[index] = cand[i];
                 index = (index +1)%(solucion.size());
                 change = true;
                 i = -1;
+                actual_disp = new_disp;
                 
             }
             if(!change and solucion[index] != solucion[solucion.size()-1]){
@@ -287,9 +294,13 @@ vector<int> MDD::BL_2(vector<int > solucion, int iteraciones){
                     change = false;
                 }
             }
+            //cout << "Iteracion  "<<  iter << endl;
         }
         index = (index +1)%(solucion.size());
+        //cout << "Iteraciones " <<iter << endl;
     }
+    //cout << "best fittnes " << diff(solucion) << endl;
+    sol_fit = actual_disp;
     return solucion;
 }
 
@@ -320,13 +331,10 @@ vector<int> MDD::generarSolucionAleatoria(){
              solucion.push_back(rand);
         }
     }
-
     return solucion;
 }
 
-vector<int> MDD::EnfriamientoSimulado(int MAX_ITERS){
-    
-    
+vector<int> MDD::EnfriamientoSimulado(int MAX_ITERS, float& sol_fit){
 
     //Creamos una solucion aleatoria y calculamos su coste.
     vector<int> solucion; 
@@ -347,7 +355,8 @@ vector<int> MDD::EnfriamientoSimulado(int MAX_ITERS){
 
     //Nos quedamos con la mejor solucion que es la actual
     best = solucion;
-    float best_fit = diff(best);
+    ////////////float best_fit = diff(best);///////////////////////////////////////////////
+    float best_fit = coste_ini;
 
     /*cout << "Primera solucion " << coste_ini << endl;
     printi(solucion);*/
@@ -360,7 +369,7 @@ vector<int> MDD::EnfriamientoSimulado(int MAX_ITERS){
     int iters = 0;
     double beta = (T_ini - T_fin)/(M * T_ini *T_fin);
     //cout << "Valor de beta  " << beta << endl;
-    float curr_fit = diff(solucion);
+    float curr_fit = coste_ini;
     while(/*T_curr  < T_fin && */ iters < MAX_ITERS && n_exitos != 0 ){
         n_vecinos = 0;
         n_exitos = 0;
@@ -377,9 +386,8 @@ vector<int> MDD::EnfriamientoSimulado(int MAX_ITERS){
             /*printi(s_i);*/
             
             float diferencia = abs( vecinos_fit - curr_fit );
-            auto val = Random::get<Random::common>(0, 1.f); // decltype(val) is float
             
-            if(vecinos_fit < curr_fit || val < exp(-diferencia/T_curr)){
+            if(vecinos_fit < curr_fit || Random::get<Random::common>(0, 1.f) < exp(-diferencia/T_curr)){
                 solucion = s_i;  
                 curr_fit = vecinos_fit;  
                 n_exitos++;
@@ -403,6 +411,89 @@ vector<int> MDD::EnfriamientoSimulado(int MAX_ITERS){
     << "Temperatura " << T_curr << endl
     << "N_vecinos " << n_vecinos << " de " << max_vecinos<< endl
     <<  "N_exitos " << n_exitos<< " de " << max_exitos<< endl;*/
+    //cout << "DIFFF " << diff(best) << " " << best_fit << endl;
+    sol_fit = best_fit;
+    return best;
+}
+
+vector<int> MDD::EnfriamientoSimulado2(int MAX_ITERS, float& sol_fit, vector<int> solucion){
+
+    vector<int> best;  
+    vector<int> s_i; 
+
+    int max_vecinos = 10 * this->n;
+    int max_exitos = 0.1 * max_vecinos;
+    int M = MAX_ITERS / max_vecinos;
+
+    int n_vecinos = 1;
+    int n_exitos =1;
+
+
+
+    //Calculamos el coste de la solucion  inicial.
+    float coste_ini = diff(solucion);
+
+    //Nos quedamos con la mejor solucion que es la actual
+    best = solucion;
+    ////////////float best_fit = diff(best);///////////////////////////////////////////////
+    float best_fit = coste_ini;
+
+    /*cout << "Primera solucion " << coste_ini << endl;
+    printi(solucion);*/
+    
+    //Inicializamos la temperatura inicial
+    double T_ini = 0.3 * coste_ini / (-log(0.3));    
+    double T_fin = 0.0001;
+
+    double T_curr = T_ini;
+    int iters = 0;
+    double beta = (T_ini - T_fin)/(M * T_ini *T_fin);
+    //cout << "Valor de beta  " << beta << endl;
+    float curr_fit = coste_ini;
+    while(/*T_curr  < T_fin && */ iters < MAX_ITERS && n_exitos != 0 ){
+        n_vecinos = 0;
+        n_exitos = 0;
+        //cout << "Temperatura "<< T_curr  <<endl;   
+        while(n_vecinos < max_vecinos && n_exitos < max_exitos){
+            float vecinos_fit;             
+            n_vecinos++;
+            iters++;
+            //cout << "Solucion actual " << curr_fit<<endl;
+            /*printi(solucion);
+            */
+            s_i = generarVecino(solucion, vecinos_fit);
+            //cout << "Generamos un vecino  " << vecinos_fit <<endl;
+            /*printi(s_i);*/
+            
+            float diferencia = abs( vecinos_fit - curr_fit );
+            
+            if(vecinos_fit < curr_fit || Random::get<Random::common>(0, 1.f) < exp(-diferencia/T_curr)){
+                solucion = s_i;  
+                curr_fit = vecinos_fit;  
+                n_exitos++;
+                if(vecinos_fit < best_fit){
+                    best = solucion;
+                    best_fit = vecinos_fit;
+                    //cout << "Mejor solucion " << best_fit << endl;
+                    //printi(best);
+                }
+            }
+        }
+         
+
+        
+        T_curr = T_curr / ( 1 + beta * T_curr);
+    }
+    //cout << "Mejor solucion encontrada " << diff(best) << endl;
+    //printi(best);
+    /*cout << "Acabamos la ejecucion con " << endl;
+    cout << "Iters "<< iters << endl
+    << "Temperatura " << T_curr << endl
+    << "N_vecinos " << n_vecinos << " de " << max_vecinos<< endl
+    <<  "N_exitos " << n_exitos<< " de " << max_exitos<< endl;*/
+    //cout << "DIFFF " << diff(best) << " " << best_fit << endl;
+    sol_fit = best_fit;
+
     return best;
 }
 
@@ -447,15 +538,15 @@ vector<int > MDD::BMB(int n_sol, int MAX_ITERS){
     int iters = 0;
     vector<int> best;
     float best_fit = 99999.9f;
-
+    float sol_fit;
     while(iters < n_sol){
         //cout << iters << endl;
         solucion = generarSolucionAleatoria();
         //cout << "SOLUCION ALEATORIA " << endl;
         //printi(solucion);
-        auto BL_sol = BL_2(solucion, MAX_ITERS);
+        auto BL_sol = BL_2(solucion, MAX_ITERS,sol_fit);
         
-        float sol_fit = diff(BL_sol);
+        
         //cout << "Solucion de BL " << sol_fit<< endl;
        // printi(BL_sol);
         
@@ -476,26 +567,32 @@ Se elegiran t posiciones aleatorias de la solucion actual para despues
 y cambiarlos por t valores aleatorios
 */
 vector<int> MDD::mutarSolucion(vector<int> solucion, float percent){
-    vector<int> mutacion;
+    /*cout << "Solucion inicial " << endl;
+    printi(solucion);*/
+    vector<int> mutacion = solucion;
     int t = percent * this->m; //Numero de elementos a mutar.
     int count = 0;
 
     while(count != t){
-        int muta = Random::get(0,this->m); // Eligo la posicion a mutar
+        int muta = Random::get(0,this->m-1); // Eligo la posicion a mutar
         int cambio = -1;
         do{
-            cambio = Random::get(0,this->n);
-        } while (find(solucion.begin(),solucion.end(), cambio) != solucion.end());
+            cambio = Random::get(0,this->n-1);
+        } while (find(mutacion.begin(),mutacion.end(), cambio) != mutacion.end());
+
+        mutacion[muta] = cambio;
         count++;
     }
-    
-    return solucion;
+    //cout << "Solucion mutada " << endl;
+    //printi(mutacion);
+    return mutacion;
 }
 
-vector<int> MDD::ILS(int ILS_ITERS){
+vector<int> MDD::ILS(int n_sol, int BL_ITERS){
+
     vector<int> solucion;
     vector<int> best;
-    float best_fit = 9999;
+    float best_fit;
     float curr_fit;
 
     solucion = generarSolucionAleatoria();
@@ -503,20 +600,48 @@ vector<int> MDD::ILS(int ILS_ITERS){
     best_fit = diff(solucion);
 
     int iters = 0;
-    while(iters < ILS_ITERS){
-        vector<int> s_i = BL_2(solucion,100000); 
-        curr_fit = diff(s_i);
+    
+    while(iters < n_sol){
+        iters++;
+        
+        vector<int> s_i = BL_2(solucion,BL_ITERS,curr_fit); 
+        //cout << "Current fit " << curr_fit << " , BestFit " << best_fit << endl; 
+        if(curr_fit < best_fit){
+            //cout << "Mejoro "<< endl;
+            best = s_i;
+            best_fit = curr_fit;
+        }
+        //cout << "Mutamos la solucion " << endl;
+        solucion = mutarSolucion(best,0.3); 
+           
+    }
+    /*cout << "Solucion final "<< endl;
+    printi(best);*/
+    return best;
+}
 
+
+vector<int> MDD::ILS_ES(int n_sol, int ES_ITERS){
+    vector<int> solucion;
+    vector<int> best;
+    float best_fit;
+    float curr_fit;
+
+    solucion = generarSolucionAleatoria();
+    best = solucion;
+    best_fit = diff(solucion);
+
+    int iters = 0;
+    while(iters < n_sol){
+        iters++;
+        vector<int> s_i = this->EnfriamientoSimulado2(ES_ITERS,curr_fit,solucion);
+        
+        //cout << "Best fit " << best_fit << " ES_SOL " << curr_fit  << endl;
         if(curr_fit < best_fit){
             best = s_i;
             best_fit = curr_fit;
-            solucion = mutarSolucion(best,0.3);
-        }else{
-            solucion = mutarSolucion(best,0.3);
         }
-        //solucion = BL_2(solucion,100000);
-        
-        iters++;
+        solucion = mutarSolucion(best,0.3);    
     }
     return best;
 }

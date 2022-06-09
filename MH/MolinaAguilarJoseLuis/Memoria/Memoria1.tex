@@ -1,0 +1,70 @@
+\documentclass{article}
+\usepackage{graphicx}
+
+
+\begin{document}
+
+\title{Practica 1 Regresion Lineal}
+\author{JoseLu}
+
+\maketitle
+
+\begin{abstract}
+The abstract text goes here.
+\end{abstract}
+
+\section{Introduction}
+
+
+\section{1. Ejercicio sobre la Busqeda Iterativa de Optimos}
+
+\subsection{Ejercicio1: Algoritmo de Gradiente Desdenciente}
+\subsection{Ejercicio2: Uso Gradiente Descendiente}
+  \begin{itemize}
+    \item[] Primero que nada necesitamos definir la funcion, en este caso $E(u,v)$ y tambien necesitaremos las derivadas parciles de esa misma funcion, esto lo haremos para calcular el gradiente de 
+    esta funcion
+    \item[] Las iteraciones que tardara este algoritmo en encontrar el minimo dependerá de mas factores que solo la precision, ademas dependera del learning rate, este valor influye en la longitud de avance del algoritmo de descenso 
+    \item[] Las coordenadas en donde el algoritmo encuentra el minimo dependeran del punto inicial, en mi caso las coordendas serian $(x_f, y_f) = ()$ 
+  \end{itemize}
+
+\subsection{Ejercicio3:}
+La funcion sobre la que trabajaremos ahora es $f(x,y) = x^2 + 2y^2 +2sin(2\pi x)sin(y\pi)$
+y tendremos que utilizar el gradiente descente para minimizar la funcion.
+En este caso tenemos un punto inicial $(x_0 = -1, y_0 = 1)$, un learning rate $\eta = 0.01$ 
+y un maximo de 50 iteraciones, en este caso no nos dan un valor sobre el cual calcular el error,
+esto se puede deber a que la funcion tiene partes en las que es negativa por lo que no se puede apliar esta tecnica.
+
+Tras ejecuctar las 50 iteraciones obtenermos la siguiente tabla.
+\begin{table}[t]
+  \begin{center}
+  \begin{tabular}{|c | c | c | c | c | c | }
+  \hline
+  \multicolumn{5}{ |c| }{Coordenadas} \\ \hline
+  &(-0.5, -0.5) & (1, 1) & (2.1,-2.1) & (-3, 3) & (-2, 2) \\ \hline
+  Valor obtenido&
+  
+
+  \end{tabular}
+  \caption{Coches disponibles}
+  \label{tab:coches}
+  \end{center}
+  \end{table}
+
+
+
+\subsection{Error Cuadratico Medio ( MSE )}
+Sabemos que nuestras funcion de MSE es $\frac{1}{n}(h(x)-y)^2$ pero como sabemos que nuestra funcion h(x) es  $h_w(x) = w^T \cdot x$
+
+\subsection{Gradiente para el SGD}
+En el  caso de SGD necesitamos las derivadas parciales del error, en este caso seria 
+$\frac{\partial E_{in}(w)}{\partial w_j} = \frac{2}{M} \sum_{n=1}^M x_{nj}(h(x_n) - y_n)$ 
+
+\subsection{sgd}
+
+La diferencia entre el Gradiente Descendiente y el Gradiente Descendiente Estocastico es que utilizamos unos subconjuntos de los datos llamados minibatches (los cuales deben ser disjuntos) y seguidamente en vez de iterar sobre todo el conjunto de datos 
+lo hacemos sobre el minibatch y seguimos calculando $w$ de la misma forma 
+
+\section{Conclusion}
+Write your conclusion here.
+
+\end{document}

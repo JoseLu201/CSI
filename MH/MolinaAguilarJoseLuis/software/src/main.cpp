@@ -32,9 +32,6 @@ int main(int argc, char *argv[]){
 
     instance.leer_fichero(nombreArchivo);
 
-        //Cambiar aqui las semillas!!
-    std::seed_seq sseq{0,1,2,3,4};
-
     Random::seed(0);
     vector<float> dispersion;
     vector<milliseconds> times;
@@ -43,6 +40,11 @@ int main(int argc, char *argv[]){
 
     std::chrono::_V2::system_clock::time_point inicio,fin;
     int MAX_ITERS = 100000;
+    int outer_loop = 10;
+    int inner_loop = 10000;
+    float fit;
+
+    
     switch (stoi(algo)){
     case 0:
         inicio = high_resolution_clock::now();
@@ -51,40 +53,32 @@ int main(int argc, char *argv[]){
         break;
     case 1:
         inicio = high_resolution_clock::now();
-        sol = instance.EnfriamientoSimulado(MAX_ITERS); 
+        sol = instance.EnfriamientoSimulado(MAX_ITERS,fit); 
         fin = high_resolution_clock::now();
         break;
     case 2:
         inicio = high_resolution_clock::now();
-        sol = instance.BMB(10,100000); 
+        sol = instance.BMB(outer_loop,inner_loop); 
         fin = high_resolution_clock::now();
         break;
     case 3:
         inicio = high_resolution_clock::now();
-        sol = instance.ILS(10); 
+        sol = instance.ILS(outer_loop, inner_loop); 
+        fin = high_resolution_clock::now();
+        break;
+    case 4:
+        inicio = high_resolution_clock::now();
+        sol = instance.ILS_ES(outer_loop,inner_loop); 
         fin = high_resolution_clock::now();
         break;
     default:
         break;
     }
-    /*if(stoi(algo) == 1){
-        inicio = high_resolution_clock::now();
-        sol = instance.EnfriamientoSimulado(MAX_ITERS); 
-        fin = high_resolution_clock::now();
-    }else if(stoi(algo) == 2){
-        inicio = high_resolution_clock::now();
-        //sol = instance.BL(); 
-        fin = high_resolution_clock::now();
-        
-    }*/
-    
-    dispersion.push_back(instance.diff(sol));
-    tiempo = duration_cast<std::chrono::milliseconds>(fin - inicio);
 
-    /*for(auto i : sol){
-        cout << i << ",";
-    }
-    cout << endl;*/    
+    
+    //dispersion.push_back(instance.diff(sol));
+    tiempo = duration_cast<std::chrono::milliseconds>(fin - inicio);
+ 
 
      
     cout <</*"Media de la dispersion " <<*/ instance.diff(sol) << ";";

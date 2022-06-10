@@ -9,10 +9,7 @@
 \normalfont \normalsize 
 \textsc{\textbf{Metaheurística} \\ Grado en Ingeniería Informática \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
 \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
-\huge Práctica 3.a:
-Búsquedas por Trayectorias para el
-Problema de la Mínima Dispersión Diferencial
-(MDD) \\ % The assignment title
+\huge Práctica 3 \\ % The assignment title
 \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
 }
 
@@ -256,7 +253,7 @@ Pseudocodigo de \textbf{distFactorizada}
   \end{algorithmic}
 \end{algorithm}
 
-\section{Analisis}
+\section{Analisis Práctica 1}
 \begin{itemize}
   \item La información de uso se encuentra en el README.md.
   \item Las semillas con las que se han obtenido los resultados entan el main.cpp y son \{0,1,2,3,4\}.
@@ -303,35 +300,38 @@ ya que el valor de $m$ es menor que en el intervalo [35 - 40]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{P2 : Basados en Poblaciones}
+\section{Práctica2a : Técnicas de Búsqueda Basados en Poblaciones}
 En esta practica tendremos que cambiar la representacion de las solución de enteras a binarias, por lo
 que ahora tendremos que cada solución tendrá un vector de $n$ elementos donde $m$ de esos elementos tienen que ser
 obligatoriamente 1's lo que significará que esos genes estan activos.
-Cambiaremos a esta representacion ya que es idone para realizar ejercicios basados en poblacion gracias a la facilidad 
+Cambiaremos a esta representacion ya que es idonenea para realizar ejercicios basados en poblacion gracias a la facilidad 
 de generar, cruzar y mutar individuos.\\
 
-Nos ayudaremos de funciones para realizar estos algoritmos
-\\begin{itemize}
+Nos ayudaremos de funciones para realizar estos algoritmos:
+\begin{itemize}
   \item \textbf{generarPoblacion()} Esta funcion nos permite generar individuos aleatoriamente respentando las 
-  restricciones que se nos proponen, si ejecutamos esta funcion $N$ veces obtendremos una poblacion de $N$ individuos.
-  Una vez que tenemos una poblacion es siguiendo punto importante seria ser capaz de seleccionar individuos de la misma
-   con el fin de cruzarlos y generar hijo, para ello
+  restricciones que se nos proponen, si ejecutamos esta funcion $N$ veces obtendremos una poblacion de $N$ individuos.\\
+  Una vez que tenemos una poblacion el siguiendo punto importante seria ser capaz de seleccionar individuos de la misma
+   con el fin de cruzarlos y generar hijo, para ello:\\
   \item  \textbf{seleccion(poblacion, n)} Esta funcion nos permitira elegir $n$ individuos de la poblacion.
-  Una vez que tenemos a los individuos seleccionados tenemos que generar una seria de hijos de estos individuos seleccionados, para ello tenemos dos opciones
+  Una vez que tenemos a los individuos seleccionados tenemos que generar una seria de hijos de estos individuos seleccionados, 
+  para ello tenemos dos opciones.\\
   
   \begin{itemize}
-    \item  \textbf{generarHijosPosicion(padre1, padre2)} Esta funcion cruzara dos padres, mantendra los genes comunes y 
-    eligira aleatoriamente el resto de ambos genes para decidir el resto de genes.\\
+    \item  \textbf{generarHijosPosicion(padre1, padre2)} Esta funcion cruzara dos padres, manteniendo los genes comunes y 
+    eligira aleatoriamente el resto de la siguiente forma, restará los genes que no son coincidente los mezclará y insertara en los hijos, de esta 
+    forma si partimos de padres factibles los hijos tambien lo serán.\\
+    
     De esta forma los hijos generados comparten un poco menos de informacion con los padres.
     \item  \textbf{generarHijosUniforme(padre1, padre2)} Esta función cruzamos dos padres, manteniendo los genes comunes y 
     eligiendo aleatoriamente el resto, esto puede provocar que los hijos que obtengamos no cumplan las restricciones, por lo que 
-    a veces en necesario reparlos,
+    a veces en necesario reparlos, para ello:\\
     \item  \textbf{repair(hijo)} La manera en la que reparamos se basa en si faltan elementos,
      añadir los que minimizen la disperion y si sobran elementos eliminar aquellos que minimizen la dispersion.  
   \end{itemize}
 
 \end{itemize}
-
+\newpage
 Pseudocodigo de \textbf{generarPoblacion}
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
@@ -373,7 +373,7 @@ Pseudocodigo de \textbf{torneo(poblacion,fitness\_i, indiv)}
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
-
+\newpage
 Funcion que escoge n elementos ganadores del torneo.\\
 Pseudocodigo de \textbf{seleccion(poblacion,fitness\_i, indiv,n)}
 \begin{algorithm}[H]
@@ -407,10 +407,7 @@ Pseudocodigo de \textbf{generarHijosUniforme(padre1,padre2)}
   \end{algorithmic}
 \end{algorithm}
 
-Esta funcion repara la generacionde hijos cuando se generar de forma uniforme creando lo mejores hijos manteniendo 
-los genes de los padres.\\
-
-Pseudocodigo de \textbf{reparar(hijo)}
+Pseudocodigo de \textbf{reparar(hijo)}  ||| Completar esto con lo del codigo 
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
     \Function{$reparar(hijo)$}{}
@@ -420,7 +417,7 @@ Pseudocodigo de \textbf{reparar(hijo)}
         \State \Return{$hijo$}
       \ElsIf{$v > m $} \Comment{Si te sobran elementos}
         \While{$v $ !=$  m $}
-          \State escoger los genes que minimizan la dispersion
+          \State eliminar los genes que minimizan la dispersion
         \EndWhile
       \ElsIf{$v < m $} \Comment{Si te faltan elementos}
         \While{$v $ != $ m $}
@@ -433,8 +430,6 @@ Pseudocodigo de \textbf{reparar(hijo)}
   \end{algorithmic}
 \end{algorithm}
 
-Funcion que genera una pareja de hijos que mantiene la posicoon de los genes de los padres y los que no coinciden
-se selecionan aleatoriamente pero respetando las restricciones.\\
 Pseudocodigo de \textbf{generarHijosPosicion(padre1,padre2)}
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
@@ -473,17 +468,18 @@ Pseudocodigo de \textbf{generarHijosPosicion(padre1,padre2)}
   \end{algorithmic}
 \end{algorithm}
 
+\newpage
+\subsection{Algoritmos Genéticos}
 
-Algoritmos geneticos:\\
 Implentaremos 2 tipos de algorimos geneticos,\\
 AGG( algorimo genetico generacional )\\
-AGG se basa en un algorimo que genera una poblacion aleatoria,despues se escogen mediante un torneo binario tantos individuos como
-poblacion del mismo y se cruzan, en nuestro caso diferenciaremos dos tipos de cruze uniforme y posicion (cuyos Pseudocodigo estas explicado arriba)
-para seguidamente mutar algunos de sus genes con probabilidad $P_M$ y reemplazar la nueva poblacion obtenida por la nueva y conservando el mejor de ambas(elitismo).\\
+AGG se basa en un algorimo que genera una poblacion aleatoria, despues se escogen mediante un torneo binario tantos individuos como
+poblacion del mismo y se cruzan, en nuestro caso diferenciaremos dos tipos de cruce uniforme y posicion (cuyos Pseudocodigo estas explicado arriba)
+para seguidamente mutar algunos de sus genes con probabilidad $P_M$ y reemplazar la nueva poblacion obtenida por la anterior y siempre conservando el mejor de ambas(elitismo).\\\newline 
+
 AGE( algorimo genetico Estacional )\\  
 Este es practicamente igual, la unica diferencia es que a laa hora de selecionar los individuos, solo se seleccionan 2, estos seran los que se cruzaran y cuyos hijos mutaran, 
-para seguidamente, si mejoran los peores individuos de la poblacion sustituirlos.
-
+para seguidamente, si mejoran los peores individuos de la poblacion, sustituirlos.
 
 
 \begin{algorithm}[H]
@@ -531,8 +527,10 @@ para seguidamente, si mejoran los peores individuos de la poblacion sustituirlos
         \State $poblacion \gets hijos$ \Comment{Los hijos sustituyen a la poblacion actual}
 
         \If{$!find(fitness\_i, best\_father)$} \Comment{Si no encuentro el mejor individuo de la poblacion  sustituyo el peor por el mejor de la anterior}
-          \State $poblacion at peor elemento \gets best\_father$
+          \State poblacion at peor elemento $ \gets best\_father$
         \EndIf
+        
+        \State $iters \gets iters + 1 $
       \EndWhile
 
       \State $hijo \gets min(poblacion)$
@@ -587,8 +585,10 @@ para seguidamente, si mejoran los peores individuos de la poblacion sustituirlos
         \State $poblacion \gets hijos$ \Comment{Los hijos sustituyen a la poblacion actual}
 
         \If{$!find(fitness\_i, best\_father)$} \Comment{Si no encuentro el mejor individuo de la poblacion  sustituyo el peor por el mejor de la anterior}
-          \State $poblacion at peor elemento \gets best\_father$
+        \State poblacion at peor elemento $ \gets best\_father$
         \EndIf
+          
+        \State $iters \gets iters + 1 $
       \EndWhile
 
       \State $hijo \gets min(poblacion)$
@@ -641,7 +641,8 @@ para seguidamente, si mejoran los peores individuos de la poblacion sustituirlos
        
         \State $poblacion \gets poblacion \cap \{worst\_i,second\_worst\}$
         \State $poblacion \gets poblacion \cup {hijos}$ \Comment{Sustituyo los peores padres por los mejores hijos}
-      
+        
+        \State $iters \gets iters + 1 $
       \EndWhile
       
       \State $hijo \gets min(poblacion)$
@@ -691,7 +692,8 @@ para seguidamente, si mejoran los peores individuos de la poblacion sustituirlos
        
         \State $poblacion \gets poblacion \cap \{worst\_i,second\_worst\}$
         \State $poblacion \gets poblacion \cup {hijos}$ \Comment{Sustituyo los peores padres por los mejores hijos}
-      
+        
+        \State $iters \gets iters + 1 $
       \EndWhile
       
       \State $hijo \gets min(poblacion)$
@@ -699,22 +701,32 @@ para seguidamente, si mejoran los peores individuos de la poblacion sustituirlos
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
+\newpage
+\subsection{Algoritmo Memético}
 
-Algoritmo Memético
-Este algoritmo consiste en hibridar el AGG con una busqueda local, sabemos que  BL obtiene buenos resultados en poco tiempo, por lo que La
-idea de este algoritmo seria mejorar la poblacion mediante BL de esta forma la solucion seria bastante aproximada, pero si seguimos ejecutando cruces y mutaciones
-salir del espacio de busqueda local para seguir explorando mejores soluciones.
-La diferencia de entre estos tres algoritmos Memeticos será sobre que individuos aplicar la BL.
+Este algoritmo consiste en hibridar el AGG con una busqueda local, sabemos que  BL obtiene buenos resultados en poco tiempo, por lo que la
+idea de este algoritmo seria mejorar la poblacion mediante BL, de esta forma la solucion seria bastante aproximada, pero si seguimos ejecutando cruces y mutaciones
+poder salir del espacio de busqueda local para seguir explorando mejores soluciones.\\
+AM obtiene muy buenos resultados en muy poco tiempo, vamos a implementar 3 tipos de AM.\\
+La diferencia de entre estos tres algoritmos Memeticos será sobre que individuos aplicar la BL.\\
 \begin{itemize}
-  \item Cuando aplicamos la BL sobre toda la poblacion obtenemos muy buenas poblaciones, por lo que a la hora de seguir cruzando y mutando los individuos, como comparten genes seguiremos obtendendo buenos resultados. 
-  \item Si aplicamos BL sobre un subconjunto de la poblacion mejoraremos un poco esos individuos, pero como el cruze se hace con toda la poblacion no se mejora tanto la poblacion, o en cualquir caso tardara mas iteraciones en mejorar toda la solucion
-  \item En el ultimo caso solo aplicamos BL sobre los mejores individuos (0.1) esto implica que esos individuos obtienen muy buenas soluciones, pero al cruzarse con una poblacion no tan buena tienen a no ser muy buena idea, aunque igualmente obtiene buenos resultados
+
+  \item \textbf{AM(10,1.0)} Este tipo se caracteriza por realizar BL sobre  toda la poblacion, de esta forma
+   obtenemos muy buenas poblaciones, por lo que a la hora de seguir cruzando y mutando los individuos, como 
+   comparten genes seguiremos obtendendo buenos resultados. \\
+   Consume más tiempo que el resto.
+  \item \textbf{AM(10,0.1)} Si aplicamos BL sobre un subconjunto de la poblacion mejoraremos, un poco esos 
+  individuos, pero como el cruce se hace con toda la poblacion no se mejora tanto la poblacion, o en cualquir 
+  caso tardara mas iteraciones en mejorar toda la solucion
+  \item \textbf{AM(10,0.1mej)} En el ultimo caso solo aplicamos BL sobre los mejores individuos (0.1) esto 
+  implica que esos individuos obtienen muy buenas soluciones, pero al cruzarse con una poblacion no tan buenas
+   tienden a no ser muy buena idea, aunque igualmente obtiene buenos resultados
 
 \end{itemize}
 
-Cabe destavar que el algoritmo de BL usado es el mismo que el de la practica 1 excepto que en vez de generar una solucion se la pasamos como parametro,
-como esa solucion que le pasamos esta en representacion binaria tenemos que transformarla a representacion entera y una vez encontrada la solucion volver a pasarla a representación binaria
-Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre todos los elementos de la poblacion.
+Cabe destacar que el algoritmo de BL usado es el mismo que el de la practica 1 excepto que en vez de generar una solucion se la pasamos como parametro,
+como esa solucion que le pasamos esta en representacion binaria tenemos que transformarla a representacion entera y una vez encontrada la solucion volver a pasarla a representación binaria.\\
+En todos los AM la busqueda local se ejecutará cada 10 iteraciones.\\
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
     \Function{$AM\_all()$}{}
@@ -770,7 +782,8 @@ Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre todos los elemen
             \State $fitness\_i \gets fitness\_i \cup diff(row)$
           \EndFor
         \EndIf
-
+      
+        \State $iters \gets iters + 1 $
       \EndWhile
 
       \State $hijo \gets min(poblacion)$
@@ -780,7 +793,6 @@ Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre todos los elemen
   \end{algorithmic}
 \end{algorithm}
 
-Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre el 10\% de la poblacion
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
     \Function{$AM\_subset()$}{}
@@ -838,7 +850,8 @@ Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre el 10\% de la po
             \EndIf
           \EndFor
         \EndIf
-
+    
+        \State $iters \gets iters + 1 $
       \EndWhile
 
       \State $hijo \gets min(poblacion)$
@@ -849,7 +862,6 @@ Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre el 10\% de la po
 \end{algorithm}
 
 
-Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre el 10\% de los mejores individuos de la poblacion
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
     \Function{$AM\_bests()$}{}
@@ -908,6 +920,7 @@ Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre el 10\% de los m
           \EndFor
         \EndIf
 
+        \State $iters \gets iters + 1 $
       \EndWhile
 
       \State $hijo \gets min(poblacion)$
@@ -917,13 +930,17 @@ Pseudocodigo de AM, el cual cada 10 iteraciones aplico BL sobre el 10\% de los m
   \end{algorithmic}
 \end{algorithm}
 
-El bl esta ligeramente modificado para que pueda aceptar codificaion binaria, para ello simplemente hago un cambio, en vez 
-de generar una solucion aleatoria, se la pasamos como parametro y ese parametro lo pasamos a codificacion entera para ejectuarla en el BL, luego deshacemos el cambio.
 
-\section{cONCLUSOINES}
+\section{Conclusión Práctica 2.}
 
-Si metemos muchas iteraciones en el generacional obtenemos soluciones mejores que las dadas como mejores en las tablas, pero
-requiere mucho tiempo.\\
+Recordando las conclusiones que obtuvimos en la practica 1 ampliamos. \\
+
+Estos tipos de algoritmos son muy dependientes del número de iteraciones que realizan, ya que en muchos casos mientras realizaba pruebas
+encontraba mejores resultados para los test simplemente aumentado el número de iteraciones, eso si, penalizando por un consumo de tiempo mayor.\\
+Ademas la mayoria de estos algorimos encuentra la solucion puesta como mejor e incluso la mejoran en los primeros casos, con esto observamos que cuando nos 
+enfrentamos a problemas con un tamaño pequeño, tenemos una alta probabilida de sacar la solucion perfecta o muy aproximada.
+
+
 
 \begin{table}[H]
   \begin{tabular}{|l|l|l|}
@@ -931,18 +948,59 @@ requiere mucho tiempo.\\
   \multicolumn{1}{|c|}{Algoritmo}   & \multicolumn{1}{l|}{Desv}                  & \multicolumn{1}{c|}{Tiempo}           \\ \hline
   Greedy                            & \textbf{0,6646633915}                      & \textbf{32,88}                        \\\hline
   BL                                & \textbf{0,4815112495}                      & \textbf{706,84}                       \\\hline
-  AGG-uniforme                      & \textbf{0,384878225}                       & \textbf{4956,38}  \\\hline
-  AGG-posición                      & \textbf{0,5215188632}                      & \textbf{4279,12}                      \\\hline
-  AGE-uniforme                      & \textbf{}                      & \textbf{}                                             \\\hline
-  AGE-posición                      & \textbf{}                      & \textbf{}                                               \\\hline
-  AM-(10,1.0)                       & \textbf{0,2682065942}                      & \textbf{20142,46}                     \\ \hline
-  AM-(10,0.1)                       & \textbf{0,3943533539}                      & \textbf{4984,94}                       \\ \hline
-  AM-(10,0.1mej)                    & \textbf{0,3886030957}                      & \textbf{5175,8}                      \\ \hline
+  AGG-uniforme                      & \textbf{0,409546259}                       & \textbf{25331,42}  \\\hline
+  AGG-posición                      & \textbf{0,5215188632}                      & \textbf{3517,38}                      \\\hline
+  AGE-uniforme                      & \textbf{0,483662062  }                      & \textbf{37863,06}                                             \\\hline
+  AGE-posición                      & \textbf{0,470069908 }                      & \textbf{1843,76}                                               \\\hline
+  AM-(10,1.0)                       & \textbf{0,322516584  }                      & \textbf{5011,3 }                     \\ \hline
+  AM-(10,0.1)                       & \textbf{0,427105774  }                      & \textbf{3654,3  }                       \\ \hline
+  AM-(10,0.1mej)                    & \textbf{0,415776803  }                      & \textbf{3664,36  }                      \\ \hline
   \end{tabular}
   \end{table}
 
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{ag_compare}
+  \caption{Desviación AGG}
+  \label{gra2}
+\end{figure}
+
+Comparando los resultados obtenidos de los AGG observamos que obtenemos mejores resultados mediante el cruce Uniforme como habiamos indicado
+antes, pero sin embargo cuando vemos los tiempos en Figura \ref{fig:tiem} observamos que este cruce es muy costoso en tiempo
+
+
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{age_comp}
+  \caption{Desviación AGE}
+  \label{gra2}
+\end{figure}
+
+Si seguimos comparando los AGE llegamos a la misma conclusion, y de media vemos que obtenemos mejores resultados que el AGG
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{am_compare}
+  \caption{Desviación AM}
+  \label{gra2}
+\end{figure}
+
+Como vemos de media AM obiene mejores resultados que AGG y AGE ademas no tenemos el problema de tiempos provocado por el cruce uniforme.
+Como dije antes corroboramos que el mejor algoritmo de AM es el que ejecuta BL sobre toda la poblacion sin embargo, tambien vemos que eso conlleva un ligero incremento
+en tiempo de cómputo,
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{tiempos_compa}
+  \caption{Desviación distintos Algoritmos}
+  \label{fig:tiem}
+\end{figure}
+
 \section{P3: Trayectorias}
 Tabla de resultados de la practica 3 
+
 \begin{table}[H]
   \begin{tabular}{|l|l|l|}
   \hline
@@ -951,14 +1009,14 @@ Tabla de resultados de la practica 3
   BL                                & \textbf{0,4815112495}                       & \textbf{706,84}                      \\\hline
   BMB                               & \textbf{0,4013}                             & \textbf{1848,1}                      \\\hline
   Enfriamiento Simulado             & \textbf{0,5353}                             & \textbf{110,26}                      \\\hline
-  ILS                               & \textbf{0,55171}                            & \textbf{2438,48}                     \\\hline                \\\hline
-  ILS-ES                            & \textbf{0,38508}                            & \textbf{1075,46}                     \\\hline                                               \\\hline
+  ILS                               & \textbf{0,55171}                            & \textbf{2438,48}                     \\\hline                
+  ILS-ES                            & \textbf{0,38508}                            & \textbf{1075,46}                     \\\hline                                               
   \end{tabular}
   \end{table}
 
 
   Notas a tener en cuenta\\
-    -> He modiciado un poca la busqueda local y la he llamado BL_2, esta se diferencia de la original en que
+    -> He modiciado un poca la busqueda local y la he llamado BL\_2, esta se diferencia de la original en que
     no genera una solucion inicial sino que se le pasa a la funcion como parametro, ademas de pasarle el numero de iteraciones 
     que tiene que reailizar antes de parar y tambien devuelve por referencia el valor de la dispersion para 
     la solucion encontrada por la busquda local (esto lo hago para reducir el tiempo de computo ya que
@@ -1018,17 +1076,17 @@ Tabla de resultados de la practica 3
           \State $T\_ini \gets 0.3 * \frac{coste\_ini }{-\log(0.3)}$
           \State $T\_fin \gets 0.0001$
 
-          \State $T_curr \gets T\_ini$
+          \State $T\_curr \gets T\_ini$
           \State $iters \gets 0$
           \State $\beta \gets \frac{T\_ini - T\_fin}{M * T\_ini * T\_fin}$
 
           \State $curr\_fit \gets coste\_ini$
 
-          \While{$iters < MAX\_ITERS $ AND $n\_exitos != 0$}
+          \While{$iters < MAX\_ITERS $ and $n\_exitos != 0$}
           \State $n\_vecinos \gets 0$
           \State $n\_exitos \gets 0$
             \While{$n\_vecinos < max\_vecinos $ and $n\_exitos < max\_exitos$}
-              \State $vecino_fit \gets 0.0$
+              \State $vecino\_fit \gets 0.0$
               \State $iters \gets iters + 1$
               \State $n\_vecnios \gets n\_venicos + 1$
               \State $s\_i \gets generarVecino(solucion,vecino\_fit)$
@@ -1047,26 +1105,26 @@ Tabla de resultados de la practica 3
 
             \State $T\_curr \gets \frac{T\_curr}{1 + \beta * T\_curr} $
           \EndWhile
-          \State $ sol\_fit \gets best\_fit$          
+          \State $ sol\_fit \gets best\_fit$   \Comment{Lo devuelvo por referencia}       
           \State \Return{$best$}
          \EndFunction
        \end{algorithmic}
      \end{algorithm}
 
-     Pseudocodigo de \textbf{BMB(n_sol, MAX\_ITERS)}
+     Pseudocodigo de \textbf{BMB(n\_sol, MAX\_ITERS)}
      \begin{algorithm}[H]
        \begin{algorithmic}[1]
-         \Function{$generarVecino(solucion,fit\_vecino)$}{}
+         \Function{$BMB(n\_sol, MAX\_ITERS)$}{}
           \State $solucion \gets \emptyset$
           \State $best \gets \emptyset$
-          \State $best\_fit \gets \inf$
+          \State $best\_fit \gets \infty$
           \State $iters \gets 0$
 
-          \While{$iters < n_sol$}
+          \While{$iters < n\_sol$}
             \State $iters \gets iters + 1$
             \State $solucion \gets generarSolucionAleatoria()$
             \Comment{Aplico la BL sobre esa solucion aleatoria}
-            \State $BL\_sol \gets BL_2(solucion, MAX\_ITERS, sol\_fit)$
+            \State $BL\_sol \gets BL\_2(solucion, MAX\_ITERS, sol\_fit)$
             \If{$sol\_fit < best\_fit$}
               \State $best \gets BL\_sol$
               \State $best\_fit \gets sol\_fit$
@@ -1109,7 +1167,7 @@ Tabla de resultados de la practica 3
 
           \While{$iters < n\_sol$}
             \State $ iters \gets iters + 1$
-            \State $BL\_sol \gets BL_2(solucion,BL\_ITERS,curr\_fit)$ \Comment{devuelve el fit por referencia}
+            \State $BL\_sol \gets BL\_2(solucion,BL\_ITERS,curr\_fit)$ \Comment{devuelve el fit por referencia}
             \If{$curr\_fit < best\_fit$}
               \State $best \gets BL\_sol$
               \State $best\_fit \gets curr\_fit$
@@ -1144,5 +1202,6 @@ Tabla de resultados de la practica 3
          \EndFunction
        \end{algorithmic}
      \end{algorithm}
+
 
 \end{document}

@@ -1,0 +1,33 @@
+1.c✔		|	☑*														
+2.b,d? diria q d										
+3.b✔		|	
+4.c(?)Teorema:pag 12
+5.d ✔	|
+6.b ✔		|	☑	
+7.b ✔		|	☑
+8.b	✔ 		|	☑
+9.b	✔		|	☑
+10.b✔		|	☑
+11.c✔		|	☑
+12.c✔		|	☑
+13.b (a no puede ser porque STRIPS no va con universales) (b,d)
+14.-D		|	☑
+15.c✔		|	☑
+16.c✔		|	☑
+17.c/d(?)	|
+18.a✔		|	☑
+19.d✔		|	☑
+20.a✔		|	☑
+21.c✔		|	☑
+22.c(?)✔	|
+23.c✔		|	☑
+24.d✔		|	☑
+25.a✔		|	☑
+26.d		|	☑
+27.- d		|	☑
+28.C✔		|	☑
+29.b		|	☑
+30.b✔
+
+5.b(?)✔ (Creo) El problema del marco es que especificar solo qué condiciones cambian las acciones no implica que todas las demás condiciones no cambien.
+

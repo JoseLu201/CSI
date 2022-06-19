@@ -13,30 +13,31 @@
 )
 
 (defrule conoce_animal
-	(declare (salience-4))
+	(declare (salience -4))
 	?f<-(animal_nuevo ?x)
 	(animal ?x)
 	(explicacion animal ?x ?expl1)
-	(explicacion vuela ?x Pexpl2)
+	(explicacion vuela ?x ?expl2)
 	=>
 	(retract ?f)
 	(printout t ?expl1 crlf)
-	(printout t 2expl2 crlf)
+	(printout t ?expl2 crlf)
 )
 
-(defrule no_conoce animal
-	(declare (salience-4))
+(defrule no_conoce_animal
+	(declare (salience -4))
 	?f<-(animal_nuevo ?x)
 	=>
-	(printoutt "El animal " ?x " es un ave o un mamifero? (ave, mamifero o nolose) ")
+	(printout t "El animal " ?x " es un ave o un mamifero? (ave, mamifero o nolose) ")
 	(assert (animalEs ?x (read)))
 	(retract ?f)
 )
 
 (defrule add_mamifero
-	(declare (salience-4))
+	(declare (salience -4))
 	(animalEs ?x ?y)
 	(test (eq mamifero ?y))
+	=>
 	(assert (mamifero ?x))
 )
 
@@ -44,19 +45,21 @@
 	(declare (salience -4))
 	(animalEs ?x ?y)
 	(test (eq ave ?y))
+	=>
 	(assert (ave ?x))
 )
 
 (defrule add_nolose
-(declare (salience-4))
+(declare (salience -4))
 (animalEs ?x ?y)
 (test (eq nolose ?y))
+=>
 (assert (animal ?x))
 )
 
-(defrule conocimiento_nuevo_animal
-(declare (salience-5))
-?f-(animalEs ?x ?y)
+(defrule CONOCIMIENTO_nuevo_animal
+(declare (salience -5))
+?f<-(animalEs ?x ?y)
 (animal ?x)
 (explicacion vuela ?x ?expl2)
 (test (eq nolose ?y))
@@ -77,6 +80,7 @@
 
 (defrule mamiferos_son_animales
 (mamifero ?x)
+=>
 (assert (animal ?x))
 (bind ?expl (str-cat "sabemos que un " ?x " es un animal porque los mamiferos son un tipo de animal"))
 (assert (explicacion animal ?x ?expl) )
@@ -87,7 +91,7 @@
 (ave ?x)
 =>
 (assert(vuela ?x si por_defecto))
-(bind Pexpl (str-cat "asumo que un " ?x " vuela, porque casi todas las aves vuelan"))
+(bind ?expl (str-cat "asumo que un " ?x " vuela, porque casi todas las aves vuelan"))
 (assert (explicacion vuela ?x ?expl))
 )
 
@@ -103,12 +107,13 @@ seguro que " ?x ?s " vuela"))
 (assert(explicacion retracta_vuela ?x ?expl))
 )
 
+; Como sabemos la mayor parte de los animales no vuelan por lo que podemos decir que por defecto la mayotia no vuelan
 (defrule mayor_parte_animales_no_vuelan
 (declare (salience -2))
 (animal ?x)
 (not (vuela ?x ? ?))
 =>
 (assert (vuela ?x no por_defecto))
-(bind ?expl (str-cat "asumo que" ?x" no vuela, porque la mayor parte de los animales no vuelan"))
+(bind ?expl (str-cat " asumo que " ?x" no vuela, porque la mayor parte de los animales no vuelan"))
 (assert (explicacion vuela ?x ?expl))
 )

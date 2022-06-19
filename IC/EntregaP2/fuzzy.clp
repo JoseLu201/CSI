@@ -49,6 +49,9 @@
 ;; Si esté destemplado y el peso es medio o alto administrar dosis media
 ;; Si está destemplado y el peso es bajo administrar dosis baja
 ;; Si la temperatura es alta administrar dosis alta 
+;; AÑADIMOS ALGUNAS VARIABLES COMO LA EDAD
+;; Si la edad es < 65 y tiene fiebre alta adminisrtar dosis baja
+;; Si la edad es > 65 y tiene fiebre alta adminisrtar dosis alta
 
 ;; Definimos de las variables del sistema
 
@@ -56,6 +59,8 @@
 (variable temperatura)
 (variable peso)
 (variable dosis)
+;;Añadimos la variable edad
+(variable edad)
 )
 
 ;;  Definimos los conjuntos difusos que usará el sistema
@@ -71,6 +76,10 @@
 (cd dosis baja 4 5 5 6.5)    ; aproximadamente 5
 (cd dosis media 6 7 7 8)     ; aproximadamente 7
 (cd dosis alta 8 9 9 10)     ; aprximadamente 9
+
+(cd edad menor 0 0 17 18)
+(cd edad adulto 17 18 64 65)  ; Edad aproximadamente menor a 65 años
+(cd edad anciano 64 65 99 99)
 )
 
 ;; Definimos las reglas y las explicaciones asociadas
@@ -79,21 +88,37 @@
 (regla 1 antecedente temperatura normal)
 (regla 1 consecuente dosis cero)
 (regla 1 explicacion "Si la temperatura es normal, la dosis a aplicar es cero")
+
 (regla 2 antecedente temperatura destemplada)
 (regla 2 antecedente peso medio)
 (regla 2 consecuente dosis media)
 (regla 2 explicacion "Si esta destemplado y el peso es medio, la dosis a aplicar es media")
+
 (regla 2bis antecedente temperatura destemplada)
 (regla 2bis antecedente peso alto)
 (regla 2bis consecuente dosis media)
 (regla 2bis explicacion "Si esta destemplado y el peso es alto, la dosis a aplicar es media")
+
 (regla 3 antecedente temperatura destemplada)
 (regla 3 antecedente peso bajo)
 (regla 3 consecuente dosis baja)
 (regla 3 explicacion "Si esta destemplado y el peso es bajo, la dosis a aplicar es baja")
-(regla 4 antecedente temperatura alta)
-(regla 4 consecuente dosis alta)
-(regla 4 explicacion "Si la temperatura es alta, la dosis a aplicar es alta")
+
+(regla 5 antecedente edad menor)
+(regla 5 antecedente temperatura alta)
+(regla 5 consecuente dosis baja)
+(regla 5 explicacion "Si la temperatura es alta, pero es menor la dosis a aplicar es baja")
+
+(regla 6 antecedente edad adulto)
+(regla 6 antecedente temperatura alta)
+(regla 6 consecuente dosis alta)
+(regla 6 explicacion "Si la temperatura es alta, y  es adulto la dosis a aplicar es alta")
+
+(regla 7 antecedente edad anciano)
+(regla 7 antecedente temperatura alta)
+(regla 7 consecuente dosis baja)
+(regla 7 explicacion "Si la temperatura es alta, pero es anciano la dosis a aplicar es baja")
+
 )
 
 
@@ -158,7 +183,7 @@
 (regla ?r explicacion ?text)
 =>
 (assert (fuzzy inferido ?v ?l ?g1))
-(printout t "Se va a aplicar la regla " ?text  crlf)
+(printout t "Se va a aplicar la regla: " ?text  crlf)
 )
 
 
@@ -270,6 +295,13 @@
 =>
 (printout t "Peso: ")
 (assert (dato peso (read)))
+)
+
+(defrule pregunta_edad
+(declare (salience 1)) 
+=>
+(printout t "Edad: ")
+(assert (dato edad (read)))
 )
 
 (defrule pregunta3

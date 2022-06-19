@@ -1,0 +1,153 @@
+\input{preambuloSimple.tex}
+
+\everymath{\displaystyle}
+%----------------------------------------------------------------------------------------
+%	TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+
+\title{	
+\normalfont \normalsize 
+\textsc{\textbf{Metaheurística} \\ Grado en Ingeniería Informática \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Práctica Alternativa ALO: Ant Lion Optimizer \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{José Luis Molina Aguilar} % Nombre y apellidos
+
+\date{\normalsize\today} % Incluye la fecha actual
+
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+
+\maketitle % Muestra el Título
+  \begin{large}
+    \centering
+  \vfill
+  
+  Curso 2021-2022\\
+  DNI : 77556436E\\
+  Correo : joselu201@correo.ugr.es\\
+  Grupo : A3, MARTES 17:30 - 19:30
+  \vfill
+  \end{large}
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+\listoffigures
+
+
+\newpage
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 1
+%----------------------------------------------------------------------------------------
+
+\section{ALO: Ant Lion Optimizer}
+En este documento veremos y explicaremos una Metaheurística basada en ................ y la modelaremos
+para aplicarlo al problema de practicas de MDD.
+
+
+
+\subsection{Inspiracion}
+  ALO esta inspitada en el modelo de caza que realiza la hormiga leon contra insectos, especificamente contra hormigas.
+  Los hormigas leon tienen dos fases principales en su vida, la fase de larva y su fase adulta, es es su fase de larva en la que
+  que nos fijamos para desarrolar ALO, las hormigas leon tiene ese nombre devido a que en su fase de larva teien una forma 
+  pareceida a las de las hormigas.\\
+  Su metodo de caza consiste en escaver un foso en el suelo arenoso con forma de cono, de forma que todo lo que caiga en 
+  ese foso caera abajo, justo al lugar dondo la larva de hormiga leon se mantiene esperando enterrada.
+  La hormiga leon es un depredador pasivo ya que espera en el fondo del foso esperando a que las presas ciagan dentro
+  Aqune tambien tienen otras estrategias para la caza como poderosas mandibulas con veneno incluso son capaces de tirar arena hacia 
+  la presa con el fin de hacerlas deslicer al centro.\\
+
+  Esta Metaheurística simula este comportamiento siguiente los siguientes pasos:
+  \begin{itemize}
+    \item Desplazamiento aleatorio de las hormigas
+    \item Atrapar a las presas en el trampa
+    \item Construir la trampa
+    \item Deslizamiento hacia la hormiga leon
+    \item Capturando la presa y Recostruyendo el foso
+    
+  \end{itemize}
+
+
+  \subsection{Desplazamiento aleatorio de las hormigas}
+
+  Como podemos ver en la naturaleza, el desplazamiento de las hormigas por la superficie es aleatorio, esto nos ayuda 
+  añadiendo una gran componente de diversidad a la hora de crear soluciones.
+
+  En la implentacion original de ALO, el movimiento de las hormigas esta acotado para mantener las restricciones de las variables 
+  del problema\\
+  Para simular caer en una trampa se restringe el movimiento aleatoria de las hormigsa conforma avanzan las iteracioens, esto permite tener en un principio mucha diversidad y conforme vamos
+  avanzando vamos especificando en la solucion.\\
+
+  Entonces para calcular la neva posicion de la hormiga: \\
+  \begin{equation}
+    X_i^t = \frac{(X_i^t -a_i ) \cdot (d_i -c_i^t)}{(d_i -a_i)} + c_i
+  \end{equation}
+
+  donde $a$ es la cota inferior y $b$ es la cota superior de las variables mientras que $c$ y $d$ es el rango de movimiento
+  $X_i^t $ es una suma acumulativa de la variable $i$ en la iteracion $y$
+  
+  \subsection{Atrapar a las presas en el trampa}
+
+  Como hemos dicho antes el desplazamiento de las hormigas se ve influenciado por las trampas de la hormiga leon
+
+  \begin{equation}
+    c_i^t = Antlion_j^t +c^t
+    d_i^t = Antlion_j^t +d^t
+  \end{equation}
+
+  donde $c^t$ es el minimo de todas las variables en esa iteracion, mientras que $d_i^t$ representa el maximo 
+  de las varaibles en esa iteracion.\\
+  De esta forma definimos un moviemeinto circular alrededor del foso de la hormiga leon seleccionada
+
+  \subsection{Construir la trampa}
+
+  En cada iteracion escogemos una hormiga leon para cada una de las hormigas, esta seleccion las realizamos mediente una 
+  Ruleta la que toma en cuante el fitness de cada hormiga leon y el fitness acumulado de todas ellas. 
+  De esta forma conseguirmos que las hormiga leon con mejor fitness tengas mas probabiliadeds de cazar hormigas
+
+  \subsection{Deslizamiento hacia la hormiga leon}
+   Para simular el deslizamiento que realizar la hormiga leon con diferentes metodos sobre las hormigas se simula reduciendo el radio
+   de movimiento de las hormigas:\\
+
+   \begin{equation}
+    c^t = \frac{c^t}{I}
+    d^t = \frac{d^t}{I}
+  \end{equation}
+
+  donde I es el radio y se calcula respeco de las iteraciones.
+
+  \subsection{Capturando la presa u Recostruyendo el foso}
+  La ultima parte de la caza es cuando la hormiga llega al fondo del foso y es atrapada por la hormiga leon.
+  Asumimos la captura se lleva a cabo cuando el fitness de la hormige se haga mejor que el de su correspondiente hormiga leon.\\
+  Despues actualizamos la posicion de la hormiga leon a la ultima posicion de la hormiga presa
+
+  \begin{algorithm}[H]
+    \begin{algorithmic}[1]
+      \If{$f(Ant_i^t) > f(AntLion_j^t)$}
+        \State $AntLion_j^t \gets Ant_i^t$
+      \EndIf
+    \end{algorithmic}
+  \end{algorithm}
+
+  \subsection{Elitismo}
+  Vamos a aplicar elitismo para encontrar la mejor solucion. Para ello en cada iteracion la mejor hormiga leon se 
+  guardara como elite y esta afectara los movimientos del resto de hormigas, por ello
+  \begin{equation}
+   Ant_i^t = \frac{R_A^t + R_E^t}{2}
+  \end{equation}
+
+  donde $R_A^t$ es el movimiento aleatoria alrededor de la hormiga leon seleccionada mediante la ruleta, mientras que
+   $R_E^t$ es el moviemeinto aleatorio alrededor de la elite
+
+\end{document}

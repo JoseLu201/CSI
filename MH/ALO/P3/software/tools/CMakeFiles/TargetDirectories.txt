@@ -1,0 +1,4 @@
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/tools/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/tools/CMakeFiles/edit_cache.dir
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/tools/CMakeFiles/random.dir
+/mnt/c/Users/JoseL/Desktop/universidad/TercerCurso/CSI/MH/P1/tools/CMakeFiles/tiempos.dir

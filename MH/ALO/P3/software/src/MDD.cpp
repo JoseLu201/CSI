@@ -6,6 +6,7 @@
 #include <vector>
 #include <math.h>
 #include <set>
+#include <unordered_set>
 
 
 /*
@@ -683,48 +684,44 @@ void print_ant(pair<vector<int>,float> ant){
     cout << "   " << ant.second << endl<< endl;
 }
 
-void MDD::move_to_hole(pair<vector<int>,float> &ant_lion, pair<vector<int>,float> &ant){
+void MDD::move_to_hole(pair<vector<int>,float> &ant_lion, pair<vector<int>,float> &ant, int curr_iter){
 
-    for(int i = 0; i < ant.first.size();i++){
-        if(ant_lion.first[i] >= ant.first[i] ){
-            //Deslizamos aleatoriamente
-            ant.first[i] = ant_lion.first[i] - ant.first[i];
-            ant.second = distFactorizada(ant.first,make_pair(i,ant.first[i]));
-        }else{
-            ant.first[i] =  ant.first[i] - ant_lion.first[i];
-            ant.second = distFactorizada(ant.first,make_pair(i,ant.first[i]));
+    if(ant.second > ant_lion.second){
+        for(int i = 0; i < ant.first.size();i++){
+            if(ant_lion.first[i] >= ant.first[i] ){
+                //Deslizamos aleatoriamente
+                ant.first[i] = ant_lion.first[i] - ant.first[i];
+                ant.second = distFactorizada(ant.first,make_pair(i,ant.first[i]));
+            }
         }
-       
+    }else if(Random::get<bool>(0.5)){
+        for(int i = 0; i < ant.first.size();i++){
+            if(ant_lion.first[i] >= ant.first[i] ){
+                //Deslizamos aleatoriamente
+                ant.first[i] = (ant_lion.first[i] + ant.first[i])%this->n;
+                ant.second = distFactorizada(ant.first,make_pair(i,ant.first[i]));
+            }
+        }
     }
 
-    set<int> fix(ant.first.begin(),ant.first.end());
+    unordered_set<int> fix(ant.first.begin(),ant.first.end());
     if(fix.size() != this->m){
         while(fix.size() != this->m){
             fix.insert(Random::get(0,this->n-1));
         }
         ant.first.assign(fix.begin(),fix.end());
         ant.second = diff(ant.first);
-    }
-    /*if( ant_lion.second < ant.second){
-        int index = Random::get(0,this->m-1);
-        ant.first[index] = ant_lion.first[index];
-        auto cambio = make_pair(index,ant_lion.first[index]);
-        ant.second = distFactorizada(ant.first,cambio); 
-    }else{
-        int index = Random::get(0,this->m-1);
-        ant_lion.first[index] = ant.first[index];
-        auto cambio = make_pair(index,ant.first[index]);
-        ant_lion.second = distFactorizada(ant_lion.first,cambio); 
-    }*/
+    } 
+        
 }
 
 vector<int> MDD::ALO(int ITERS){
     //Definimos la matriz de hormigas y hormigas leones
-    int TAM = 5;
+    int TAM = 20;
    vector<int> best;
    float best_fit;
     vector<pair<vector<int>,float>> ant(TAM,make_pair(vector<int>(this->n-1,0),0));
-    vector<pair<vector<int>,float>> ant_leon(TAM,make_pair(vector<int>(this->n-1,0),0));;
+    vector<pair<vector<int>,float>> ant_leon(TAM/2,make_pair(vector<int>(this->n-1,0),0));;
 
 
     
@@ -735,7 +732,7 @@ vector<int> MDD::ALO(int ITERS){
         i.second = diff(i.first);
     }
 
-    sort(ant.begin(), ant.end(),compare_menorFitness);
+    //sort(ant.begin(), ant.end(),compare_menorFitness);
 
     for(auto &i : ant_leon){
         i.first = generarPoblacion();
@@ -747,57 +744,56 @@ vector<int> MDD::ALO(int ITERS){
     best = (*(ant_leon.begin())).first;
     best_fit = (*(ant_leon.begin())).second;
 
-    vector<float> pesos;
-    for(auto &row : ant_leon){
-        pesos.push_back(row.second);
-    }
-    /*cout << "Poblacione ANT inicial" << endl;
-    print_poblacion(ant);
-
-    cout << "Poblacione ANT_leon inicial" << endl;
-    print_poblacion(ant_leon);
-    cout << endl;*/
     int iter = 0;
+
+    /*cout << "Poblacion inicial " << endl;
+    print_poblacion(ant);
+    cout << "LEON" << endl;
+    print_poblacion(ant_leon);
+    */
     while(iter < ITERS){
         iter++;
+        vector<float> pesos;
+        for(auto &row : ant_leon){
+            pesos.push_back(row.second);
+        }
         //Para cada hormiga 
         for(auto &hormiga : ant){
             //selecciono una hormiga leon con la ruleta
-            //int roulete_index = RouletteWheelSelection(pesos);
-            //cout << "Selecciono la hormiga leon" << endl;
-            //print_ant(*(ant_leon.begin()+roulete_index));
-            //cout << "Selecciono la hormiga " << endl;
-            //print_ant(hormiga);
+            int roulete_index = RouletteWheelSelection(pesos);
             //Y esa hormiga se movera en torno a esa solucion
-            move_to_hole(ant_leon.front(),hormiga);
-            //print_ant(hormiga);
-            //cout << "DESPUES Selecciono la hormiga leon" << endl;
-            //print_ant(*(ant_leon.begin()+roulete_index));
-            //cout << " DESPUES Selecciono la hormiga " << endl;
-            //print_ant(hormiga);
+            move_to_hole(*(ant_leon.begin()+roulete_index),hormiga,iter);
+          
+            if(hormiga.second < (*(ant_leon.begin()+roulete_index)).second){
+                *(ant_leon.begin()+roulete_index) = hormiga;
+            }
+
+            /*cout<< "Hormiga leon"<< endl;
+            print_ant(*(ant_leon.begin()+roulete_index));*/
         }
-    sort(ant.begin(), ant.end(),compare_menorFitness);
-    sort(ant_leon.begin(), ant_leon.end(),compare_menorFitness);
-    //cout << "Poblacione ANT " << endl;
-    //print_poblacion(ant);
 
-    //cout << "Poblacione ANT_leon " << endl;
-    //print_poblacion(ant_leon);
-
-    if(ant.front().second < ant_leon.front().second){
-        ant_leon.pop_back();
-        ant_leon.push_back(ant.front());     
-    }
-        
-        
-    if(ant_leon.front().second < best_fit){
-        best = ant_leon.front().first;
-        best_fit =ant_leon.front().second;
-
-    }
+        float max = 9999;
+        pair<vector<int>,float> min;
+        for(auto &h : ant_leon){
+            if(h.second < max){
+                min = h;
+                max = h.second;
+            }
+        }
+            
+        if(min.second < best_fit){
+            best = min.first;
+            best_fit =min.second;
+            /*cout << "Mejoro" << endl;
+            for(int i =0; i < best.size();i++){
+                cout << best[i] << ",";
+            }cout << "  "<<best_fit << endl;*/
+        }
         //cout << iter << endl;
 
     }
+
+    
 
     return best;
     

@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
         break;
     case 5:
         inicio = high_resolution_clock::now();
-        sol = instance.ALO(MAX_ITERS);
+        sol = instance.ALO(10000);
         fin = high_resolution_clock::now();
         break;
     default:

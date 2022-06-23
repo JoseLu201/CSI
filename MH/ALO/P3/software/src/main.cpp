@@ -77,6 +77,11 @@ int main(int argc, char *argv[]){
         sol = instance.ALO(10000);
         fin = high_resolution_clock::now();
         break;
+    case 6:
+        inicio = high_resolution_clock::now();
+        sol = instance.ALO_MM(10000,100);
+        fin = high_resolution_clock::now();
+        break;
     default:
         break;
     }

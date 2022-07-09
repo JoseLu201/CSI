@@ -1,9 +1,11 @@
 \babel@toc {spanish}{}
 \contentsline {section}{\numberline {1}ALO: Ant Lion Optimizer}{3}%
-\contentsline {subsection}{\numberline {1.1}Inspiracion}{3}%
-\contentsline {subsection}{\numberline {1.2}Desplazamiento aleatorio de las hormigas}{3}%
-\contentsline {subsection}{\numberline {1.3}Atrapar a las presas en el trampa}{4}%
-\contentsline {subsection}{\numberline {1.4}Construir la trampa}{4}%
-\contentsline {subsection}{\numberline {1.5}Deslizamiento hacia la hormiga leon}{4}%
-\contentsline {subsection}{\numberline {1.6}Capturando la presa u Recostruyendo el foso}{4}%
-\contentsline {subsection}{\numberline {1.7}Elitismo}{4}%
+\contentsline {subsection}{\numberline {1.1}Inspiración}{3}%
+\contentsline {subsection}{\numberline {1.2}Generacion de poblacion.}{3}%
+\contentsline {subsection}{\numberline {1.3}Desplazamiento aleatorio de las hormigas}{4}%
+\contentsline {subsection}{\numberline {1.4}Atrapar a las presas en el trampa}{4}%
+\contentsline {subsection}{\numberline {1.5}Construir la trampa}{4}%
+\contentsline {subsection}{\numberline {1.6}Deslizamiento hacia la hormiga leon}{4}%
+\contentsline {subsection}{\numberline {1.7}Capturando la presa y reconstrucción del foso.}{5}%
+\contentsline {subsection}{\numberline {1.8}Elitismo}{5}%
+\contentsline {section}{\numberline {2}Analisis}{6}%

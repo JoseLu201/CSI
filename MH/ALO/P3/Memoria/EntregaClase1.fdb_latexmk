@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1655567373 "EntregaClase1.tex" "EntregaClase1.pdf" "EntregaClase1" 1655567374
+["pdflatex"] 1655942388 "EntregaClase1.tex" "EntregaClase1.pdf" "EntregaClase1" 1655942389
   "/etc/texmf/web2c/texmf.cnf" 1640614679 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/joselu/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecsx1095.600pk" 1648167979 24004 b6cd5f8c5571537afbfa7ab6a6c52867 ""
   "/home/joselu/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecsx1200.600pk" 1648167978 27316 123382651dc64f870469f21476a8ae67 ""
@@ -102,16 +102,16 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1581979058 38841 ce3692aa899bb693b90b87eaa5d4d84e ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1648211613 165012 f177baa1c39a3ebd62c3096a43521a0d ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1648211618 4936373 2981688062aad6374327e3b745f33fc3 ""
-  "EntregaClase1.aux" 1655567374 1236 1b6f5ee5338a11fa41b7e4511a3bf813 "pdflatex"
-  "EntregaClase1.lof" 1655567374 23 39d772808ad4a7ebd21da0b3c9cd2947 "pdflatex"
-  "EntregaClase1.tex" 1655567371 6350 546d25908392676f3150be24b89b5af2 ""
-  "EntregaClase1.toc" 1655567374 630 a5c7d8a82a44697f48c756281976a371 "pdflatex"
+  "EntregaClase1.aux" 1655942389 1480 394d6d8f327981e8581e64ff8e740c20 "pdflatex"
+  "EntregaClase1.lof" 1655942389 23 39d772808ad4a7ebd21da0b3c9cd2947 "pdflatex"
+  "EntregaClase1.tex" 1655942387 10130 5b459f0e0b79530a525b8990661c2eb5 ""
+  "EntregaClase1.toc" 1655942389 762 005fecadfbfbc2ed701b9de45c3e729e "pdflatex"
   "algorithmicx.sty" 1655502031 26750 ce139c05a983e19ddca355b43e29c395 ""
   "algpseudocode.sty" 1655502031 3457 d9077efe6b74c5a094199256af8d7d9a ""
   "preambuloSimple.tex" 1655502031 3043 6a1ab5931f58927a2b863f38505e39ff ""
   (generated)
-  "EntregaClase1.toc"
-  "EntregaClase1.aux"
-  "EntregaClase1.log"
   "EntregaClase1.pdf"
+  "EntregaClase1.log"
+  "EntregaClase1.aux"
+  "EntregaClase1.toc"
   "EntregaClase1.lof"

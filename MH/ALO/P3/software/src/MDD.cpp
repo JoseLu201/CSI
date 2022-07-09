@@ -621,6 +621,29 @@ vector<int> MDD::ILS_ES(int n_sol, int ES_ITERS){
 
 
 
+///////////////////////////////////////////////////////////////////
+////////////////////////Practica Alternatica///////////////////////
+///////////////////////////////////////////////////////////////////
+
+
+void print_poblacion(vector<pair<vector<int>,float>> ant){
+    for(auto i : ant){
+        for(auto j :i.first){
+            cout << j << " ";
+        }
+        cout << "   " << i.second << endl;
+    }
+    
+    
+}
+
+void print_ant(pair<vector<int>,float> ant){
+    for(auto j :ant.first){
+        cout << j << " ";
+    }
+    cout << "   " << ant.second << endl<< endl;
+}
+
 vector<int> MDD::generarPoblacion(){
     set<int> ant;
     while(ant.size() != this->m){
@@ -640,9 +663,10 @@ int MDD::RouletteWheelSelection(vector<float> pesos){
     int chosen = 1;
     vector<float> cumsum;
     cumsum.resize(pesos.size());
+
     std::partial_sum(pesos.begin(), pesos.end(), cumsum.begin(),plus<float>() );
-     auto val = Random::get<Random::common>(1, 0.f);
-    float p = val * cumsum[cumsum.size()-1];
+
+    float p = Random::get<Random::common>(1, 0.f) * cumsum[cumsum.size()-1];
     for(int i = 0; i < cumsum.size();i++){
         if(cumsum[i] > p){
             chosen = i;
@@ -651,45 +675,18 @@ int MDD::RouletteWheelSelection(vector<float> pesos){
     }
     return chosen;
 }
-//Necesito la ant_lion y la iteracion actual
-/*vector<int> Random_walk_around_antlion(pair<vector<int>,float> ant_l, int curr_iter, int MAX_ITERS){
-    double I;
-    if(curr_iter >= MAX_ITERS *0.95)
-        I = 1 + 10**6 * (curr_iter/MAX_ITERS);
-    else if (curr_iter >= MAX_ITERS * 0.9)
-        I = 1 + 10**5 * (curr_iter/MAX_ITERS);
-    else if (curr_iter >= MAX_ITERS * 3/4)
-        I = 1 + 10**4 * (curr_iter/MAX_ITERS);
-    else if (curr_iter >= MAX_ITERS * 0.5)
-        I = 1 + 10**3 * (curr_iter/MAX_ITERS);
-    else
-        I = 1 + 10**2 * (curr_iter/MAX_ITERS);
-    return;
-}*/
-void print_poblacion(vector<pair<vector<int>,float>> ant){
-    for(auto i : ant){
-        for(auto j :i.first){
-            cout << j << " ";
-        }
-        cout << "   " << i.second << endl;
-    }
-    
-    
-}
 
-void print_ant(pair<vector<int>,float> ant){
-    for(auto j :ant.first){
-        cout << j << " ";
-    }
-    cout << "   " << ant.second << endl<< endl;
-}
+/*
+Esta funcion hace que una hormiga caiga en la trampa de una hormiga leon, mas que caer seria deslizar, por lo que 
+    -> Si la hormiga es peor que la hormiga leon, entonces se deslizara hacia la hormiga leon
+    -> en caso contrario la hormiga podra moverse en cualquir direccion ya que es mejor que la hormiga leon
 
-void MDD::move_to_hole(pair<vector<int>,float> &ant_lion, pair<vector<int>,float> &ant, int curr_iter){
+*/
+void MDD::SlidetoTrap(pair<vector<int>,float> &ant_lion, pair<vector<int>,float> &ant){
 
     if(ant.second > ant_lion.second){
         for(int i = 0; i < ant.first.size();i++){
             if(ant_lion.first[i] >= ant.first[i] ){
-                //Deslizamos aleatoriamente
                 ant.first[i] = ant_lion.first[i] - ant.first[i];
                 ant.second = distFactorizada(ant.first,make_pair(i,ant.first[i]));
             }
@@ -704,11 +701,11 @@ void MDD::move_to_hole(pair<vector<int>,float> &ant_lion, pair<vector<int>,float
         }
     }
 
+    //Reparamos la solucion si es necesario
     unordered_set<int> fix(ant.first.begin(),ant.first.end());
     if(fix.size() != this->m){
-        while(fix.size() != this->m){
+        while(fix.size() != this->m)
             fix.insert(Random::get(0,this->n-1));
-        }
         ant.first.assign(fix.begin(),fix.end());
         ant.second = diff(ant.first);
     } 
@@ -716,24 +713,24 @@ void MDD::move_to_hole(pair<vector<int>,float> &ant_lion, pair<vector<int>,float
 }
 
 vector<int> MDD::ALO(int ITERS){
-    //Definimos la matriz de hormigas y hormigas leones
+    //Definimos el tamaño de la poblacion
     int TAM = 20;
-   vector<int> best;
-   float best_fit;
+
+    //Aqui almacenamos el mejor individuo de las hormigas leon
+    vector<int> best;
+    float best_fit;
+    
+    //Definimos la matriz de hormigas y hormigas leones
     vector<pair<vector<int>,float>> ant(TAM,make_pair(vector<int>(this->n-1,0),0));
     vector<pair<vector<int>,float>> ant_leon(TAM/2,make_pair(vector<int>(this->n-1,0),0));;
 
-
-    
-    vector<int> ans;
-
+    //Generamos la poblacion de hormigas y calculamos su fitness
     for(auto &i : ant){
         i.first = generarPoblacion();
         i.second = diff(i.first);
     }
 
-    //sort(ant.begin(), ant.end(),compare_menorFitness);
-
+    //Generamos la poblacion de hormigas leon y calculamos su fitness
     for(auto &i : ant_leon){
         i.first = generarPoblacion();
         i.second = diff(i.first);
@@ -741,18 +738,15 @@ vector<int> MDD::ALO(int ITERS){
 
     sort(ant_leon.begin(), ant_leon.end(),compare_menorFitness);
 
+    //Guardamos el mejor individuo
     best = (*(ant_leon.begin())).first;
     best_fit = (*(ant_leon.begin())).second;
 
     int iter = 0;
-
-    /*cout << "Poblacion inicial " << endl;
-    print_poblacion(ant);
-    cout << "LEON" << endl;
-    print_poblacion(ant_leon);
-    */
     while(iter < ITERS){
         iter++;
+
+        //Almacenamos los pesos de cada hormiga leon para ruleta.
         vector<float> pesos;
         for(auto &row : ant_leon){
             pesos.push_back(row.second);
@@ -762,14 +756,12 @@ vector<int> MDD::ALO(int ITERS){
             //selecciono una hormiga leon con la ruleta
             int roulete_index = RouletteWheelSelection(pesos);
             //Y esa hormiga se movera en torno a esa solucion
-            move_to_hole(*(ant_leon.begin()+roulete_index),hormiga,iter);
+            SlidetoTrap(*(ant_leon.begin()+roulete_index), hormiga);
           
+            //Si la hormiga es mejor que la leon la reemplazamos
             if(hormiga.second < (*(ant_leon.begin()+roulete_index)).second){
                 *(ant_leon.begin()+roulete_index) = hormiga;
             }
-
-            /*cout<< "Hormiga leon"<< endl;
-            print_ant(*(ant_leon.begin()+roulete_index));*/
         }
 
         float max = 9999;
@@ -780,107 +772,92 @@ vector<int> MDD::ALO(int ITERS){
                 max = h.second;
             }
         }
-            
+
+        //Actualizamos la mejor solucion
         if(min.second < best_fit){
             best = min.first;
             best_fit =min.second;
-            /*cout << "Mejoro" << endl;
-            for(int i =0; i < best.size();i++){
-                cout << best[i] << ",";
-            }cout << "  "<<best_fit << endl;*/
         }
-        //cout << iter << endl;
-
     }
-
-    
-
     return best;
+}
+
+
+
+/*
+Aplicamos busqueda local cada n iteraciones sobre algun individuo aleatori de la poblacion
+*/
+vector<int> MDD::ALO_MM(int ITERS, int n){
+    //Definimos el tamaño de la poblacion
+    int TAM = 20;
+
+    //Aqui almacenamos el mejor individuo de las hormigas leon
+    vector<int> best;
+    float best_fit;
     
-}
+    //Definimos la matriz de hormigas y hormigas leones
+    vector<pair<vector<int>,float>> ant(TAM,make_pair(vector<int>(this->n-1,0),0));
+    vector<pair<vector<int>,float>> ant_leon(TAM/2,make_pair(vector<int>(this->n-1,0),0));;
 
-vector<pair<vector<int>,float>>::iterator RouletteWheel(vector<pair<vector<int>,float>>& M_ant_lion) {
-    // Obtenemos el número de ant lion
-    int numIndividuos = M_ant_lion.size();
-
-    // Calcular el fitness acumulado total
-    double fitnessTotal = 0.0;
-    for(auto it = M_ant_lion.begin(); it != M_ant_lion.end(); ++it) {
-        fitnessTotal += it->second;
+    //Generamos la poblacion de hormigas y calculamos su fitness
+    for(auto &i : ant){
+        i.first = generarPoblacion();
+        i.second = diff(i.first);
     }
 
-    // Calcular el peso de cada ant lion
-    vector<double> pesos;
-    for(auto it = M_ant_lion.begin(); it != M_ant_lion.end(); ++it) {
-        pesos.push_back(it->second / fitnessTotal);
+    //Generamos la poblacion de hormigas leon y calculamos su fitness
+    for(auto &i : ant_leon){
+        i.first = generarPoblacion();
+        i.second = diff(i.first);
     }
 
-    // Calcular las probabilidades de cada ant lion
-     vector<double> probabilidades;
-    probabilidades.push_back(pesos[0]);
-    for(int i = 1; i < (numIndividuos-1); ++i) {
-        probabilidades.push_back(probabilidades[i-1] + pesos[i]);
-    }
+    sort(ant_leon.begin(), ant_leon.end(),compare_menorFitness);
 
-    // Se añade la última probabilidad acumulada de esta forma para evitar problemas de redondeo
-    probabilidades.push_back(1.0);
+    //Guardamos el mejor individuo
+    best = (*(ant_leon.begin())).first;
+    best_fit = (*(ant_leon.begin())).second;
 
-    // Generar un número aleatorio en el rango [0,1]
+    int iter = 0;
+    vector<float> pesos;
+    int rand_index =0;
+    int k=0;
 
-    double prob = Random::get<Random::common>(1, 0.f) ;
-
-    // Selección del ant lion
-    auto elegido = M_ant_lion.begin();
-    for(int i = 0; i < (numIndividuos-1); ++i, ++elegido) {
-        if(probabilidades[i] < prob && prob < probabilidades[i+1]) {
-            break;
+    while(iter < ITERS){
+        iter++; 
+        if(iter == k+n){
+            rand_index = Random::get(0,(TAM/2)-1);
+            (ant_leon.begin()+rand_index)->first = BL_2((ant_leon.begin()+rand_index)->first,ITERS/10,(ant_leon.begin()+rand_index)->second);
+            k+=n;
         }
+        //Almacenamos los pesos de cada hormiga leon para ruleta.
+        for(auto &row : ant_leon){
+            pesos.push_back(row.second);
+        }
+        //Para cada hormiga 
+        for(auto &hormiga : ant){
+            //selecciono una hormiga leon con la ruleta
+            int roulete_index = RouletteWheelSelection(pesos);
+            //Y esa hormiga se movera en torno a esa solucion
+            SlidetoTrap(*(ant_leon.begin()+roulete_index),hormiga);
+          
+            if(hormiga.second < (*(ant_leon.begin()+roulete_index)).second)
+                *(ant_leon.begin()+roulete_index) = hormiga;     
+        }
+
+        float max = 9999;
+        pair<vector<int>,float> min;
+        for(auto &h : ant_leon){
+            if(h.second < max){
+                min = h;
+                max = h.second;
+            }
+        }  
+        //Actualizamos la mejor solucion
+        if(min.second < best_fit){
+            best = min.first;
+            best_fit =min.second;
+        }
+        pesos.clear();
     }
-
-    return elegido;
-}
-
-
-
-/**
- * @brief Función para obtener el valor de w
- * 
- * @param iteraciones Iteración actual
- * @param maxIteraciones Número máximo de iteraciones
- * @return int Valor de w
- */
-int obtenerW(double iteraciones, double maxIteraciones) {
-    int w = 1;
-
-    if(iteraciones > 0.1*maxIteraciones) {
-        ++w;
-    }
-    if(iteraciones > 0.5*maxIteraciones) {
-        ++w;
-    }
-    if(iteraciones > 0.75*maxIteraciones) {
-        ++w;
-    }
-    if(iteraciones > 0.9*maxIteraciones) {
-        ++w;
-    }
-    if(iteraciones > 0.95*maxIteraciones) {
-        ++w;
-    }
-
-    return w;
-}
-
-/**
- * @brief Función para obtener el valor de I
- * 
- * @param iteraciones Iteración actual
- * @param maxIteraciones Número máximo de iteraciones
- * @return double Valor de I
- */
-double obtenerI(double iteraciones, double maxIteraciones) {
-    double w = obtenerW(iteraciones, maxIteraciones);
-    double I = pow(10, w) * (iteraciones/maxIteraciones);
-
-    return I;
+    return best;
 }

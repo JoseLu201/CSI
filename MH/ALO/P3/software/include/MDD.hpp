@@ -48,11 +48,12 @@ class MDD{
         vector<int> ILS_ES(int n_sol, int ES_ITERS);
 
         vector<int> generarPoblacion();
-        vector<int> ALO(int ITERS);    
+        vector<int> ALO(int ITERS);
+        vector<int> ALO_MM(int ITERS, int n); 
 
         int RouletteWheelSelection(vector<float> pesos); 
         //void move_to_hole(vector<pair<vector<int>,float>> &ant_lion, vector<pair<vector<int>,float>> &ant);
-        void move_to_hole(pair<vector<int>,float> &ant_lion, pair<vector<int>,float> &ant, int curr_iter);
+        void SlidetoTrap(pair<vector<int>,float> &ant_lion, pair<vector<int>,float> &ant);
         void Random_walk();
 
 };

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.3.25)  18 JUN 2022 17:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.3.25)  23 JUN 2022 01:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -525,6 +525,8 @@ Package tocbasic Info: Using my definition of `\numberline' on input line 6.
 Package tocbasic Info: Using my definition of `\numberline' on input line 7.
 Package tocbasic Info: Using my definition of `\numberline' on input line 8.
 Package tocbasic Info: Using my definition of `\numberline' on input line 9.
+Package tocbasic Info: Using my definition of `\numberline' on input line 10.
+Package tocbasic Info: Using my definition of `\numberline' on input line 11.
 )
 \tf@toc=\write3
 \openout3 = `EntregaClase1.toc'.
@@ -538,34 +540,39 @@ LaTeX Info: Redefining \% on input line 1.
 
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 61--70
+Underfull \hbox (badness 10000) in paragraph at lines 61--72
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 87--91
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 92--93
+Underfull \hbox (badness 10000) in paragraph at lines 73--74
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 120--122
+Underfull \hbox (badness 10000) in paragraph at lines 96--100
 
  []
 
-[4] [5] (./EntregaClase1.aux
+
+Underfull \hbox (badness 10000) in paragraph at lines 101--102
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 132--134
+
+ []
+
+[4] [5] [6] (./EntregaClase1.aux
 LaTeX Info: Redefining \. on input line 8.
 LaTeX Info: Redefining \% on input line 8.
 ) ) 
 Here is how much of TeX's memory you used:
- 8854 strings out of 483048
- 155197 string characters out of 5962772
+ 8857 strings out of 483048
+ 155234 string characters out of 5962772
  515899 words of memory out of 5000000
- 23748 multiletter control sequences out of 15000+600000
+ 23751 multiletter control sequences out of 15000+600000
  581141 words of font info for 88 fonts, out of 8000000 for 9000
  85 hyphenation exceptions out of 8191
  56i,11n,65p,10136b,521s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -579,10 +586,10 @@ f-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/ur
 w/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a
 .pfb>
-Output written on EntregaClase1.pdf (5 pages, 84390 bytes).
+Output written on EntregaClase1.pdf (6 pages, 93545 bytes).
 PDF statistics:
- 128 PDF objects out of 1000 (max. 8388607)
- 43 compressed objects within 1 object stream
+ 143 PDF objects out of 1000 (max. 8388607)
+ 45 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -9,7 +9,7 @@
 \normalfont \normalsize 
 \textsc{\textbf{Metaheurística} \\ Grado en Ingeniería Informática \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
 \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
-\huge Práctica Alternativa ALO: Ant Lion Optimizer \\ % The assignment title
+\huge Práctica Alternativa\\ ALO: Ant Lion Optimizer \\ % The assignment title
 \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
 }
 
@@ -52,40 +52,49 @@
 %----------------------------------------------------------------------------------------
 
 \section{ALO: Ant Lion Optimizer}
-En este documento veremos y explicaremos una Metaheurística basada en ................ y la modelaremos
-para aplicarlo al problema de practicas de MDD.
+En este documento veremos y explicaremos una Metaheurística basada en \cite{or} y la modelamos
+para aplicarlo al problema de prácticas de Mínima Dispersión Diferencial (MDD).
+ 
+ 
+ 
+\subsection{Inspiración}
+  ALO está inspirada en el modelo de caza que realiza la hormiga león contra insectos, específicamente contra
+  hormigas.\\
+  Los hormigas león tienen dos fases principales en su vida, la fase de larva y su fase adulta, es su fase de
+  larva es en la que nos fijamos para desarrollar ALO, las hormigas león tiene ese nombre debido a que en su
+  fase de larva tiene una forma parecida a las de las hormigas.\\
+  Su método de caza consiste en excavar un foso en el suelo arenoso con forma de cono, de forma que todo lo que
+   caiga en ese foso caerá abajo, justo al lugar donde la larva de hormiga león se mantiene esperando enterrada
+   con sus colmillos sobresaliendo un poco en la superficie para atrapar a su presa.
+  La hormiga león es un depredador pasivo ya que espera en el fondo del foso esperando a que las presas caigan
+   dentro aunque también tienen otras estrategias para la caza como poderosas mandíbulas con veneno incluso son capaces
+  de tirar arena hacia la presa con el fin de hacerlas deslizar al centro.\\
+ 
+  Esta Metaheurística simula este comportamiento siguiente los siguientes pasos:\\
 
-
-
-\subsection{Inspiracion}
-  ALO esta inspitada en el modelo de caza que realiza la hormiga leon contra insectos, especificamente contra hormigas.
-  Los hormigas leon tienen dos fases principales en su vida, la fase de larva y su fase adulta, es es su fase de larva en la que
-  que nos fijamos para desarrolar ALO, las hormigas leon tiene ese nombre devido a que en su fase de larva teien una forma 
-  pareceida a las de las hormigas.\\
-  Su metodo de caza consiste en escaver un foso en el suelo arenoso con forma de cono, de forma que todo lo que caiga en 
-  ese foso caera abajo, justo al lugar dondo la larva de hormiga leon se mantiene esperando enterrada.
-  La hormiga leon es un depredador pasivo ya que espera en el fondo del foso esperando a que las presas ciagan dentro
-  Aqune tambien tienen otras estrategias para la caza como poderosas mandibulas con veneno incluso son capaces de tirar arena hacia 
-  la presa con el fin de hacerlas deslicer al centro.\\
-
-  Esta Metaheurística simula este comportamiento siguiente los siguientes pasos:
   \begin{itemize}
-    \item Desplazamiento aleatorio de las hormigas
-    \item Atrapar a las presas en el trampa
-    \item Construir la trampa
-    \item Deslizamiento hacia la hormiga leon
-    \item Capturando la presa y Recostruyendo el foso
-    
+    \item Generacion de poblacion.
+    \item Desplazamiento aleatorio de las hormigas.
+    \item Atrapar a las presas en el trampa.
+    \item Construir la trampa.
+    \item Deslizamiento hacia la hormiga león.
+    \item Capturando la presa y reconstrucción del foso.
   \end{itemize}
 
+  \subsection{Generacion de poblacion.}
+  Inicialmiente tenemos dos poblaciones, una de hormigas, y otra de hormigas leones, estas poblaciones 
+  estaran constitudos por un numero $n$ de individuos, aunque segun he desarrolado, el numero de estas pueden cambiar
+  incluso que las poblaciones no sean del mismo tamaño y que sea las hormigas leones la minoria pero mantiniendo un elitismo.\\
+  Con el fin de explorar el mayor espacio de busqueda posible crearemos ambas poblaciones lo mas diversas 
+  posibles, es decir, que las componentes de ambas poblaciones tengas sus variables lo mas variadas posibles.\\
+  Tambien calcularemos el fitness de cada individuo de ambas poblaciones lo cual nos permitira compara entre individuos.
 
   \subsection{Desplazamiento aleatorio de las hormigas}
-
   Como podemos ver en la naturaleza, el desplazamiento de las hormigas por la superficie es aleatorio, esto nos ayuda 
   añadiendo una gran componente de diversidad a la hora de crear soluciones.
 
   En la implentacion original de ALO, el movimiento de las hormigas esta acotado para mantener las restricciones de las variables 
-  del problema\\
+  del problema.\\
   Para simular caer en una trampa se restringe el movimiento aleatoria de las hormigsa conforma avanzan las iteracioens, esto permite tener en un principio mucha diversidad y conforme vamos
   avanzando vamos especificando en la solucion.\\
 
@@ -102,7 +111,10 @@ para aplicarlo al problema de practicas de MDD.
   Como hemos dicho antes el desplazamiento de las hormigas se ve influenciado por las trampas de la hormiga leon
 
   \begin{equation}
-    c_i^t = Antlion_j^t +c^t
+    c_i^t = Antlion_j^t +c^t 
+  \end{equation}
+
+  \begin{equation}
     d_i^t = Antlion_j^t +d^t
   \end{equation}
 
@@ -122,12 +134,14 @@ para aplicarlo al problema de practicas de MDD.
 
    \begin{equation}
     c^t = \frac{c^t}{I}
+  \end{equation}
+  \begin{equation}
     d^t = \frac{d^t}{I}
   \end{equation}
 
   donde I es el radio y se calcula respeco de las iteraciones.
 
-  \subsection{Capturando la presa u Recostruyendo el foso}
+  \subsection{Capturando la presa y reconstrucción del foso.}
   La ultima parte de la caza es cuando la hormiga llega al fondo del foso y es atrapada por la hormiga leon.
   Asumimos la captura se lleva a cabo cuando el fitness de la hormige se haga mejor que el de su correspondiente hormiga leon.\\
   Despues actualizamos la posicion de la hormiga leon a la ultima posicion de la hormiga presa
@@ -149,5 +163,54 @@ para aplicarlo al problema de practicas de MDD.
 
   donde $R_A^t$ es el movimiento aleatoria alrededor de la hormiga leon seleccionada mediante la ruleta, mientras que
    $R_E^t$ es el moviemeinto aleatorio alrededor de la elite
+
+
+
+
+
+
+   \newpage
+   \section{Analisis}
+
+   \begin{table}[H]
+    \centering
+     \begin{tabular}{|l|l|l|}
+     \hline
+     \multicolumn{1}{|c|}{Algoritmo}   & \multicolumn{1}{l|}{Desv}                   & \multicolumn{1}{c|}{Tiempo}          \\\hline
+        Greedy                            & \textbf{0,6646633915}                       & \textbf{32,88}                       \\\hline
+        BL                                & \textbf{0,4815112495}                       & \textbf{706,84}                      \\\hline
+        AGG-uniforme                      & \textbf{0,409546259}                       & \textbf{25331,42}  \\\hline
+        AGG-posición                      & \textbf{0,5215188632}                      & \textbf{3517,38}                      \\\hline
+        AGE-uniforme                      & \textbf{0,483662062  }                      & \textbf{37863,06}                                             \\\hline
+        AGE-posición                      & \textbf{0,470069908 }                      & \textbf{1843,76}                                               \\\hline
+        AM-(10,1.0)                       & \textbf{0,322516584  }                      & \textbf{5011,3 }                     \\ \hline
+        AM-(10,0.1)                       & \textbf{0,427105774  }                      & \textbf{3654,3  }                       \\ \hline
+        AM-(10,0.1mej)                    & \textbf{0,415776803  }                      & \textbf{3664,36  }                      \\ \hline
+        BMB                               & \textbf{0,4013}                             & \textbf{1848,1}                      \\\hline
+        Enfriamiento Simulado             & \textbf{0,5353}                             & \textbf{110,26}                      \\\hline
+        ILS                               & \textbf{0,55171}                            & \textbf{2438,48}                     \\\hline                
+        ILS-ES                            & \textbf{0,38508}                            & \textbf{1075,46}                     \\\hline                                               
+        ALO                               & \textbf{0,}                            & \textbf{,48}                     \\\hline                
+        ALO\_BL                            & \textbf{0,}                            & \textbf{,46}                     \\\hline 
+     \end{tabular}
+     \end{table}
+
+
+
+     Poner algo de Analisis
+    
+     En ALO utilizamos poblaciones lo cual nos da sus ventajas e inconvenientes
+
+     Como ventajas principales
+
+     El mayor inconveniente es el tema tiempo.
+
+
+
+   \begin{thebibliography}{9}
+    \bibitem{or}
+    Mirjalili S. The Ant Lion Optimizer. Advances in Engineering Software. 2015;83:80–98.
+    
+    \end{thebibliography}
 
 \end{document}

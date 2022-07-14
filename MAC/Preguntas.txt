@@ -1,0 +1,131 @@
+Preguntas V o F MAC
+
+1. Cualquir problema NP puede ser resolverse en un espacio polinomico y tiempo exponencial
+	->  [F] en tiempo polinomico	
+
+2. Una MT universal puede calcular cualquir cosa que cualquir otra MT puede calcular
+	-> [V] Como la MTU puede simular una MT con cualquir entrada 
+
+3. Se sabe que el complementario de SAT no tiene un algoritmo de tiempo polinomico
+	->
+
+4. Si A es un problema NP-completo y A \reduction B, entonces B es NP-compelto
+	->[V] Para demostrar la NP-completitud de un problema solo tendremos que demostrar que el problema B es NP y que exista una reduccion de los ya probados como NP-completos a estos
+
+5. Si P=NP entocnes el problema del viajante de comercio se puede resolvern en tiempo polinomico determinista
+	->[V] Si consiguisemos demostrar que P=NP entonces este problema que es NP-Duro podria resovlerse en tiempo polinomico determinista 
+
+6. La clase L es distinta del PESPACIO
+	->La clase L (LSPACE) son problemas de decision que pueden resolverse en espcio log(n) para una MT determinista y sabemos que esta contenida estrictamente en PSPACE al iguak que NL
+		::PESPACE probleams de decicison que puede resolver na MT determinista en espacio polinomico y tiempo ilimitado PSPACE = NPSPACE
+
+7. El problema SAT para clausulas Horn es NP-completo
+	-> Es P-completo
+	As we know, 2-SAT is NL-complete, Horn-SAT is P-complete, and k-SAT (k>2) is NP-complete
+
+8. Si el problema P1 se reduce al problema P2 y P2 es semidecidible, entonces tambien lo sera P1
+	->
+
+9. Si un problema esta en NL, entonces se puede resolver en tiempo polinomico determinista.
+	->[V] Sabemos que NL es un subconjunto de P por lo que en principio si.
+
+10. Las posibilidades de la computacion cuantica ponen en duda la tessis de Church-Turing
+	-> [] puede que falsas
+
+11. Si una MT escribe en su primera cinta, entonces su complejidad en espacio es de O(n).
+	-> [V]
+
+12. Si un problema de optimizacion tiene un umbral de aproximacion de 2, entonces tiene un algoritmo aproximado polinomico con una razon de eficiencia de phi = 2.
+	->
+
+13. Si los algoritmos ALG1(x) y ALG2(x) son espacio logaritmicos, entonces el algoritmo 
+ALG(x) que contiene los siguientes pasos:
+	- y = ALG1(x);
+	- Return ALG2(y)
+
+es tambien espacio logaritmico.
+	->
+
+14. Si P1 \reduc P2 \reduc P3 y P1 es semidecidible, entonces P3 tambien lo es.
+	->[F] Pq cuando se hace una reducción, se "hereda" lo malo de izquierda a derecha, y lo bueno se "hereda" de derecha a izquierda
+	Si P1 es no semidecidible, puedes afirmar que p2 y p3 no son semidecidible
+	Y si p2 es semidecidible, puedes afirmar que p1 es semidecidible
+
+15. Si NL = NP, entonces NP = coNP.
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+
+Problemas de Decibilidad, Semidecidibilidada/No Semidecidibilidada
+
+Es DECIDIBLE ( siempre para ): Diseñar un algo que resuelva el problema, probando que el prob es realizar un num finito de comprobaciones, cada comprobaacion en un numero finito de pasos
+
+No es DECIDIBLE: (Teorema de Rice) : Toda propiedad no trivial de los lenguajes r.e no es admisible.
+	-> Propiedades que solo dependen del lenguaje, Independiente de las diferentes MT que acepten ese lenguaje.
+		EJ: Dada MT determinar si acpta una palabra que empice por 0, que empiece por 0 es una propiede de los lenguajes r.e,
+		EJ: MT acepte en menos de 5 movimeintos, esta no. Propiedad de MT
+		EJ: MT que acepta una palabra de longitud menor que 20
+
+SEMIDECIDIBLE: Diseñar una MT determinista o no
+	Normalmente es semi aquellos que requieres comporobar que en un conjunto infinito A (si es finito ademas es decidible), existe un elemtento que cumple una propiedad
+
+	::: 
+		Selecciono de forma no determinista a 
+			Si a cumple la condicion de P 
+				entonces acepto
+			si no 
+				rechazo
+
+NO SEMIDECIDIBLE: Establecemos una reduccion de un problema que sabemos que no es semi.
+	Ejemplos : 
+	DIAGONAL, dada MT determinar si M no acepta su codificacion <M> lenguaje Ld
+	C-UNIVERSAL, dada MT M y una entrada w, determinar si M NO acepta w.
+	VACIO, dada MT M determinar si su lenguaje es vacio.
+
+2021 ORDINARIO
+	1. Dada una MT M y una palabra w, ¿es cierto que M no acepta w?
+		-> Este es C-UNIVERSAL que sabemos que no es semidecidible
+
+	2.Dada una gramatica independiente del contexto, determina si es ambigua
+		-> En clase hemos visto que  {enunciado} es indecidible reduciendo el problema de correspondecia de POST al problema de saber si una gramatica es ambigua
+
+	3.Dada una gramatica independiente del contexto G, y una palabra u, ¿es cierto que G genera u?
+
+	4. Dada un MT M, ¿existe una palabra w, tq |w| <= 100 que sea aceptada en menos de 1000 pasos?
+		Como es un problema de determinar ecistencia de algo deberiamos intuir que es no es decidible pero si semi
+
+2021 EXTRA
+
+	1.Dada MT M y una palabra w, ¿es el numero de estados de M <= |w|?
+	2.Dada MT M ,¿M acepta al menos 3 palabras distintas ?
+	3.Dada MT M y¿M acepta exactamente 3 palabras distintas?
+	4.Dada MT M y una palabra w, ¿es cierto que M acepta w sin usar mas de 2|w| casillas?
+
+2019 ORD
+
+	1. El problema de la correspondencia de Post con el alfabeto de cardinalidad mayor o igual a 2.
+	
+	2. Dada una gramatica Independiente del contexto, determina si es ambigua. 	!!!!REPETIDA!!!
+
+	3. El problema de la correspondencia de Post con el alfabeto de cardinalidad 1.
+
+	4. Dadas 2 MT M1 Y M2 determinar si el lengaj aceptado por M1 esta incluido en el acepttado por M2.
+
+RANDOM:
+	Dado un automata con pila no determinista y una palabra de entrada, determinar si el automata aceptra la palabra
+		-> Es decidible, solo hay que hacer un MT que simule el automata
+
+
+Preguntas__
+
+	--¿Que complejidad en espacio determinista tiene el problema de la busquda de caminos en grafos? Explica en que se basa tu afirmacion.
+	
+	--Explica brevemente las ideas basicas de la simulacion de una MT mediante un programa con variables, detalla la simulacion de una transaccion F(q_i,a_j) = (q_m, a_k, D)
+
+	-- Explica las diferencia entre reducibilidad Turing, y la reducibilidad espacio logaritmica en la que se basa el concepto de NP-completitud, ¿Cual de ellas es mas fuerte?
+
+
+
+
+	Tema 2:
+
+	Modelos de calculo equivalentes a los realizados por una MT, tesis de church-Turing indica qe todos los modelos de calculo puede llevarse a cabo por una MT
